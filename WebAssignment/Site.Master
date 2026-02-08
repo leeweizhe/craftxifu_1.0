@@ -1,0 +1,45 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site.master.cs" Inherits="WebAssignment.Site" %>
+
+<!DOCTYPE html>
+
+<html>
+<head runat="server">
+    <title>Minecraft Community</title>
+    <link href="https://fonts.cdnfonts.com/css/minecraft-4" rel="stylesheet" />
+    <link href="SiteMaster.css" rel="stylesheet" type="text/css" runat="server" />
+    <asp:ContentPlaceHolder ID="head" runat="server">
+    </asp:ContentPlaceHolder>
+</head>
+<body>
+    <form id="form1" runat="server">
+        <nav>
+            <ul class="main-nav">
+                <li><a class="main-link">Home</a></li>
+                <li><a class="main-link">Post</a></li>
+                <li><a class="main-link">Guide</a></li>
+                <li><a class="main-link">Donate Us</a></li>
+
+                <li class="move-right dropdown-parent">
+                    <a  class="main-link"><img src="/images/troll.jpg" class="profile-pic"/><span>Purple</span></a>
+                    <ul class="dropdown-menu">
+                        <li><a class="sub-link">Profile</a></li>
+                        <li><a class="sub-link">Log out</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+
+        <div class="main-content">
+            <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
+            </asp:ContentPlaceHolder>
+        </div>
+
+        <footer>
+            <p>&copy; 2026 Minecraft Community</p>
+        </footer>
+
+        <script src="/js/nav.js"></script>
+
+    </form>
+</body>
+</html>

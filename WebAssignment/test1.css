@@ -1,0 +1,178 @@
+﻿input,
+button,
+textarea,
+select {
+    font-family: inherit;
+}
+
+body {
+    font-family: 'Minecraft', sans-serif;
+    /*    font-family: "PT Serif", serif;*/
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    background-image: 
+        linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), 
+        url('images/dirt_texture.jpg');
+    background-repeat: repeat;
+    image-rendering: pixelated;
+}
+
+#form1 {
+    
+}
+
+nav {
+    width: 100%;
+    height: 96px;
+    margin-bottom: 50px;
+    background-image: url('images/grass_texture.jpg');
+    background-repeat: repeat;
+    image-rendering: pixelated;
+}
+
+nav ul {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+    display: flex;
+    align-items: stretch;
+    height: 100%;
+}
+
+nav li {
+
+}
+
+nav a {
+    position: relative;
+    display: flex;
+    align-items: center;
+    font-size: 1.6rem;
+    color: #ffffff;
+    padding: 0 30px;
+    cursor: pointer;
+    text-decoration: none;
+    height: 100%;
+    transition: all 0.3s ease-out;
+}
+
+nav a::after {
+    content: ' ';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0%;
+    height: 4px;
+    background-color: #68ff00;
+    transition: all 0.3s ease-out;
+    transform: translateX(-50%);
+}
+
+nav a:hover::after{
+    width: 100%;
+}
+
+nav a:hover {
+    color: #68ff00;
+}
+
+.move-right {
+    margin-left: auto;
+}
+
+.profile-pic {
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    vertical-align: middle;
+    margin-right: 14px;
+}
+
+footer {
+    color: white;
+    font-size: 1.5rem;
+}
+
+.main-content {
+    
+    display: flex;
+    justify-content: center;
+    /*    align-items: center;*/
+    flex: 1;
+}
+
+.login-container {
+    background-color: white;
+    box-shadow: 0 4px 5px rgba(255, 255, 255, 0.3);
+    border-radius: 10px;
+    padding: 2rem;
+    max-width: 400px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.input-section {
+    position: relative;
+    margin-bottom: 20px;
+    height: 50px;
+    width: 100%;
+}
+
+.input-section label {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1rem;
+    pointer-events: none;
+    transition: all 0.3s ease;
+}
+
+.input-section input {
+    background-color: #d5d5d5;
+    height: 100%;
+    width: 100%;
+    padding: 20px 10px 5px 10px;
+    border-radius: 8px;
+    border: 1px solid #808080;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+}
+
+.input-section input:focus + label,
+.input-section input:not(:placeholder-shown) + label{
+    color: #00b63b;
+    top: 5px;
+    transform: translateY(0);
+    font-size: 0.75rem;
+}
+
+.input-section input:focus {
+    border-color: #00b63b;
+    background-color: white;
+    outline: none;
+}
+
+.login-container button {
+    background-color: #009731;
+    color: white;
+    width: 100%;
+    padding: 0.75rem;
+    margin: 1rem 0;
+    font-size: 1.5rem;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.login-container button:hover {
+    background-color: #00b63b;
+    transform: scale(1.05);
+}

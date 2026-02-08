@@ -1,0 +1,161 @@
+﻿* {
+    user-select: none;
+    box-sizing: border-box;
+    font-family: 'Minecraft', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('images/backgrounds/dirt_texture.jpg');
+    background-repeat: repeat;
+    image-rendering: pixelated;
+    height: 100%;
+}
+
+#form1 {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.main-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
+}
+
+nav {
+    width: 100%;
+    height: 100px;
+    margin-bottom: 20px;
+    background-image: url('images/backgrounds/grass_texture.jpg');
+    background-repeat: repeat;
+    image-rendering: pixelated;
+}
+
+.main-nav {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+    display: flex;
+    align-items: stretch;
+    height: 100%;
+}
+
+.main-link {
+    position: relative;
+    display: flex;
+    align-items: center;
+    font-size: 1.6rem;
+    color: #ffffff;
+    padding: 0 30px;
+    cursor: pointer;
+    text-decoration: none;
+    height: 100%;
+    transition: all 0.3s ease-out;
+}
+
+.main-link::after {  /* Underline */
+    content: ' ';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0%;
+    height: 4px;
+    background-color: #68ff00;
+    transition: all 0.3s ease-out;
+    transform: translateX(-50%);
+}
+
+.main-link:hover::after{
+    width: 100%;
+}
+
+.main-link:hover {
+    color: #68ff00;
+}
+
+.move-right {
+    margin-left: auto;
+}
+
+.profile-pic {
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    vertical-align: middle;
+    margin-right: 14px;
+}
+
+.dropdown-parent {
+    position: relative;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: all 0.3s ease;
+
+
+    background-color: black;
+    color: white;
+    width: 100%;
+    min-width: 150px;
+    right: 0;
+    left: auto;
+    padding: 0;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    z-index: 1000;
+    list-style-type: none;
+}
+
+.sub-link {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 15px 20px;
+    font-size: 1.6rem;
+    border-bottom: none;
+    width: 100%;
+    transition: all 0.3s ease;
+}
+
+/*.dropdown-parent:hover .dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}*/
+
+.dropdown-parent.open .dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.dropdown-parent.open .main-link::after {
+    width: 100%;
+    background-color: lightyellow;
+}
+
+.dropdown-parent.open .main-link {
+    color: lightyellow;
+}
+
+.sub-link:hover {
+    color: #68ff00;
+    background-color: #464646;
+}
+
+footer {
+    color: white;
+    font-size: 1.6rem;
+}
