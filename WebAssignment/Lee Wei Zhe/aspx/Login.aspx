@@ -22,8 +22,13 @@
             </span>
 
         </div>
-        <asp:Button ID="btnSubmit" runat="server" Text="Submit" OnClick="btnSubmit_Click" />
+
         <asp:Label id="errorMsg" runat="server" Visible="False">geh</asp:Label>
+
+        <asp:Button id="btnSubmit" runat="server" Text="Submit" OnClick="btnSubmit_Click" />
+
+        <asp:LinkButton class="normal-link" id="lnkForgetPassword" runat="server" OnClick="lnkForgetPassword_Click">Forgot Password?</asp:LinkButton>
+        <asp:LinkButton class="normal-link" id="lnkRegister" runat="server" OnClick="lnkRegister_Click" >New? Register here</asp:LinkButton>
     </div>
 
 </asp:Content>
