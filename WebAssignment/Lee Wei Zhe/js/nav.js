@@ -1,28 +1,32 @@
-﻿// Wait for the HTML to fully load before running
-document.addEventListener('DOMContentLoaded', function () {
+﻿document.addEventListener('DOMContentLoaded', function () {
 
-    // 1. Find the dropdown parent (The "Guide" link)
-    // Note: We use querySelector to find the class we added earlier
+    // 1. Find the dropdown parent
     var dropdownBtn = document.querySelector('.dropdown-parent > .main-link');
+
+    // Safety check: If there is no dropdown on this page, stop here so we don't get errors
+    if (!dropdownBtn) return;
 
     // 2. Add a click event listener
     dropdownBtn.addEventListener('click', function (e) {
-
-        // Prevent the link from jumping to top of page
+        // Prevent jumping to top of page
         e.preventDefault();
 
-        // 3. Find the parent <li>
-        var parentLi = this.parentElement;
+        // CRITICAL: Stop the click from bubbling up to the document
+        e.stopPropagation();
 
-        // 4. Toggle the class "open" on the parent
-        // If it has "open", remove it. If not, add it.
+        // Toggle the class
+        var parentLi = this.parentElement;
         parentLi.classList.toggle('open');
     });
 
-    // OPTIONAL: Close dropdown if user clicks anywhere else on the screen
+    // 3. Close dropdown if user clicks anywhere else
     document.addEventListener('click', function (e) {
-        if (!dropdownBtn.contains(e.target)) {
-            dropdownBtn.parentElement.classList.remove('open');
+        // We have to define parentLi here too!
+        var parentLi = dropdownBtn.parentElement;
+
+        // If the click happened outside the entire dropdown area, remove 'open'
+        if (!parentLi.contains(e.target)) {
+            parentLi.classList.remove('open');
         }
     });
 

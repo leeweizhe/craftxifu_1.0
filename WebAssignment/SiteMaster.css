@@ -143,11 +143,11 @@ nav {
 
 .dropdown-parent.open .main-link::after {
     width: 100%;
-    background-color: lightyellow;
+    background-color: #68ff00;
 }
 
 .dropdown-parent.open .main-link {
-    color: lightyellow;
+    color: #68ff00;
 }
 
 .sub-link:hover {

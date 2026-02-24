@@ -58,5 +58,15 @@ namespace WebAssignment
 
             con.Close();
         }
+
+        protected void lnkForgetPassword_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        protected void lnkRegister_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("RegistrationPage.aspx");
+        }
     }
 }
