@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data.SqlClient;
+using System.Drawing;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
@@ -21,47 +22,55 @@ namespace WebAssignment
             string username = txtUsername.Text;
             string password = txtPassword.Text;
 
-            SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
-            con.Open();
+            string connString = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
 
-            SqlCommand cmd = new SqlCommand("select count(*) from userTable where Username = '" + txtUsername.Text + "' and Password = '" + txtPassword.Text + "'", con);
-            int count = Convert.ToInt32(cmd.ExecuteScalar().ToString());
-
-            if (count > 0)
+            using (SqlConnection con = new SqlConnection(connString))
             {
-                SqlCommand cmdType = new SqlCommand("select FName, Role from userTable where Username = '" + txtUsername.Text + "'", con);
-                SqlDataReader dr = cmdType.ExecuteReader();
+                string query = "SELECT Password, FName, Role FROM userTable WHERE Username = @Username";
 
-                string role = "";
-                string name = "";
-
-                while (dr.Read())
+                using (SqlCommand cmd = new SqlCommand(query, con))
                 {
-                    role = dr["Role"].ToString().Trim();
-                    name = dr["FName"].ToString().Trim();
+                    cmd.Parameters.AddWithValue("@Username", username);
+
+                    con.Open();
+                    using (SqlDataReader dr = cmd.ExecuteReader())
+                    {
+                        if (dr.Read())
+                        {
+                            string storedHash = dr["Password"].ToString();
+                            bool isPasswordCorrect = BCrypt.Net.BCrypt.Verify(password, storedHash);
+
+                            if (isPasswordCorrect)
+                            {
+                                Session["firstName"] = dr["FName"].ToString().Trim();
+                                Session["userRole"] = dr["Role"].ToString().Trim();
+
+                                Response.Redirect("Home.aspx");
+                            }
+                            else
+                            {
+                                ShowError("Username and Password mismatch!");
+                            }
+                        }
+                        else
+                        {
+                            ShowError("Invalid Username!");
+                        }
+                    }
                 }
-
-                Session["firstName"] = name;
-                Session["userRole"] = role;
-                Response.Redirect("Home.aspx");
-                errorMsg.Visible = true;
-                errorMsg.Text = "Login Successful";
-
             }
-            else
-            {
-                errorMsg.Visible = true;
-                errorMsg.ForeColor = System.Drawing.Color.Red;
-                errorMsg.Text = "Username and Password mismatch!";
-                return;
-            }
+        }
 
-            con.Close();
+        private void ShowError(string message)
+        {
+            errorMsg.Text = message;
+            errorMsg.ForeColor = Color.Red;
+            errorMsg.Visible = true;
         }
 
         protected void lnkForgetPassword_Click(object sender, EventArgs e)
         {
-
+            Response.Redirect("ForgotPass.aspx");
         }
 
         protected void lnkRegister_Click(object sender, EventArgs e)
