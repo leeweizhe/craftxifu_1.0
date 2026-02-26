@@ -7,6 +7,7 @@ namespace AutoFarm
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            /*
             [cite_start]// 只有注册会员或管理员可以查看 Hard 难度以上的完整内容或发表评论 [cite: 13, 66, 136]
             if (Session["UserID"] != null)
             {
@@ -18,6 +19,7 @@ namespace AutoFarm
                 [cite_start] pnlFeedback.Visible = false; [cite: 114]
                 lblLoginToComment.Visible = true;
             }
+            */
         }
     }
 }

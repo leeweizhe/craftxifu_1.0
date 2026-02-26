@@ -84,10 +84,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include=".gitignore" />
-    <Content Include="App_Data\WebDatabase.mdf" />
-    <Content Include="App_Data\WebDatabase_log.ldf">
-      <DependentUpon>WebDatabase.mdf</DependentUpon>
-    </Content>
+    <Content Include="App_Data\Database1.mdf" />
     <Content Include="images\profiles\DPick.jpg" />
     <Content Include="Lee Wei Zhe\aspx\Home.aspx" />
     <Content Include="Lee Wei Zhe\aspx\RegistrationPage.aspx" />
@@ -104,6 +101,11 @@
     <Content Include="test1.css" />
     <Content Include="SiteMaster.css" />
     <Content Include="Web.config" />
+    <Content Include="Wong Zhang Zhe\AutoFarm.aspx" />
+    <Content Include="Wong Zhang Zhe\ContactUs.aspx" />
+    <Content Include="Wong Zhang Zhe\Home.aspx" />
+    <Content Include="Wong Zhang Zhe\Style.css" />
+    <Content Include="Wong Zhang Zhe\UserProfile.aspx" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Lee Wei Zhe\aspx\Home.aspx.cs">
@@ -142,6 +144,10 @@
       <DependentUpon>test1.aspx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Wong Zhang Zhe\AutoFarm.aspx.cs">
+      <DependentUpon>AutoFarm.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
