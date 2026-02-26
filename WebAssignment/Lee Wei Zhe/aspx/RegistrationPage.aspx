@@ -24,24 +24,23 @@
         <label>Email</label>
     </div>
         
-    <div class="input-section">
-        <label>Gender</label>
-        <asp:RadioButtonList ID="rblGender" runat="server" RepeatDirection="Horizontal" CssClass="radio-options">
-            <asp:ListItem Text="Male" Value="male" />
-            <asp:ListItem Text="Female" Value="female" />
-        </asp:RadioButtonList>
-    </div>
+    <div class="input-section gender-box">
+    <label class="static-label">Gender</label>
+    <asp:RadioButtonList ID="rblGender" runat="server" RepeatDirection="Horizontal" CssClass="radio-options">
+        <asp:ListItem Text="Male" Value="M" />
+        <asp:ListItem Text="Female" Value="F" />
+    </asp:RadioButtonList>
+</div>
         
-    <div class="input-section">
-        <label>Country</label>
-    
-        <asp:DropDownList ID="ddlCountry" runat="server" CssClass="form-control">
-            <asp:ListItem Text="Select your country" Value="" Selected="True" />
-            <asp:ListItem Text="Malaysia" Value="my" />
-            <asp:ListItem Text="United States" Value="us" />
-            <asp:ListItem Text="United Kingdom" Value="uk" />
-        </asp:DropDownList>
-    </div>
+<div class="input-section">
+    <label class="static-label">Country</label>
+    <asp:DropDownList ID="ddlCountry" runat="server" CssClass="country-dropdown">
+        <asp:ListItem Text="Select your country" Value="" Selected="True" />
+        <asp:ListItem Text="Malaysia" Value="Malaysia" />
+        <asp:ListItem Text="United States" Value="United States" />
+        <asp:ListItem Text="United Kingdom" Value="United Kingdom" />
+    </asp:DropDownList>
+</div>
         
     <div class="input-section">
         <asp:TextBox type="text" id="txtUsername" runat="server" ClientIDMode="Static" placeholder=" " required="required"/>
@@ -66,9 +65,9 @@
         </span>
     </div>
 
-    <asp:Label id="errorMsg" runat="server" Visible="False">geh</asp:Label>
+    <asp:Label id="errorMsg" runat="server" Visible="False">err</asp:Label>
 
-    <asp:Button ID="btnRegister" runat="server" Text="Register" />
+    <asp:Button ID="btnRegister" runat="server" Text="Register" OnClick="btnRegister_Click"/>
 
 
     <asp:LinkButton class="normal-link" id="lnkHaveAccount" runat="server" OnClick="lnkHaveAccount_Click">Already Have Account? Login Here</asp:LinkButton>
