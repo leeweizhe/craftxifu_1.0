@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data.SqlClient;
+using System.Drawing;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
@@ -10,11 +11,11 @@ using WebAssignment.Lee_Wei_Zhe.myClass;
 
 namespace WebAssignment.Lee_Wei_Zhe.aspx
 {
-    public partial class VerifyOtpFp : System.Web.UI.Page
+    public partial class VerifyOtpR : System.Web.UI.Page
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (Request.QueryString["email"] == null)
+            if (Session["RegEmail"] == null)
             {
                 Response.Redirect("Home.aspx");
             }
@@ -22,7 +23,7 @@ namespace WebAssignment.Lee_Wei_Zhe.aspx
 
         protected void btnVerify_Click(object sender, EventArgs e)
         {
-            string email = Request.QueryString["email"];
+            string email = Session["RegEmail"].ToString();
             string enteredOtp = txtOtp.Text.Trim();
             string connString = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
 
@@ -59,11 +60,23 @@ namespace WebAssignment.Lee_Wei_Zhe.aspx
                                 // 1. Mark as used so they can't reuse it
                                 OtpHelper.MarkOtpAsUsed(otpId, connString);
 
-                                // 2. THE VIP PASS: Save their ID to a Session variable
-                                Session["email"] = email;
+                                string insertUserQuery = @"INSERT INTO userTable (FName, LName, Email, Gender, Country, Username, Password) 
+                                               VALUES (@FName, @LName, @Email, @Gender, @Country, @Username, @Password)";
 
-                                // 3. Send them to the final step!
-                                Response.Redirect("ResetPassword.aspx");
+                                using (SqlCommand cmdInsert = new SqlCommand(insertUserQuery, conn))
+                                {
+                                    // Pulling all the data we temporarily saved during Step 1
+                                    cmdInsert.Parameters.AddWithValue("@FName", Session["RegFName"].ToString());
+                                    cmdInsert.Parameters.AddWithValue("@LName", Session["RegLName"].ToString());
+                                    cmdInsert.Parameters.AddWithValue("@Email", email);
+                                    cmdInsert.Parameters.AddWithValue("@Gender", Session["RegGender"].ToString());
+                                    cmdInsert.Parameters.AddWithValue("@Country", Session["RegCountry"].ToString());
+                                    cmdInsert.Parameters.AddWithValue("@Username", Session["RegUsername"].ToString());
+                                    cmdInsert.Parameters.AddWithValue("@Password", Session["RegPassword"].ToString()); // This is already hashed!
+
+                                    cmdInsert.ExecuteNonQuery();
+                                    Response.Redirect("Login.aspx?message=RegistrationSuccess");
+                                }
                             }
                             else
                             {
@@ -77,13 +90,14 @@ namespace WebAssignment.Lee_Wei_Zhe.aspx
 
         protected void lnkBack_Click(object sender, EventArgs e)
         {
-            Response.Redirect("ForgotPass.aspx");
+            Response.Redirect("RegistrationPage.aspx");
         }
 
         private void ShowError(string message)
         {
-            errorMsg.Text = message; 
-            errorMsg.ForeColor = System.Drawing.Color.Red;
+            errorMsg.Text = message;
+            errorMsg.ForeColor = Color.Red;
+            errorMsg.Visible = true;
         }
     }
 }

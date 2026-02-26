@@ -14,9 +14,9 @@ namespace WebAssignment.Lee_Wei_Zhe.aspx
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (Session["userId"] == null)
+            if (Session["email"] == null)
             {
-                Response.Redirect("ForgotPassword.aspx");
+                Response.Redirect("Home.aspx");
             }
         }
 
@@ -37,16 +37,16 @@ namespace WebAssignment.Lee_Wei_Zhe.aspx
                 return;
             }
             // Safely grab the userId we saved during the OTP step
-            int userId = Convert.ToInt32(Session["userId"]);
+            string email = Session["email"].ToString();
             string hashedPassword = BCrypt.Net.BCrypt.HashPassword(password);
 
             // Attempt to update the database
-            bool isUpdated = UpdatePasswordInDatabase(userId, hashedPassword);
+            bool isUpdated = UpdatePasswordInDatabase(email, hashedPassword);
 
             if (isUpdated)
             {
                 // Clean up the session so they can't reuse it, then send to login
-                Session.Remove("userId");
+                Session.Remove("email");
                 Response.Redirect("Login.aspx?message=PasswordResetSuccess");
             }
             else
@@ -55,7 +55,7 @@ namespace WebAssignment.Lee_Wei_Zhe.aspx
             }
         }
 
-        private bool UpdatePasswordInDatabase(int userId, string newPassword)
+        private bool UpdatePasswordInDatabase(string email, string newPassword)
         {
             string connString = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
 
@@ -63,12 +63,12 @@ namespace WebAssignment.Lee_Wei_Zhe.aspx
             {
                 using (SqlConnection conn = new SqlConnection(connString))
                 {
-                    string query = "UPDATE userTable SET Password = @Password WHERE UserId = @UserId";
+                    string query = "UPDATE userTable SET Password = @Password WHERE Email = @Email";
 
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
                         cmd.Parameters.AddWithValue("@Password", newPassword);
-                        cmd.Parameters.AddWithValue("@UserId", userId);
+                        cmd.Parameters.AddWithValue("@Email", email);
 
                         conn.Open();
                         int rowsAffected = cmd.ExecuteNonQuery();

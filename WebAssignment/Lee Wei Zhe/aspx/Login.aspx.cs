@@ -20,6 +20,12 @@ namespace WebAssignment
                 errorMsg.ForeColor = Color.Green;
                 errorMsg.Visible = true;
             }
+            else if (Request.QueryString["message"] == "RegistrationSuccess")
+            {
+                errorMsg.Text = "User successfully registered";
+                errorMsg.ForeColor = Color.Green;
+                errorMsg.Visible = true;
+            }
         }
 
         protected void btnSubmit_Click(object sender, EventArgs e)

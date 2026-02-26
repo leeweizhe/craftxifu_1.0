@@ -19,17 +19,18 @@ namespace WebAssignment.Lee_Wei_Zhe.myClass
             return BCrypt.Net.BCrypt.HashPassword(plainTextOtp);
         }
 
-        public static void SaveOtpToDb(int userId, string otpHash, DateTime expirationTime, string connString)
+        public static void SaveOtpToDb(string email, string otpHash, string purpose, DateTime expirationTime, string connString)
         {
-            string query = @"INSERT INTO EmailOtp (UserId, OtpHash, ExpiresAt, IsUsed, Attempts, CreatedAt) 
-                             VALUES (@UserId, @OtpHash, @ExpiresAt, 0, 0, GETDATE())";
+            string query = @"INSERT INTO EmailOtp (Email, OtpHash, ExpiresAt, IsUsed, Purpose, CreatedAt) 
+                             VALUES (@Email, @OtpHash, @ExpiresAt, 0, @Purpose, GETDATE())";
 
             using (SqlConnection conn = new SqlConnection(connString))
             {
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
-                    cmd.Parameters.AddWithValue("@UserId", userId);
+                    cmd.Parameters.AddWithValue("@Email", email);
                     cmd.Parameters.AddWithValue("@OtpHash", otpHash);
+                    cmd.Parameters.AddWithValue("@Purpose", purpose);
                     cmd.Parameters.AddWithValue("@ExpiresAt", expirationTime);
 
                     conn.Open();
