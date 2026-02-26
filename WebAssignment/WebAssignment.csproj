@@ -89,9 +89,13 @@
       <DependentUpon>WebDatabase.mdf</DependentUpon>
     </Content>
     <Content Include="images\profiles\DPick.jpg" />
+    <Content Include="Lee Wei Zhe\aspx\BeginnerGuide.aspx" />
     <Content Include="Lee Wei Zhe\aspx\ForgotPass.aspx" />
     <Content Include="Lee Wei Zhe\aspx\Home.aspx" />
     <Content Include="Lee Wei Zhe\aspx\RegistrationPage.aspx" />
+    <Content Include="Lee Wei Zhe\aspx\ResetPassword.aspx" />
+    <Content Include="Lee Wei Zhe\aspx\VerifyOtpFp.aspx" />
+    <Content Include="Lee Wei Zhe\css\BeginnerGuide.css" />
     <Content Include="Lee Wei Zhe\css\RegistrationPage.css" />
     <Content Include="Lee Wei Zhe\css\Login.css" />
     <Content Include="images\backgrounds\Dirt_texture.jpg" />
@@ -107,6 +111,13 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Lee Wei Zhe\aspx\BeginnerGuide.aspx.cs">
+      <DependentUpon>BeginnerGuide.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Lee Wei Zhe\aspx\BeginnerGuide.aspx.designer.cs">
+      <DependentUpon>BeginnerGuide.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Lee Wei Zhe\aspx\ForgotPass.aspx.cs">
       <DependentUpon>ForgotPass.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -135,6 +146,22 @@
     <Compile Include="Lee Wei Zhe\aspx\RegistrationPage.aspx.designer.cs">
       <DependentUpon>RegistrationPage.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Lee Wei Zhe\aspx\ResetPassword.aspx.cs">
+      <DependentUpon>ResetPassword.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Lee Wei Zhe\aspx\ResetPassword.aspx.designer.cs">
+      <DependentUpon>ResetPassword.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Lee Wei Zhe\aspx\VerifyOtpFp.aspx.cs">
+      <DependentUpon>VerifyOtpFp.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Lee Wei Zhe\aspx\VerifyOtpFp.aspx.designer.cs">
+      <DependentUpon>VerifyOtpFp.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Lee Wei Zhe\myClass\EmailHelper.cs" />
+    <Compile Include="Lee Wei Zhe\myClass\OtpHelper.cs" />
     <Compile Include="Site.Master.cs">
       <DependentUpon>Site.Master</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

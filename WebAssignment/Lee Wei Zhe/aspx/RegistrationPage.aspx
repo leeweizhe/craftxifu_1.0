@@ -65,7 +65,7 @@
         </span>
     </div>
 
-    <asp:Label id="errorMsg" runat="server" Visible="False">geh</asp:Label>
+    <asp:Label id="errorMsg" runat="server" Visible="False">err</asp:Label>
 
     <asp:Button ID="btnRegister" runat="server" Text="Register" OnClick="btnRegister_Click"/>
 

@@ -14,7 +14,12 @@ namespace WebAssignment
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-
+            if (Request.QueryString["message"] == "PasswordResetSuccess")
+            {
+                errorMsg.Text = "Password successfully changed";
+                errorMsg.ForeColor = Color.Green;
+                errorMsg.Visible = true;
+            }
         }
 
         protected void btnSubmit_Click(object sender, EventArgs e)

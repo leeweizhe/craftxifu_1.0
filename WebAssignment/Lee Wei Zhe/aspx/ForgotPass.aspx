@@ -20,4 +20,5 @@
         <asp:LinkButton class="normal-link" id="lnkLogin" runat="server" OnClick="lnkLogin_Click">Back to Login</asp:LinkButton>
         <asp:LinkButton class="normal-link" id="lnkRegister" runat="server" OnClick="lnkRegister_Click" >New? Register here</asp:LinkButton>
     </div>
+
 </asp:Content>
