@@ -15,6 +15,7 @@
     margin-bottom: 20px;
 }
 
+
 .input-section {
     position: relative;
     margin: 10px 20px 10px;
@@ -22,50 +23,97 @@
     width: 100%;
 }
 
-.input-section label {
+    .input-section label {
+        position: absolute;
+        left: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 1rem;
+        pointer-events: none;
+        transition: all 0.3s ease;
+    }
+
+    .input-section input {
+        background-color: #d5d5d5;    
+        height: 100%;                   
+        width: 100%;
+        padding: 20px 10px 5px 10px;
+        border-radius: 8px;
+        border: 1px solid #808080;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        box-sizing: border-box;
+    }
+
+
+        .input-section input:focus ~ label, 
+        .input-section input:not(:placeholder-shown) ~ label {
+            top: 5px;                      /*move to top*/
+            transform: translateY(0);       /*no need to shift up annymore*/
+            font-size: 0.75rem;             /*shrink label*/
+        }
+
+        /*change label color*/
+        .input-section input:not(:placeholder-shown) ~ label {
+            color: black; 
+        }
+
+        .input-section input:focus ~ label {
+            color: #00b63b;
+        }
+
+        /*textbox change from grey stop while, border green*/
+        .input-section input:focus,
+        .input-section input:not(:placeholder-shown) {
+            border-color: #00b63b;
+            background-color: white;
+            outline: none;
+        }
+
+.password-toggle {
     position: absolute;
-    left: 10px;
-    top: 50%;
+    right: 10px;
+    top: 55%;
     transform: translateY(-50%);
-    font-size: 1rem;
-    pointer-events: none;
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    z-index: 10;
     transition: all 0.3s ease;
 }
 
-.input-section input {
-    background-color: #d5d5d5;      /*grey*/
-    height: 100%;                   
-    width: 100%;
-    padding: 20px 10px 5px 10px;
-    border-radius: 8px;
-    border: 1px solid #808080;
-    font-size: 1rem;
+    .eye-open {
+        opacity: 0;
+        transform: scale(0.5);
+    }
+
+    .eye-close {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    .password-toggle.active .eye-open {
+        opacity: 1;
+        transform: scale(1)
+    }
+
+    .password-toggle.active .eye-close {
+        opacity: 0;
+        transform: scale(0.5)
+    }
+
+    .password-toggle:hover {
+        transform: scale(1.10) translateY(-45%);
+        color: dimgrey;
+    }
+
+
+.password-toggle i {
+    position: absolute;
+    top: 0;
+    left: 0;
+    font-size: 1.2rem;
     transition: all 0.3s ease;
-    box-sizing: border-box;
-}
-
-
-.input-section input:focus ~ label, 
-.input-section input:not(:placeholder-shown) ~ label {
-    top: 5px;                      /*move to top*/
-    transform: translateY(0);       /*no need to shit up annymore*/
-    font-size: 0.75rem;             /*shrink label*/
-}
-
-/*change label color*/
-.input-section input:not(:placeholder-shown) ~ label {
-    color: black; 
-}
-
-.input-section input:focus ~ label {
-    color: #00b63b;
-}
-
-/*textbox change from grey stop while, border green*/
-.input-section input:focus { 
-    border-color: #00b63b;
-    background-color: white;
-    outline: none;
 }
 
 .login-container input[type="submit"] {
@@ -81,55 +129,11 @@
     transition: all 0.3s ease;
 }
 
-.password-toggle {
-    position: absolute;
-    right: 10px;
-    top: 55%;
-    transform: translateY(-50%);
-    width: 24px;
-    height: 24px;
-    cursor: pointer;
-    z-index: 10;
-    transition: all 0.3s ease;
-}
 
-.password-toggle i {
-    position: absolute;
-    top: 0;
-    left: 0;
-    font-size: 1.2rem;
-    transition: all 0.3s ease;
-}
-
-.password-toggle:hover {
-    transform: scale(1.10) translateY(-45%);
-    color: dimgrey;
-}
-
-.eye-open {
-    opacity: 0;
-    transform: scale(0.5);
-}
-
-.eye-close {
-    opacity: 1;
-    transform: scale(1);
-}
-
-.password-toggle.active .eye-open {
-    opacity: 1;
-    transform: scale(1)
-}
-
-.password-toggle.active .eye-close {
-    opacity: 0;
-    transform: scale(0.5)
-}
-
-.login-container input[type="submit"]:hover {
-    background-color: #00b63b;
-    transform: scale(1.05);
-}
+    .login-container input[type="submit"]:hover {
+        background-color: #00b63b;
+        transform: scale(1.05);
+    }
 
 .normal-link {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -146,3 +150,80 @@
         color: #007bff;
     }
 
+.static-label {
+    top: 5px !important;
+    transform: translateY(0) !important;
+    font-size: 0.75rem !important;
+    color: black !important;
+    z-index: 10;
+    transition: all 0.3s ease;
+}
+
+.input-section:focus-within .static-label {
+    color: #00b63b !important;
+}
+
+/* Bonus: Turn the Gender box's border green to match your textboxes! */
+.input-section.gender-box:focus-within {
+    border-color: #00b63b;
+    background-color: white;
+}
+
+/* 2. Fix the Country Dropdown to look like the textboxes */
+.input-section select.country-dropdown {
+    background-color: #d5d5d5;
+    height: 100%;
+    width: 100%;
+    padding: 20px 10px 5px 10px;
+    border-radius: 8px;
+    border: 1px solid #808080;
+    font-size: 1rem;
+    box-sizing: border-box;
+    font-family: 'Minecraft', sans-serif;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+    /* Change dropdown border to green when clicked */
+    .input-section select.country-dropdown:focus {
+        border-color: #00b63b;
+        background-color: white;
+        outline: none;
+    }
+
+/* 3. Make the Gender section a grey box */
+.gender-box {
+    background-color: #d5d5d5;
+    border-radius: 8px;
+    border: 1px solid #808080;
+}
+
+/* 4. Position the Radio Buttons properly inside the box */
+.radio-options {
+    position: absolute;
+    bottom: 5px; /* Pushes the dots down away from the "Gender" label */
+    left: 10px;
+}
+
+    /* Stop the "Male" and "Female" text from stacking in the middle! */
+    .radio-options label {
+        position: static !important;
+        transform: none !important;
+        font-size: 1rem !important;
+        pointer-events: auto !important; /* Makes the text clickable */
+        margin-left: 5px;
+        margin-right: 30px; 
+    }
+
+    /* Stop the radio dots from trying to be 100% width/height */
+    .radio-options input[type="radio"] {
+        height: auto !important;
+        width: auto !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        cursor: pointer;
+    }
+
+.input-section.gender-box:has(input[type="radio"]:checked) {
+    background-color: white;
+}

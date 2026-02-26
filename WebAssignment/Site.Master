@@ -16,9 +16,9 @@
         <nav>
             <ul class="main-nav">
                 <li><a class="main-link">Home</a></li>
-                <li><a class="main-link">Post</a></li>
                 <li><a class="main-link">Guide</a></li>
-                <li><a class="main-link">Donate Us</a></li>
+                <li><a class="main-link">Minigame</a></li>
+                <li><a class="main-link">Live Stream</a></li>
 
                 <li class="move-right dropdown-parent">
                     <a  class="main-link"><img src="/images/troll.jpg" class="profile-pic"/><span>Purple</span></a>
