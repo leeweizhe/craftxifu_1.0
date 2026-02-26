@@ -1,14 +1,14 @@
 ﻿using System;
-using System.Data.SqlClient;
-using System.Configuration;
-using System.Text.RegularExpressions;
-using System.Drawing;        // Needed for changing error message color
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data.SqlClient;
+using System.Drawing;        // Needed for changing error message color
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using WebAssignment.Lee_Wei_Zhe.myClass;
 
 namespace WebAssignment.Lee_Wei_Zhe.aspx
 {
@@ -17,7 +17,20 @@ namespace WebAssignment.Lee_Wei_Zhe.aspx
         protected void Page_Load(object sender, EventArgs e)
         {
             errorMsg.Visible = false;
+            if (!IsPostBack)
+            {
+                if (Session["RegEmail"] != null)
+                {
+                    txtFname.Text = Session["RegFName"].ToString();
+                    txtLname.Text = Session["RegLName"].ToString();
+                    txtEmail.Text = Session["RegEmail"].ToString();
+                    txtUsername.Text = Session["RegUsername"].ToString();
+                    rblGender.SelectedValue = Session["RegGender"].ToString();
+                    ddlCountry.SelectedValue = Session["RegCountry"].ToString();
+                }
+            }
         }
+
 
         protected void btnRegister_Click(object sender, EventArgs e)
         {
@@ -38,13 +51,13 @@ namespace WebAssignment.Lee_Wei_Zhe.aspx
 
             if (string.IsNullOrEmpty(gender))
             {
-                ShowError("Please select both your Gender!");
+                ShowError("Please select your Gender!");
                 return;
             }
 
             if (string.IsNullOrEmpty(country))
             {
-                ShowError("Please select both your Country!");
+                ShowError("Please select your Country!");
                 return;
             }
 
@@ -64,14 +77,17 @@ namespace WebAssignment.Lee_Wei_Zhe.aspx
 
             try
             {
-                using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString))
+                string connString = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
+                using (SqlConnection conn = new SqlConnection(connString))
                 {
                     conn.Open();
+
+                    // 1. Check if Username exists
                     string checkUserQuery = "SELECT COUNT(*) FROM userTable WHERE Username = @Username";
                     using (SqlCommand cmdUser = new SqlCommand(checkUserQuery, conn))
                     {
                         cmdUser.Parameters.AddWithValue("@Username", username);
-                        int userCount = (int)cmdUser.ExecuteScalar(); // ExecuteScalar grabs the single number result
+                        int userCount = (int)cmdUser.ExecuteScalar();
                         if (userCount > 0)
                         {
                             ShowError("That username is already taken. Please choose another.");
@@ -79,6 +95,7 @@ namespace WebAssignment.Lee_Wei_Zhe.aspx
                         }
                     }
 
+                    // 2. Check if Email exists
                     string checkEmailQuery = "SELECT COUNT(*) FROM userTable WHERE Email = @Email";
                     using (SqlCommand cmdEmail = new SqlCommand(checkEmailQuery, conn))
                     {
@@ -91,36 +108,45 @@ namespace WebAssignment.Lee_Wei_Zhe.aspx
                         }
                     }
 
-                    // Create your SQL Query. 
-                    // We use @ parameters to PREVENT SQL INJECTION attacks. Never concatenate strings for SQL!
+                    // --- NEW OTP LOGIC STARTS HERE ---
+
+                    // 3. Hash the password immediately for safety
                     string hashedPassword = BCrypt.Net.BCrypt.HashPassword(password);
 
-                    string query = @"INSERT INTO userTable (FName, LName, Email, Gender, Country, Username, Password) 
-                                     VALUES (@FName, @LName, @Email, @Gender, @Country, @Username, @Password)";
+                    // 4. Save all validated data to Session to be inserted LATER on VerifyEmail page
+                    Session["RegFName"] = fName;
+                    Session["RegLName"] = lName;
+                    Session["RegEmail"] = email;
+                    Session["RegGender"] = gender;
+                    Session["RegCountry"] = country;
+                    Session["RegUsername"] = username;
+                    Session["RegPassword"] = hashedPassword;
 
-                    using (SqlCommand cmd = new SqlCommand(query, conn))
-                    {
+                    // 5. Generate a 6-digit OTP
+                    string otp = OtpHelper.GenerateNumericOtp();
+                    string otpHash = OtpHelper.HashOtp(otp);
+                    string purpose = "Registration";
+                    DateTime expiresAt = DateTime.Now.AddMinutes(10);
 
-                        cmd.Parameters.AddWithValue("@FName", fName);
-                        cmd.Parameters.AddWithValue("@LName", lName);
-                        cmd.Parameters.AddWithValue("@Email", email);
-                        cmd.Parameters.AddWithValue("@Gender", gender);
-                        cmd.Parameters.AddWithValue("@Country", country);
-                        cmd.Parameters.AddWithValue("@Username", username);
+                    OtpHelper.SaveOtpToDb(email, otpHash, purpose, expiresAt, connString);
+                    EmailHelper.SendOtpEmail(email, otp);
+                    // 6. Save the OTP to the new EmailOtp table
+                    //string otpQuery = "INSERT INTO EmailOtp (Email, OtpHash, Purpose, Expiration) VALUES (@OtpEmail, @OtpHash, @Purpose, @ExpiresAt)";
+                    //using (SqlCommand cmdOtp = new SqlCommand(otpQuery, conn))
+                    //{
+                    //    cmdOtp.Parameters.AddWithValue("@OtpEmail", email);
+                    //    cmdOtp.Parameters.AddWithValue("@OtpCode", otpHash);
+                    //    cmdOtp.Parameters.AddWithValue("@Purpose", purpose);
+                    //    cmdOtp.Parameters.AddWithValue("@ExpiresAt", expiresAt);
+                    //    cmdOtp.ExecuteNonQuery();
+                    //}
 
-                        cmd.Parameters.AddWithValue("@Password", hashedPassword);
-
-                        cmd.ExecuteNonQuery();
-                    }
                     conn.Close();
+                    Response.Redirect("VerifyOtpR.aspx");
                 }
-
-                // If successful, redirect them to the login page!
-                Response.Redirect("Login.aspx");
             }
             catch (Exception ex)
             {
-                // If the database crashes or username already exists, show the error
                 ShowError("Registration failed: " + ex.Message);
             }
         }
