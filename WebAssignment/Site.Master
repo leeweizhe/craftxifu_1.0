@@ -19,6 +19,7 @@
                 <li><a class="main-link">Guide</a></li>
                 <li><a class="main-link">Minigame</a></li>
                 <li><a class="main-link">Live Stream</a></li>
+                <li><a href="/Wong Zhang Zhe/ContactUs.aspx" class="main-link">Contact US</a></li>
 
                 <asp:PlaceHolder ID="phVisitor" runat="server">
                     <li class="move-right">
