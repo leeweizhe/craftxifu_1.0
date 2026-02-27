@@ -1,179 +1,122 @@
-﻿<%@ Page Language="C#" %>
+﻿<%@ Page Title="Auto Farm Guides" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" %>
+<%@ Import Namespace="System.Data" %>
+<%@ Import Namespace="System.Data.SqlClient" %>
+<%@ Import Namespace="System.Configuration" %>
 
-<!DOCTYPE html>
 <script runat="server">
     protected void Page_Load(object sender, EventArgs e)
     {
-        // 检查用户是否登录 (Check if user is logged in)
-        // 实际运行时，Session["UserID"] 会在 Login.aspx 登录成功后设置
-        bool IsLoggedIn = (Session["UserID"] != null);
+        if (!IsPostBack)
+        {
+            // 默认显示分类面板
+            categoryPanel.Visible = true;
+            subFarmPanel.Visible = false;
+        }
+    }
 
-        // 根据权限控制反馈区域的显示
-        phMemberFeedback.Visible = IsLoggedIn;
-        lblVisitorNotice.Visible = !IsLoggedIn;
+    // 点击分类卡片触发的事件
+    protected void SelectCategory(object sender, EventArgs e)
+    {
+        LinkButton btn = (LinkButton)sender;
+        string category = btn.CommandArgument; // 获取点击的是哪个分类
+        
+        lblCategoryTitle.Text = category + " Farms Database";
+        LoadFarmsByCategory(category);
+        
+        categoryPanel.Visible = false;
+        subFarmPanel.Visible = true;
+    }
+
+    private void LoadFarmsByCategory(string category)
+    {
+        string connString = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
+        using (SqlConnection conn = new SqlConnection(connString))
+        {
+            // 从数据库根据分类查询所有农场
+            string sql = "SELECT * FROM farmTable WHERE Category = @cat";
+            SqlCommand cmd = new SqlCommand(sql, conn);
+            cmd.Parameters.AddWithValue("@cat", category);
+            
+            SqlDataAdapter da = new SqlDataAdapter(cmd);
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+            
+            // 绑定到 Repeater 控件显示
+            farmRepeater.DataSource = dt;
+            farmRepeater.DataBind();
+        }
+    }
+
+    protected void BackToCategories(object sender, EventArgs e)
+    {
+        categoryPanel.Visible = true;
+        subFarmPanel.Visible = false;
     }
 </script>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head runat="server">
-    <title>CraftXiFu - Auto Farm Guides</title>
+<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <style type="text/css">
-        /* Minecraft 风格 CSS 样式 */
-        body { 
-            background-color: #313233; 
-            color: #FFFFFF; 
-            font-family: 'Segoe UI', Arial, sans-serif; 
-            margin: 0; padding: 20px;
-        }
-
-        .container { max-width: 1000px; margin: auto; }
-
-        /* 搜索栏样式 */
-        .search-section {
-            background: #C6C6C6;
-            border: 4px solid #555;
-            padding: 15px;
-            display: flex;
-            gap: 10px;
-            margin-bottom: 30px;
-        }
-        .mc-input { 
-            flex-grow: 1; 
-            border: 2px solid #373737; 
-            padding: 10px; 
-            background: #FFF;
-        }
-
-        /* 选项卡样式 - 模拟 Minecraft 快捷栏 (Hotbar) */
-        .tabs-row { display: flex; gap: 5px; margin-bottom: 20px; }
-        .tab-item {
-            background: #8B8B8B;
-            border: 4px solid #373737;
-            padding: 10px 20px;
-            cursor: pointer;
-            font-weight: bold;
-            color: #DDD;
-        }
-        .tab-item.active { background: #C6C6C6; color: #000; border-color: #FFF; }
-
-        /* 卡片网格布局 */
-        .farm-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 25px;
-        }
-
-        .farm-card {
-            background: #C6C6C6;
-            border: 4px solid #1E1E1E;
-            color: #333;
-            position: relative;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .card-img { width: 100%; height: 180px; background: #555; object-fit: cover; }
-        .card-body { padding: 15px; flex-grow: 1; }
-
-        /* 难度标签样式 */
-        .badge {
-            position: absolute; top: 10px; left: 10px;
-            padding: 5px 10px; font-weight: bold; color: #FFF;
-            border: 2px solid #000;
-        }
-        .easy { background: #3c8527; }
-        .medium { background: #e28e00; }
-        .hard { background: #aa0000; }
-
-        /* 锁定覆盖层 (针对 Visitor) */
-        .lock-overlay {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.85);
-            display: flex; flex-direction: column;
-            justify-content: center; align-items: center;
-            color: #FFD700; text-align: center; padding: 10px;
-            z-index: 10;
-        }
-
-        /* 按钮样式 */
-        .mc-button {
-            background: #8B8B8B;
-            border: 3px solid #000;
-            color: white;
-            padding: 8px 15px;
-            cursor: pointer;
-            box-shadow: inset -3px -3px #5A5A5A;
-        }
-        .mc-button:hover { background: #C6C6C6; color: #000; }
+        .farm-container { width: 90%; margin: 30px auto; color: #fff; }
+        .page-title { font-size: 2.5rem; color: #68ff00; text-transform: uppercase; border-bottom: 4px solid #68ff00; padding-bottom: 10px; margin-bottom: 30px; }
+        .farm-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+        
+        /* 分类卡片样式 */
+        .category-card { background: rgba(0,0,0,0.8); border: 3px solid #444; padding: 20px; cursor: pointer; text-decoration: none; display: block; transition: 0.3s; text-align: center; }
+        .category-card:hover { border-color: #68ff00; transform: scale(1.05); }
+        .category-card h2 { color: #68ff00; text-transform: uppercase; margin: 15px 0; }
+        
+        /* 从数据库加载的农场列表样式 */
+        .sub-farm-card { background: #1a1a1a; border-left: 5px solid #68ff00; padding: 15px; margin-bottom: 15px; display: flex; gap: 20px; align-items: center; }
+        .sub-farm-card img { width: 120px; height: 80px; object-fit: cover; border: 1px solid #333; }
+        .details-link { background: #68ff00; color: #000; padding: 5px 15px; text-decoration: none; font-weight: bold; font-size: 0.9rem; }
+        
+        .back-btn { color: #fbbf24; cursor: pointer; text-decoration: underline; margin-bottom: 20px; display: inline-block; }
     </style>
-</head>
-<body>
-    <form id="form1" runat="server">
-        <div class="container">
-            <h1 style="text-shadow: 2px 2px #000;">[CraftXiFu] Automated Farms</h1>
+</asp:Content>
 
-            <div class="search-section">
-                <asp:TextBox ID="txtSearch" runat="server" CssClass="mc-input" placeholder="Search for farms (Iron, Gold, etc.)..." />
-                <asp:Button ID="btnSearch" runat="server" Text="SEARCH" CssClass="mc-button" />
-            </div>
-
-            <div class="tabs-row">
-                <div class="tab-item active">IRON (刷铁机)</div>
-                <div class="tab-item">STONE (刷石机)</div>
-                <div class="tab-item">MOB (刷怪)</div>
-                <div class="tab-item">FOOD (食物)</div>
-            </div>
-
+<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
+    <div class="farm-container">
+        
+        <%-- 面板 1：分类选择 --%>
+        <asp:Panel ID="categoryPanel" runat="server">
+            <h1 class="page-title">Farm Categories</h1>
             <div class="farm-grid">
-                
-                <div class="farm-card">
-                    <div class="badge easy">EASY</div>
-                    <img src="https://via.placeholder.com/300x180?text=Simple+Iron+Farm" class="card-img" alt="Iron Farm" />
-                    <div class="card-body">
-                        <h3>Village Iron Golem Farm</h3>
-                        <p>适合生存初期的简易刷铁机，仅需3名村民。 [cite: 7]</p>
-                        <div style="font-size: 0.8em; color: #555;">👍 150 Likes</div>
-                    </div>
-                </div>
+                <asp:LinkButton ID="btnIron" runat="server" CssClass="category-card" CommandArgument="Iron" OnClick="SelectCategory">
+                    <img src="/images/icons/iron_ingot.png" style="width:64px;"/>
+                    <h2>Iron Farms</h2>
+                    <p>Endless iron for beacons and hoppers.</p>
+                </asp:LinkButton>
 
-                <div class="farm-card">
-                    <div class="badge hard">HARD</div>
-                    
-                    <%-- 逻辑判断：如果用户未登录，显示锁定层 --%>
-                    <% if (Session["UserID"] == null) { %>
-                    <div class="lock-overlay">
-                        <h2 style="margin:0;">🔒 LOCKED</h2>
-                        <p>Deep-dive guides are for members only. [cite: 13]</p>
-                        <asp:HyperLink runat="server" NavigateUrl="Login.aspx" CssClass="mc-button" Text="LOGIN TO UNLOCK" />
-                    </div>
-                    <% } %>
-
-                    <img src="https://via.placeholder.com/300x180?text=Mega+Iron+Titan" class="card-img" alt="Hard Farm" />
-                    <div class="card-body">
-                        <h3>Iron Titan v2.0</h3>
-                        <p>高效率工业刷铁机，每小时产出极高。 [cite: 9]</p>
-                    </div>
-                </div>
-
+                <asp:LinkButton ID="btnGold" runat="server" CssClass="category-card" CommandArgument="Gold" OnClick="SelectCategory">
+                    <img src="/images/icons/gold_ingot.png" style="width:64px;"/>
+                    <h2>Gold Farms</h2>
+                    <p>Automated XP and bartering gold.</p>
+                </asp:LinkButton>
             </div>
+        </asp:Panel>
 
-            <div style="margin-top: 40px; padding: 20px; background: #444; border: 4px solid #000;">
-                <h2 style="margin-top:0;">Community Feedback</h2>
-                
-                <asp:PlaceHolder ID="phMemberFeedback" runat="server">
-                    <p>Share your tips or ask questions about these farms: [cite: 19]</p>
-                    <asp:TextBox ID="txtComment" runat="server" TextMode="MultiLine" Rows="3" Width="100%" CssClass="mc-input" />
-                    <br /><br />
-                    <asp:Button ID="btnPost" runat="server" Text="POST COMMENT" CssClass="mc-button" />
-                </asp:PlaceHolder>
+        <%-- 面板 2：详细农场列表 (从数据库获取数据) --%>
+        <asp:Panel ID="subFarmPanel" runat="server">
+            <asp:LinkButton ID="btnBack" runat="server" OnClick="BackToCategories" CssClass="back-btn"><< Back to Categories</asp:LinkButton>
+            <h1 class="page-title"><asp:Label ID="lblCategoryTitle" runat="server" /></h1>
+            
+            <asp:Repeater ID="farmRepeater" runat="server">
+                <ItemTemplate>
+                    <div class="sub-farm-card">
+                        <img src='<%# Eval("Thumbnail") %>' />
+                        <div style="flex-grow:1;">
+                            <h3 style="color:#fbbf24;"><%# Eval("Title") %></h3>
+                            <p style="font-size:0.9rem; color:#ccc;"><%# Eval("Description") %></p>
+                        </div>
+                        <div style="text-align:right;">
+                            <span style="display:block; margin-bottom:10px;">EFFICIENCY: <b style="color:#68ff00;"><%# Eval("Efficiency") %></b></span>
+                            <%-- 这里点击后跳转到详细教学页，并带上 FarmId --%>
+                            <a href='FarmDetails.aspx?id=<%# Eval("FarmId") %>' class="details-link">VIEW TUTORIAL</a>
+                        </div>
+                    </div>
+                </ItemTemplate>
+            </asp:Repeater>
+        </asp:Panel>
 
-                <asp:Label ID="lblVisitorNotice" runat="server" ForeColor="#FFD700" Font-Bold="true">
-                    Notice: Please sign in to leave feedback or likes. [cite: 94]
-                </asp:Label>
-            </div>
-
-        </div>
-    </form>
-</body>
-</html>
+    </div>
+</asp:Content>

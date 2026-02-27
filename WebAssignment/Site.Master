@@ -15,7 +15,7 @@
     <form id="form1" runat="server">
         <nav>
             <ul class="main-nav">
-                <li><a class="main-link">Home</a></li>
+                <li><a href="/Wong Zhang Zhe/Home.aspx" class="main-link">Home</a></li>
                 <li><a class="main-link">Guide</a></li>
                 <li><a class="main-link">Minigame</a></li>
                 <li><a class="main-link">Live Stream</a></li>
