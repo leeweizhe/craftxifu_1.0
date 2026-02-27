@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data.SqlClient;
-using System.Drawing;        // Needed for changing error message color
+using System.Drawing; 
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web;
@@ -19,7 +19,7 @@ namespace WebAssignment.Lee_Wei_Zhe.aspx
             errorMsg.Visible = false;
             if (!IsPostBack)
             {
-                if (Session["RegEmail"] != null)
+                if (Session["RegEmail"] != null) //auto load back
                 {
                     txtFname.Text = Session["RegFName"].ToString();
                     txtLname.Text = Session["RegLName"].ToString();
@@ -130,16 +130,6 @@ namespace WebAssignment.Lee_Wei_Zhe.aspx
 
                     OtpHelper.SaveOtpToDb(email, otpHash, purpose, expiresAt, connString);
                     EmailHelper.SendOtpEmail(email, otp);
-                    // 6. Save the OTP to the new EmailOtp table
-                    //string otpQuery = "INSERT INTO EmailOtp (Email, OtpHash, Purpose, Expiration) VALUES (@OtpEmail, @OtpHash, @Purpose, @ExpiresAt)";
-                    //using (SqlCommand cmdOtp = new SqlCommand(otpQuery, conn))
-                    //{
-                    //    cmdOtp.Parameters.AddWithValue("@OtpEmail", email);
-                    //    cmdOtp.Parameters.AddWithValue("@OtpCode", otpHash);
-                    //    cmdOtp.Parameters.AddWithValue("@Purpose", purpose);
-                    //    cmdOtp.Parameters.AddWithValue("@ExpiresAt", expiresAt);
-                    //    cmdOtp.ExecuteNonQuery();
-                    //}
 
                     conn.Close();
                     Response.Redirect("VerifyOtpR.aspx");
@@ -153,7 +143,7 @@ namespace WebAssignment.Lee_Wei_Zhe.aspx
 
         protected void lnkHaveAccount_Click(object sender, EventArgs e)
         {
-            Response.Redirect("Login.aspx");
+            Response.Redirect("~/Lee Wei Zhe/aspx/Login.aspx");
         }
 
         private void ShowError(string message)

@@ -17,7 +17,7 @@ namespace WebAssignment.Lee_Wei_Zhe.aspx
         {
             if (Session["RegEmail"] == null)
             {
-                Response.Redirect("Home.aspx");
+                Response.Redirect("~/Wong Zhang Zhe/Home.aspx");
             }
         }
 
@@ -75,7 +75,7 @@ namespace WebAssignment.Lee_Wei_Zhe.aspx
                                     cmdInsert.Parameters.AddWithValue("@Password", Session["RegPassword"].ToString()); // This is already hashed!
 
                                     cmdInsert.ExecuteNonQuery();
-                                    Response.Redirect("Login.aspx?message=RegistrationSuccess");
+                                    Response.Redirect("~/Lee Wei Zhe/aspx/Login.aspx?message=RegistrationSuccess");
                                 }
                             }
                             else
@@ -90,7 +90,7 @@ namespace WebAssignment.Lee_Wei_Zhe.aspx
 
         protected void lnkBack_Click(object sender, EventArgs e)
         {
-            Response.Redirect("RegistrationPage.aspx");
+            Response.Redirect("~/Lee Wei Zhe/aspx/RegistrationPage.aspx");
         }
 
         private void ShowError(string message)

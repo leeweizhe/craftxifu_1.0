@@ -88,10 +88,11 @@
     <Content Include="App_Data\WebDatabase_log.ldf">
       <DependentUpon>WebDatabase.mdf</DependentUpon>
     </Content>
+    <Content Include="images\frames\diamondFrame.jpg" />
+    <Content Include="images\frames\diamondFrame.png" />
     <Content Include="images\profiles\DPick.jpg" />
     <Content Include="Lee Wei Zhe\aspx\BeginnerGuide.aspx" />
     <Content Include="Lee Wei Zhe\aspx\ForgotPass.aspx" />
-    <Content Include="Lee Wei Zhe\aspx\Home.aspx" />
     <Content Include="Lee Wei Zhe\aspx\RegistrationPage.aspx" />
     <Content Include="Lee Wei Zhe\aspx\ResetPassword.aspx" />
     <Content Include="Lee Wei Zhe\aspx\VerifyOtpFp.aspx" />
@@ -119,6 +120,64 @@
     </Content>
     <Content Include="Wong Zhang Zhe\EditProfile.aspx" />
     <Content Include="Wong Zhang Zhe\Home.aspx" />
+    <Content Include="Wong Zhang Zhe\pic\1_iron.png" />
+    <Content Include="Wong Zhang Zhe\pic\food_icon.png" />
+    <Content Include="Wong Zhang Zhe\pic\gold_icon.png" />
+    <Content Include="Wong Zhang Zhe\pic\iron_1.png" />
+    <Content Include="Wong Zhang Zhe\pic\iron1M.png" />
+    <Content Include="Wong Zhang Zhe\pic\iron_2.png" />
+    <Content Include="Wong Zhang Zhe\pic\2_iron.png" />
+    <Content Include="Wong Zhang Zhe\pic\iron2M.png" />
+    <Content Include="Wong Zhang Zhe\pic\iron_3.png" />
+    <Content Include="Wong Zhang Zhe\pic\3_iron.png" />
+    <Content Include="Wong Zhang Zhe\pic\iron3M.png" />
+    <Content Include="Wong Zhang Zhe\pic\gold_1.png" />
+    <Content Include="Wong Zhang Zhe\pic\1_gold.png" />
+    <Content Include="Wong Zhang Zhe\pic\gold2M.png" />
+    <Content Include="Wong Zhang Zhe\pic\2_gold.png" />
+    <Content Include="Wong Zhang Zhe\pic\gold_2.png" />
+    <Content Include="Wong Zhang Zhe\pic\3_gold.png" />
+    <Content Include="Wong Zhang Zhe\pic\gold_3.png" />
+    <Content Include="Wong Zhang Zhe\pic\gold3M.png" />
+    <Content Include="Wong Zhang Zhe\pic\1_wood.png" />
+    <Content Include="Wong Zhang Zhe\pic\3_wood.png" />
+    <Content Include="Wong Zhang Zhe\pic\2_xp.png" />
+    <Content Include="Wong Zhang Zhe\pic\3_xp.png" />
+    <Content Include="Wong Zhang Zhe\pic\food_1.png" />
+    <Content Include="Wong Zhang Zhe\pic\food1M.png" />
+    <Content Include="Wong Zhang Zhe\pic\1_food.png" />
+    <Content Include="Wong Zhang Zhe\pic\food_2.png" />
+    <Content Include="Wong Zhang Zhe\pic\food2M.png" />
+    <Content Include="Wong Zhang Zhe\pic\2_food.png" />
+    <Content Include="Wong Zhang Zhe\pic\3_food.png" />
+    <Content Include="Wong Zhang Zhe\pic\food3M.png" />
+    <Content Include="Wong Zhang Zhe\pic\food_3.png" />
+    <Content Include="Wong Zhang Zhe\pic\1_stone.png" />
+    <Content Include="Wong Zhang Zhe\pic\3_stone.png" />
+    <Content Include="Wong Zhang Zhe\pic\iron_icon.png" />
+    <Content Include="Wong Zhang Zhe\pic\stone_3.png" />
+    <Content Include="Wong Zhang Zhe\pic\stone1M.png" />
+    <Content Include="Wong Zhang Zhe\pic\stone_1.png" />
+    <Content Include="Wong Zhang Zhe\pic\2_stone.png" />
+    <Content Include="Wong Zhang Zhe\pic\stone2M.png" />
+    <Content Include="Wong Zhang Zhe\pic\stone_2.png" />
+    <Content Include="Wong Zhang Zhe\pic\stone_icon.png" />
+    <Content Include="Wong Zhang Zhe\pic\wood_icon.png" />
+    <Content Include="Wong Zhang Zhe\pic\xp3M.png" />
+    <Content Include="Wong Zhang Zhe\pic\xp_3.png" />
+    <Content Include="Wong Zhang Zhe\pic\xp_2.png" />
+    <Content Include="Wong Zhang Zhe\pic\xp2M.png" />
+    <Content Include="Wong Zhang Zhe\pic\xp1M.png" />
+    <Content Include="Wong Zhang Zhe\pic\xp_1.png" />
+    <Content Include="Wong Zhang Zhe\pic\1_xp.png" />
+    <Content Include="Wong Zhang Zhe\pic\wood3M.png" />
+    <Content Include="Wong Zhang Zhe\pic\wood_3.png" />
+    <Content Include="Wong Zhang Zhe\pic\wood_2.png" />
+    <Content Include="Wong Zhang Zhe\pic\2_wood.png" />
+    <Content Include="Wong Zhang Zhe\pic\wood2M.png" />
+    <Content Include="Wong Zhang Zhe\pic\wood1M.png" />
+    <Content Include="Wong Zhang Zhe\pic\wood_1.png" />
+    <Content Include="Wong Zhang Zhe\pic\xp_icon.png" />
     <Content Include="Wong Zhang Zhe\Style.css" />
     <Content Include="Wong Zhang Zhe\UserProfile.aspx" />
     <Content Include="Wong Zhang Zhe\FarmDetails.aspx" />
@@ -137,13 +196,6 @@
     </Compile>
     <Compile Include="Lee Wei Zhe\aspx\ForgotPass.aspx.designer.cs">
       <DependentUpon>ForgotPass.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Lee Wei Zhe\aspx\Home.aspx.cs">
-      <DependentUpon>Home.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Lee Wei Zhe\aspx\Home.aspx.designer.cs">
-      <DependentUpon>Home.aspx</DependentUpon>
     </Compile>
     <Compile Include="Lee Wei Zhe\aspx\Login.aspx.cs">
       <DependentUpon>Login.aspx</DependentUpon>
