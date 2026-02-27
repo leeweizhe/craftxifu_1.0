@@ -1,234 +1,130 @@
-﻿<%@ Page Language="C#" %>
-<!DOCTYPE html>
-<html lang="en">
-<head runat="server">
-    <meta charset="UTF-8">
-    <title>My Profile | CraftXiFu</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --primary: #3c8527;
-            --bg-dark: #121212;
-            --card-bg: rgba(255, 255, 255, 0.05);
-            --border: rgba(255, 255, 255, 0.1);
-            --text-main: #ffffff;
-            --text-dim: #a0a0a0;
-        }
+﻿<%-- 1. 页面指令与母版页关联 --%>
+<%@ Page Title="User Profile" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" %>
 
-        body {
-            background-color: var(--bg-dark);
-            background-image: radial-gradient(circle at 50% 50%, #1a3a10 0%, #121212 100%);
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            color: var(--text-main);
-            margin: 0;
-            padding: 40px;
-        }
+<%-- 2. 导入命名空间，解决编译错误 --%>
+<%@ Import Namespace="System.Data" %>
+<%@ Import Namespace="System.Data.SqlClient" %>
+<%@ Import Namespace="System.Configuration" %>
 
-        .profile-wrapper {
-            max-width: 1000px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: 300px 1fr;
-            gap: 30px;
-        }
+<script runat="server">
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        // 临时设置测试 ID，防止未登录重定向
+        Session["UserId"] = 5;
 
-        /* Sidebar Profile Card */
-        .profile-side {
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            padding: 30px;
-            text-align: center;
-            backdrop-filter: blur(10px);
+        if (Session["UserId"] == null)
+        {
+            Response.Redirect("Login.aspx");
         }
-
-        .avatar-container {
-            width: 120px;
-            height: 120px;
-            margin: 0 auto 20px;
-            border: 3px solid var(--primary);
-            padding: 5px;
-            border-radius: 50%;
+        else if (!IsPostBack)
+        {
+            try {
+                int currentUserId = Convert.ToInt32(Session["UserId"]);
+                LoadUserData(currentUserId);
+            }
+            catch (Exception) {
+                Response.Redirect("Login.aspx");
+            }
         }
+    }
 
-        .avatar-container img {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            object-fit: cover;
-        }
+    private void LoadUserData(int userId)
+    {
+        // 使用 Web.config 中的 "ConnectionString"
+        var connSettings = ConfigurationManager.ConnectionStrings["ConnectionString"];
+        if (connSettings == null) return;
 
-        .user-role {
-            background: var(--primary);
-            color: white;
-            padding: 4px 12px;
-            font-size: 12px;
-            font-weight: 800;
-            border-radius: 20px;
-            text-transform: uppercase;
-        }
+        string connString = connSettings.ConnectionString;
 
-        /* Main Content Area */
-        .profile-main {
-            display: flex;
-            flex-direction: column;
-            gap: 25px;
-        }
+        using (SqlConnection conn = new SqlConnection(connString))
+        {
+            string sql = "SELECT * FROM userTable WHERE UserId = @id";
+            SqlCommand cmd = new SqlCommand(sql, conn);
+            cmd.Parameters.AddWithValue("@id", userId);
 
-        .section-card {
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            padding: 25px;
-            backdrop-filter: blur(10px);
-        }
+            conn.Open();
+            SqlDataReader reader = cmd.ExecuteReader();
 
-        .section-title {
-            font-size: 18px;
-            font-weight: 700;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .section-title::before {
-            content: '';
-            width: 4px;
-            height: 18px;
-            background: var(--primary);
-        }
-
-        .form-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
-
-        .input-group label {
-            display: block;
-            font-size: 13px;
-            color: var(--text-dim);
-            margin-bottom: 8px;
-        }
-
-        .modern-input {
-            width: 100%;
-            background: rgba(0,0,0,0.3);
-            border: 1px solid var(--border);
-            padding: 12px;
-            color: white;
-            font-family: inherit;
-            box-sizing: border-box;
-            transition: 0.3s;
-        }
-
-        .modern-input:focus {
-            outline: none;
-            border-color: var(--primary);
-            background: rgba(0,0,0,0.5);
-        }
-
-        .btn-update {
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 12px 30px;
-            font-weight: 700;
-            cursor: pointer;
-            margin-top: 10px;
-            transition: 0.3s;
-        }
-
-        .btn-update:hover {
-            background: #4ea334;
-            box-shadow: 0 0 20px rgba(60, 133, 39, 0.4);
-        }
-
-        /* Achievement Stats */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
-        }
-
-        .stat-item {
-            background: rgba(255,255,255,0.03);
-            padding: 15px;
-            text-align: center;
-            border: 1px solid var(--border);
-        }
-
-        .stat-value {
-            font-size: 24px;
-            font-weight: 800;
-            display: block;
-        }
-
-        .stat-label {
-            font-size: 12px;
-            color: var(--text-dim);
-            text-transform: uppercase;
-        }
-    </style>
-</head>
-<body>
-    <form id="profileForm" runat="server">
-        <div class="profile-wrapper">
-            <div class="profile-side">
-                <div class="avatar-container">
-                    <img src="https://api.dicebear.com/7.x/pixel-art/svg?seed=Zhangzhe" alt="User Avatar">
-                </div>
-                <h2 style="margin: 10px 0;">Zhangzhe Wong</h2>
-                <span class="user-role">Member</span>
-                <p style="color: var(--text-dim); font-size: 14px; margin-top: 20px;">
-                    Joined: Feb 2026
-                </p>
-            </div>
-
-            <div class="profile-main">
+            if (reader.Read())
+            {
+                // 将数据库数据绑定到 Label 控件
+                lblFullName.Text = reader["FName"].ToString() + " " + reader["LName"].ToString();
+                lblUsername.Text = "@" + reader["Username"].ToString();
+                lblEmail.Text = reader["Email"].ToString();
+                lblRole.Text = reader["Role"].ToString();
+                lblCountry.Text = reader["Country"].ToString();
+                lblCurrency.Text = reader["Currency"].ToString();
                 
-                <div class="section-card">
-                    <div class="section-title">Account Settings</div>
-                    <div class="form-grid">
-                        <div class="input-group">
-                            <label>Username</label>
-                            <asp:TextBox ID="txtUsername" runat="server" CssClass="modern-input" Text="Zhangzhe_W"></asp:TextBox>
-                        </div>
-                        <div class="input-group">
-                            <label>Email Address</label>
-                            <asp:TextBox ID="txtEmail" runat="server" CssClass="modern-input" Text="tp080517@mail.apu.edu.my"></asp:TextBox>
-                        </div>
-                        <div class="input-group">
-                            <label>New Password</label>
-                            <asp:TextBox ID="txtPass" runat="server" CssClass="modern-input" TextMode="Password" placeholder="Leave blank to keep current"></asp:TextBox>
-                        </div>
-                        <div class="input-group">
-                            <label>In-game Name (IGN)</label>
-                            <asp:TextBox ID="txtIGN" runat="server" CssClass="modern-input" placeholder="e.g. Dream"></asp:TextBox>
-                        </div>
-                    </div>
-                    <asp:Button ID="btnUpdate" runat="server" Text="Save Changes" CssClass="btn-update" />
-                </div>
+                // 处理 Bio 为空的情况
+                lblBio.Text = reader["Bio"] != DBNull.Value && !string.IsNullOrEmpty(reader["Bio"].ToString()) 
+                               ? reader["Bio"].ToString() : "No bio available.";
+                
+                // 绑定头像路径
+                imgAvatar.ImageUrl = reader["ProfilePicture"].ToString();
+            }
+            conn.Close();
+        }
+    }
 
-                <div class="section-card">
-                    <div class="section-title">Learning Progress</div>
-                    <div class="stats-grid">
-                        <div class="stat-item">
-                            <span class="stat-value">12</span>
-                            <span class="stat-label">Guides Read</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-value">5</span>
-                            <span class="stat-label">Auto Farms Mastered</span>
-                        </div>
-                        <div class="stat-item" style="border-color: var(--primary);">
-                            <span class="stat-value" style="color: var(--primary);">Level 4</span>
-                            <span class="stat-label">Survivalist</span>
-                        </div>
-                    </div>
-                </div>
+    // 处理跳转到编辑页面的逻辑
+    protected void btnGoToEdit_Click(object sender, EventArgs e)
+    {
+        // 使用相对路径跳转，前提是两个文件在同一文件夹
+        Response.Redirect("EditProfile.aspx"); 
+    }
+</script>
 
+<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+    <style type="text/css">
+        /* 保持 Minecraft 像素风格 UI */
+        .profile-box { background: rgba(0,0,0,0.9); border: 5px solid #464646; padding: 50px; width: 85%; margin: 40px auto; color: #FFF; box-shadow: 0 0 20px rgba(104, 255, 0, 0.3); }
+        .header-flex { display: flex; align-items: center; gap: 40px; border-bottom: 4px solid #68ff00; padding-bottom: 30px; }
+        .avatar-frame { width: 180px; height: 180px; border: 4px solid #68ff00; image-rendering: pixelated; object-fit: cover; }
+        .name-main { font-size: 3.5rem; color: #68ff00; margin: 0; }
+        .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 40px; }
+        .data-item { background: #111; padding: 25px; border: 2px solid #333; }
+        .label-text { color: #68ff00; font-size: 1.4rem; text-transform: uppercase; display: block; }
+        .value-text { font-size: 2.2rem; display: block; margin-top: 10px; }
+    </style>
+</asp:Content>
+
+<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
+    <div class="profile-box">
+        <div class="header-flex">
+            <asp:Image ID="imgAvatar" runat="server" CssClass="avatar-frame" />
+            <div>
+                <asp:Label ID="lblFullName" runat="server" CssClass="name-main" />
+                <br />
+                <asp:Label ID="lblUsername" runat="server" style="color:#999; font-size:1.8rem;" />
+                <br />
+                <span style="border: 2px solid #68ff00; padding: 5px 15px; color: #68ff00; font-size: 1.2rem; display: inline-block; margin-top: 10px;">
+                    Rank: <asp:Label ID="lblRole" runat="server" />
+                </span>
             </div>
         </div>
-    </form>
-</body>
-</html>
+
+        <div class="info-grid">
+            <div class="data-item">
+                <span class="label-text">Email Address</span>
+                <asp:Label ID="lblEmail" runat="server" CssClass="value-text" />
+            </div>
+            <div class="data-item">
+                <span class="label-text">Origin / Country</span>
+                <asp:Label ID="lblCountry" runat="server" CssClass="value-text" />
+            </div>
+            <div class="data-item">
+                <span class="label-text">Emerald Balance</span>
+                <asp:Label ID="lblCurrency" runat="server" CssClass="value-text" style="color:#fbbf24;" />
+            </div>
+            <div class="data-item">
+                <span class="label-text">Biography</span>
+                <asp:Label ID="lblBio" runat="server" CssClass="value-text" style="font-size:1.6rem;" />
+            </div>
+        </div>
+
+        <asp:Button ID="btnGoToEdit" runat="server" 
+            Text="[ EDIT CHARACTER INFO ]" 
+            style="margin-top:20px; background:none; border:2px solid #68ff00; color:#68ff00; padding:10px 20px; cursor:pointer; font-weight:bold;" 
+            OnClick="btnGoToEdit_Click" />
+    </div>
+</asp:Content>
