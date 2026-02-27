@@ -120,6 +120,7 @@
     <Content Include="Wong Zhang Zhe\Home.aspx" />
     <Content Include="Wong Zhang Zhe\Style.css" />
     <Content Include="Wong Zhang Zhe\UserProfile.aspx" />
+    <Content Include="Wong Zhang Zhe\FarmDetails.aspx" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Lee Wei Zhe\aspx\BeginnerGuide.aspx.cs">
@@ -204,6 +205,13 @@
     </Compile>
     <Compile Include="Wong Zhang Zhe\EditProfile.aspx.designer.cs">
       <DependentUpon>EditProfile.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Wong Zhang Zhe\FarmDetails.aspx.cs">
+      <DependentUpon>FarmDetails.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Wong Zhang Zhe\FarmDetails.aspx.designer.cs">
+      <DependentUpon>FarmDetails.aspx</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
