@@ -37,7 +37,7 @@ namespace WebAssignment
 
             using (SqlConnection con = new SqlConnection(connString))
             {
-                string query = "SELECT Password, FName, Role, UserId, ProfilePicture FROM userTable WHERE Username = @Username";
+                string query = "SELECT Password, FName, Role, UserId, ProfilePicture, AvatarFrame FROM userTable WHERE Username = @Username";
 
                 using (SqlCommand cmd = new SqlCommand(query, con))
                 {
@@ -58,8 +58,9 @@ namespace WebAssignment
                                 Session["userId"] = Convert.ToInt32(dr["UserId"]);
                                 Session["username"] = username;
                                 Session["profilePic"] = dr["ProfilePicture"].ToString().Trim();
+                                Session["avatarFrame"] = dr["AvatarFrame"] != DBNull.Value ? dr["AvatarFrame"].ToString() : "";
 
-                                Response.Redirect("BeginnerGuide.aspx");
+                                Response.Redirect("~/Wong Zhang Zhe/Home.aspx");
                             }
                             else
                             {
@@ -84,12 +85,12 @@ namespace WebAssignment
 
         protected void lnkForgetPassword_Click(object sender, EventArgs e)
         {
-            Response.Redirect("ForgotPass.aspx");
+            Response.Redirect("~/Lee Wei Zhe/aspx/ForgotPass.aspx");
         }
 
         protected void lnkRegister_Click(object sender, EventArgs e)
         {
-            Response.Redirect("RegistrationPage.aspx");
+            Response.Redirect("~/Lee Wei Zhe/aspx/RegistrationPage.aspx");
         }
     }
 }

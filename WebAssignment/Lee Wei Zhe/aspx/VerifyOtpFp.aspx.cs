@@ -16,7 +16,7 @@ namespace WebAssignment.Lee_Wei_Zhe.aspx
         {
             if (Request.QueryString["email"] == null)
             {
-                Response.Redirect("Home.aspx");
+                Response.Redirect("~/Wong Zhang Zhe/Home.aspx");
             }
         }
 
@@ -63,7 +63,7 @@ namespace WebAssignment.Lee_Wei_Zhe.aspx
                                 Session["email"] = email;
 
                                 // 3. Send them to the final step!
-                                Response.Redirect("ResetPassword.aspx");
+                                Response.Redirect("~/Lee Wei Zhe/aspx/ResetPassword.aspx");
                             }
                             else
                             {

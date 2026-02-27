@@ -52,13 +52,13 @@ namespace WebAssignment.Lee_Wei_Zhe.aspx
                 OtpHelper.SaveOtpToDb(email, otpHash, purpose, expiresAt, connString);
                 EmailHelper.SendOtpEmail(email, otp);
 
-                Response.Redirect("VerifyOtpFp.aspx?email=" + email);
+                Response.Redirect("~/Lee Wei Zhe/aspx/VerifyOtpFp.aspx?email=" + email);
             }
             else
             {
                 errorMsg.Text = "If that email matches an account, an OTP has been sent.";
                 errorMsg.ForeColor = System.Drawing.Color.Green;
-                Response.Redirect("VerifyOtpFp.aspx?email=" + email);
+                Response.Redirect("~/Lee Wei Zhe/aspx/VerifyOtpFp.aspx?email=" + email);
             }
         }
 
@@ -71,12 +71,12 @@ namespace WebAssignment.Lee_Wei_Zhe.aspx
 
         protected void lnkLogin_Click(object sender, EventArgs e)
         {
-            Response.Redirect("Login.aspx");
+            Response.Redirect("~/Wong Zhang Zhe/Login.aspx");
         }
 
         protected void lnkRegister_Click(object sender, EventArgs e)
         {
-            Response.Redirect("RegistrationPage.aspx");
+            Response.Redirect("~/Lee Wei Zhe/aspx/RegistrationPage.aspx");
         }
     }
 }

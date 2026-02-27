@@ -1,6 +1,6 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="BeginnerGuide.aspx.cs" Inherits="WebAssignment.Lee_Wei_Zhe.aspx.BeginnerGuide" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
-    <link href="../css/BeginnerGuide.css" rel="stylesheet" />
+    <link href="/Lee Wei Zhe/css/BeginnerGuide.css" rel="stylesheet"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </asp:Content>
 

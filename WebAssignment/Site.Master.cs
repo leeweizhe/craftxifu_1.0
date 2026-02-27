@@ -28,6 +28,17 @@ namespace WebAssignment
                 int userId = Convert.ToInt32(Session["userId"]);
                 lblUsername.Text = Session["username"].ToString();
                 imgProfile.ImageUrl = picPath;
+
+                if (Session["avatarFrame"] != null && !string.IsNullOrEmpty(Session["avatarFrame"].ToString()))
+                {
+                    string framePath = Session["avatarFrame"].ToString();
+                    imgFrame.ImageUrl = framePath;
+                    imgFrame.Visible = true; 
+                }
+                else
+                {
+                    imgFrame.Visible = false;
+                }
             }
             else
             {
@@ -41,7 +52,7 @@ namespace WebAssignment
         {
             Session.Clear();
             Session.Abandon();
-            Response.Redirect("Login.aspx");
+            Response.Redirect("~/Lee Wei Zhe/aspx/Login.aspx");
         }
     }
 }
