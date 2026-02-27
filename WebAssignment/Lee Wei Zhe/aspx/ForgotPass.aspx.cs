@@ -20,6 +20,7 @@ namespace WebAssignment.Lee_Wei_Zhe.aspx
 
         protected void btnSubmit_Click(object sender, EventArgs e)
         {
+            string purpose = "Reset Password";
             string email = txtEmail.Text.Trim();
             string connString = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
             int userId = 0;
@@ -48,16 +49,16 @@ namespace WebAssignment.Lee_Wei_Zhe.aspx
                 string otpHash = OtpHelper.HashOtp(otp);
                 DateTime expiresAt = DateTime.Now.AddMinutes(10);
 
-                OtpHelper.SaveOtpToDb(userId, otpHash, expiresAt, connString);
+                OtpHelper.SaveOtpToDb(email, otpHash, purpose, expiresAt, connString);
                 EmailHelper.SendOtpEmail(email, otp);
 
-                Response.Redirect("VerifyOtpFp.aspx?userId=" + userId);
+                Response.Redirect("VerifyOtpFp.aspx?email=" + email);
             }
             else
             {
                 errorMsg.Text = "If that email matches an account, an OTP has been sent.";
                 errorMsg.ForeColor = System.Drawing.Color.Green;
-                Response.Redirect("VerifyOtpFp.aspx?userId=" + userId);
+                Response.Redirect("VerifyOtpFp.aspx?email=" + email);
             }
         }
 
