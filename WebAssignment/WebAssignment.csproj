@@ -109,6 +109,7 @@
     <Content Include="test1.aspx" />
     <Content Include="test1.css" />
     <Content Include="SiteMaster.css" />
+    <Content Include="Tong Yu Hong\aspx\Mob.aspx" />
     <Content Include="Web.config" />
     <Content Include="Wong Zhang Zhe\AutoFarm.aspx" />
     <Content Include="Wong Zhang Zhe\ContactUs.aspx" />
@@ -225,7 +226,10 @@
       <DependentUpon>Web.config</DependentUpon>
     </None>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Tong Yu Hong\css\" />
+    <Folder Include="Tong Yu Hong\js\" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
