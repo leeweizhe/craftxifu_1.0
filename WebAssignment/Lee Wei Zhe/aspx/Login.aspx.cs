@@ -37,7 +37,7 @@ namespace WebAssignment
 
             using (SqlConnection con = new SqlConnection(connString))
             {
-                string query = "SELECT Password, FName, Role FROM userTable WHERE Username = @Username";
+                string query = "SELECT Password, FName, Role, UserId, ProfilePicture FROM userTable WHERE Username = @Username";
 
                 using (SqlCommand cmd = new SqlCommand(query, con))
                 {
@@ -55,8 +55,11 @@ namespace WebAssignment
                             {
                                 Session["firstName"] = dr["FName"].ToString().Trim();
                                 Session["userRole"] = dr["Role"].ToString().Trim();
+                                Session["userId"] = Convert.ToInt32(dr["UserId"]);
+                                Session["username"] = username;
+                                Session["profilePic"] = dr["ProfilePicture"].ToString().Trim();
 
-                                Response.Redirect("Home.aspx");
+                                Response.Redirect("BeginnerGuide.aspx");
                             }
                             else
                             {

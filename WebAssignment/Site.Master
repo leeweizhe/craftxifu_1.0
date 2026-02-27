@@ -20,13 +20,26 @@
                 <li><a class="main-link">Minigame</a></li>
                 <li><a class="main-link">Live Stream</a></li>
 
-                <li class="move-right dropdown-parent">
-                    <a  class="main-link"><img src="/images/troll.jpg" class="profile-pic"/><span>Purple</span></a>
-                    <ul class="dropdown-menu">
-                        <li><a class="sub-link">Profile</a></li>
-                        <li><a class="sub-link">Log out</a></li>
-                    </ul>
-                </li>
+                <asp:PlaceHolder ID="phVisitor" runat="server">
+                    <li class="move-right">
+                        <a href="Login.aspx" class="main-link">Log In</a>
+                    </li>
+                </asp:PlaceHolder>
+
+                <asp:PlaceHolder ID="phMember" runat="server" Visible="false">
+                    <li class="move-right dropdown-parent">
+                        <a class="main-link">
+                            <asp:Image ID="imgProfile" runat="server" CssClass="profile-pic" />
+                            <asp:Label ID="lblUsername" runat="server"></asp:Label>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="sub-link">Profile</a></li>
+                            <li>
+                                <asp:LinkButton ID="btnLogout" runat="server" CssClass="sub-link" OnClick="btnLogout_Click" CausesValidation="false">Log out</asp:LinkButton>
+                            </li>
+                        </ul>
+                    </li>
+                </asp:PlaceHolder>
             </ul>
         </nav>
 
