@@ -85,13 +85,34 @@ nav {
     margin-left: auto;
 }
 
-.profile-pic {
+.avatar-wrapper {
+    position: relative;
+    display: inline-block;
     height: 50px;
     width: 50px;
+    margin-right: 14px;
+    vertical-align: middle;
+}
+
+.profile-pic {
+    height: 100%;
+    width: 100%;
     border-radius: 50%;
     object-fit: cover;
-    vertical-align: middle;
-    margin-right: 14px;
+    display: block;
+}
+
+.avatar-frame {
+    position: absolute;
+    border-radius: 50%;
+    top: -10px;
+    left: -10px;
+    width: calc(100% + 20px); /* Makes the frame slightly larger than the picture */
+    height: calc(100% + 20px);
+    /* CRUCIAL: This stops the frame from blocking your mouse clicks! */
+    pointer-events: none;
+    z-index: 10;
+    border: 2px solid #ffffff;
 }
 
 .dropdown-parent {
@@ -122,11 +143,13 @@ nav {
 }
 
 .sub-link {
+    color: white;
     display: flex;
     justify-content: center;
     align-items: center;
     padding: 15px 20px;
     font-size: 1.6rem;
+    text-decoration: none;
     border-bottom: none;
     width: 100%;
     transition: all 0.3s ease;

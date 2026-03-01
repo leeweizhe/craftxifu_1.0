@@ -1,7 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="RegistrationPage.aspx.cs" Inherits="WebAssignment.Lee_Wei_Zhe.aspx.RegistrationPage" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
-    <link href="../css/RegistrationPage.css" rel="stylesheet" />
-    <script src="../js/Login.js"></script>
+    <link href="/Lee Wei Zhe/css/RegistrationPage.css" rel="stylesheet" />
+    <script src="/Lee Wei Zhe/js/Login.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </asp:Content>
 

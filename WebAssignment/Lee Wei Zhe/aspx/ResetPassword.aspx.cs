@@ -16,7 +16,7 @@ namespace WebAssignment.Lee_Wei_Zhe.aspx
         {
             if (Session["email"] == null)
             {
-                Response.Redirect("Home.aspx");
+                Response.Redirect("~/Wong Zhang Zhe/Home.aspx");
             }
         }
 
@@ -47,7 +47,7 @@ namespace WebAssignment.Lee_Wei_Zhe.aspx
             {
                 // Clean up the session so they can't reuse it, then send to login
                 Session.Remove("email");
-                Response.Redirect("Login.aspx?message=PasswordResetSuccess");
+                Response.Redirect("~/Lee Wei Zhe/aspx/Login.aspx?message=PasswordResetSuccess");
             }
             else
             {
@@ -82,6 +82,12 @@ namespace WebAssignment.Lee_Wei_Zhe.aspx
                 System.Diagnostics.Debug.WriteLine("Database Error: " + ex.Message);
                 return false;
             }
+        }
+
+        protected void lnkCancel_Click(object sender, EventArgs e)
+        {
+            Session.Remove("email");
+            Response.Redirect("~/Lee Wei Zhe/aspx/Login.aspx");
         }
 
         private void ShowError(string message)

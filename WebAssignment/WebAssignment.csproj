@@ -88,10 +88,11 @@
     <Content Include="App_Data\WebDatabase_log.ldf">
       <DependentUpon>WebDatabase.mdf</DependentUpon>
     </Content>
+    <Content Include="images\frames\diamondFrame.jpg" />
+    <Content Include="images\frames\diamondFrame.png" />
     <Content Include="images\profiles\DPick.jpg" />
     <Content Include="Lee Wei Zhe\aspx\BeginnerGuide.aspx" />
     <Content Include="Lee Wei Zhe\aspx\ForgotPass.aspx" />
-    <Content Include="Lee Wei Zhe\aspx\Home.aspx" />
     <Content Include="Lee Wei Zhe\aspx\RegistrationPage.aspx" />
     <Content Include="Lee Wei Zhe\aspx\ResetPassword.aspx" />
     <Content Include="Lee Wei Zhe\aspx\VerifyOtpFp.aspx" />
@@ -194,13 +195,6 @@
     </Compile>
     <Compile Include="Lee Wei Zhe\aspx\ForgotPass.aspx.designer.cs">
       <DependentUpon>ForgotPass.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Lee Wei Zhe\aspx\Home.aspx.cs">
-      <DependentUpon>Home.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Lee Wei Zhe\aspx\Home.aspx.designer.cs">
-      <DependentUpon>Home.aspx</DependentUpon>
     </Compile>
     <Compile Include="Lee Wei Zhe\aspx\Login.aspx.cs">
       <DependentUpon>Login.aspx</DependentUpon>
