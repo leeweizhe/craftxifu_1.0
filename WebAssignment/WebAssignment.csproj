@@ -104,6 +104,7 @@
     <Content Include="images\backgrounds\Grass_texture.jpg" />
     <Content Include="images\profiles\troll.jpg" />
     <Content Include="Lee Wei Zhe\aspx\Login.aspx" />
+    <Content Include="Lee Wei Zhe\js\BeginnerGuide.js" />
     <Content Include="Lee Wei Zhe\js\Login.js" />
     <Content Include="Lee Wei Zhe\js\nav.js" />
     <Content Include="test.js" />

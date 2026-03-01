@@ -15,6 +15,42 @@ namespace WebAssignment.Lee_Wei_Zhe.aspx
     {
 
         /// <summary>
+        /// pnlAddPartOverlay control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel pnlAddPartOverlay;
+
+        /// <summary>
+        /// txtNewPartTitle control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtNewPartTitle;
+
+        /// <summary>
+        /// ddlPartPosition control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlPartPosition;
+
+        /// <summary>
+        /// btnSaveNewPart control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.LinkButton btnSaveNewPart;
+
+        /// <summary>
         /// rptMenu control.
         /// </summary>
         /// <remarks>
@@ -24,6 +60,15 @@ namespace WebAssignment.Lee_Wei_Zhe.aspx
         protected global::System.Web.UI.WebControls.Repeater rptMenu;
 
         /// <summary>
+        /// pnlSidebarAddPart control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel pnlSidebarAddPart;
+
+        /// <summary>
         /// rptGuideParts control.
         /// </summary>
         /// <remarks>
@@ -31,5 +76,14 @@ namespace WebAssignment.Lee_Wei_Zhe.aspx
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Repeater rptGuideParts;
+
+        /// <summary>
+        /// pnlEndAddPart control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel pnlEndAddPart;
     }
 }
