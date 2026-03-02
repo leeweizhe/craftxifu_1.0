@@ -9,9 +9,10 @@
 <script runat="server">
     protected void btnSubmit_Click(object sender, EventArgs e)
     {
-        // 模拟登录 ID 以便测试，实际应从 Session 获取
+        // 实际开发中，这里应直接使用 Session["UserId"]
         if (Session["UserId"] == null)
         {
+            // 如果用户未登录，通常需要重定向到登录页，这里暂定为 ID 5 进行测试
             Session["UserId"] = 5; 
         }
 
@@ -20,12 +21,15 @@
 
         using (SqlConnection conn = new SqlConnection(connString))
         {
-            // 将留言存入 contactTable [cite: 2026-02-09]
-            string sql = "INSERT INTO contactTable (UserId, Subject, Message) VALUES (@uid, @sub, @msg)";
+            // 【核心修复】SQL 语句新增了 Status 字段，并设为 'Submitted'
+            // 注意：AdminMessage 允许为 NULL，所以不需要在 INSERT 中体现
+            string sql = "INSERT INTO contactTable (UserId, Subject, Message, Status) VALUES (@uid, @sub, @msg, @status)";
             SqlCommand cmd = new SqlCommand(sql, conn);
+            
             cmd.Parameters.AddWithValue("@uid", userId);
             cmd.Parameters.AddWithValue("@sub", ddlSubject.SelectedValue);
             cmd.Parameters.AddWithValue("@msg", txtMessage.Text);
+            cmd.Parameters.AddWithValue("@status", "Submitted"); // 初始状态设为 Submitted
 
             conn.Open();
             cmd.ExecuteNonQuery();
@@ -33,16 +37,14 @@
         }
 
         // 提交成功反馈逻辑
-        lblStatus.Text = "REQUEST SENT SUCCESSFULLY!";
+        lblStatus.Text = "TICKET CREATED SUCCESSFULLY!";
         lblStatus.ForeColor = System.Drawing.Color.LimeGreen;
         formPanel.Visible = false; // 隐藏输入表单
         successPanel.Visible = true; // 显示成功面板
     }
 
-    // 【核心修复】处理返回主页的跳转逻辑
     protected void btnBackHome_Click(object sender, EventArgs e)
     {
-        // 使用绝对路径解决跨文件夹跳转 404 问题
         Response.Redirect("/Wong Zhang Zhe/Home.aspx");
     }
 </script>
@@ -54,7 +56,6 @@
         .pixel-input { width: 100%; background: #000; color: #fff; border: 1px solid #444; padding: 15px; font-size: 1.2rem; box-sizing: border-box; margin-bottom: 25px; }
         .pixel-input:focus { border-color: #68ff00; outline: none; }
         
-        /* 按钮样式设计 */
         .btn-send { background: #68ff00; color: #000; font-weight: bold; padding: 15px 40px; border: none; cursor: pointer; font-size: 1.2rem; margin-right: 10px; }
         .btn-home { background: none; color: #999; font-weight: bold; padding: 15px 40px; border: 2px solid #444; cursor: pointer; font-size: 1.2rem; text-decoration: none; display: inline-block; }
         .btn-home:hover { color: #fff; border-color: #68ff00; }
@@ -65,36 +66,32 @@
 
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
     <div class="contact-box">
-        <h2 style="color:#68ff00; font-size: 2.5rem; margin-bottom: 30px;">[ SERVER SUPPORT TICKET ]</h2>
+        <h2 style="color:#68ff00; font-size: 2.5rem; margin-bottom: 30px;">[ CREATE SUPPORT TICKET ]</h2>
 
-        <%-- 输入表单面板 --%>
         <asp:Panel ID="formPanel" runat="server">
-            <span class="label-text">Select Subject</span>
+            <span class="label-text">Issue Category</span>
             <asp:DropDownList ID="ddlSubject" runat="server" CssClass="pixel-input">
-                <asp:ListItem Value="Upgrade">Require Upgrade Account</asp:ListItem>
-                <asp:ListItem Value="Account">Account Issue</asp:ListItem>
-                <asp:ListItem Value="Feedback">Feedback / Suggestion</asp:ListItem>
-                <asp:ListItem Value="Other">Other</asp:ListItem>
+                <asp:ListItem Value="Upgrade">Account Rank Upgrade</asp:ListItem>
+                <asp:ListItem Value="Account">Account Recovery</asp:ListItem>
+                <asp:ListItem Value="Feedback">Bug Report / Suggestion</asp:ListItem>
+                <asp:ListItem Value="Other">General Inquiry</asp:ListItem>
             </asp:DropDownList>
 
-            <span class="label-text">Your Message</span>
-            <asp:TextBox ID="txtMessage" runat="server" TextMode="MultiLine" Rows="6" CssClass="pixel-input" placeholder="Describe your request..."></asp:TextBox>
+            <span class="label-text">Detailed Description</span>
+            <asp:TextBox ID="txtMessage" runat="server" TextMode="MultiLine" Rows="6" CssClass="pixel-input" placeholder="Please provide details..."></asp:TextBox>
 
             <div style="margin-top: 10px;">
                 <asp:Button ID="btnSubmit" runat="server" Text="SUBMIT TICKET" OnClick="btnSubmit_Click" CssClass="btn-send" />
-                
-                <%-- 修复：改为 OnClick 事件进行跳转 --%>
-                <asp:Button ID="btnBackHome" runat="server" Text="[ RETURN TO HOME ]" OnClick="btnBackHome_Click" CssClass="btn-home" CausesValidation="false" />
+                <asp:Button ID="btnBackHome" runat="server" Text="[ CANCEL ]" OnClick="btnBackHome_Click" CssClass="btn-home" CausesValidation="false" />
             </div>
         </asp:Panel>
 
-        <%-- 提交成功显示面板 --%>
         <asp:Panel ID="successPanel" runat="server" Visible="false" CssClass="success-box">
-            <h3 style="color:#68ff00;">TICKET SUBMITTED!</h3>
-            <p>Our admins will review your request shortly.</p>
+            <h3 style="color:#68ff00;">TICKET #SUCCESSFULLY SENT!</h3>
+            <p>Status: <b style="color:#fbbf24;">Submitted</b></p>
+            <p>Our admin team will review it and reply within 24 hours.</p>
             <br />
-            <%-- 修复链接路径 --%>
-            <asp:HyperLink ID="lnkHome" runat="server" NavigateUrl="/Wong Zhang Zhe/Home.aspx" style="color:#68ff00; text-decoration:none;">[ CLICK HERE TO GO HOME ]</asp:HyperLink>
+            <asp:HyperLink ID="lnkHome" runat="server" NavigateUrl="/Wong Zhang Zhe/Home.aspx" style="color:#68ff00; text-decoration:none;">[ RETURN TO MAIN PAGE ]</asp:HyperLink>
         </asp:Panel>
 
         <asp:Label ID="lblStatus" runat="server" style="display:block; margin-top:20px; font-weight:bold;" />
