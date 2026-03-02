@@ -1,7 +1,8 @@
 ﻿* {
     user-select: none;
     box-sizing: border-box;
-    font-family: 'Minecraft', sans-serif;
+    /* Keep pixel font but allow emoji fallback from system fonts */
+    font-family: 'Minecraft', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji', sans-serif;
     margin: 0;
     padding: 0;
 }

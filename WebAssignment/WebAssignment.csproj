@@ -84,10 +84,66 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include=".gitignore" />
-    <Content Include="App_Data\WebDatabase.mdf" />
-    <Content Include="App_Data\WebDatabase_log.ldf">
-      <DependentUpon>WebDatabase.mdf</DependentUpon>
-    </Content>
+    <Content Include="bin\BCrypt.Net-Next.dll" />
+    <Content Include="bin\BCrypt.Net-Next.xml" />
+    <Content Include="bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll" />
+    <Content Include="bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml" />
+    <Content Include="bin\roslyn\csc.exe" />
+    <Content Include="bin\roslyn\csi.exe" />
+    <Content Include="bin\roslyn\Microsoft.Build.Tasks.CodeAnalysis.dll" />
+    <Content Include="bin\roslyn\Microsoft.CodeAnalysis.CSharp.dll" />
+    <Content Include="bin\roslyn\Microsoft.CodeAnalysis.CSharp.Scripting.dll" />
+    <Content Include="bin\roslyn\Microsoft.CodeAnalysis.dll" />
+    <Content Include="bin\roslyn\Microsoft.CodeAnalysis.Scripting.dll" />
+    <Content Include="bin\roslyn\Microsoft.CodeAnalysis.VisualBasic.dll" />
+    <Content Include="bin\roslyn\Microsoft.DiaSymReader.Native.amd64.dll" />
+    <Content Include="bin\roslyn\Microsoft.DiaSymReader.Native.x86.dll" />
+    <Content Include="bin\roslyn\Microsoft.Win32.Primitives.dll" />
+    <Content Include="bin\roslyn\System.AppContext.dll" />
+    <Content Include="bin\roslyn\System.Collections.Immutable.dll" />
+    <Content Include="bin\roslyn\System.Console.dll" />
+    <Content Include="bin\roslyn\System.Diagnostics.DiagnosticSource.dll" />
+    <Content Include="bin\roslyn\System.Diagnostics.FileVersionInfo.dll" />
+    <Content Include="bin\roslyn\System.Diagnostics.StackTrace.dll" />
+    <Content Include="bin\roslyn\System.Globalization.Calendars.dll" />
+    <Content Include="bin\roslyn\System.IO.Compression.dll" />
+    <Content Include="bin\roslyn\System.IO.Compression.ZipFile.dll" />
+    <Content Include="bin\roslyn\System.IO.FileSystem.dll" />
+    <Content Include="bin\roslyn\System.IO.FileSystem.Primitives.dll" />
+    <Content Include="bin\roslyn\System.Net.Http.dll" />
+    <Content Include="bin\roslyn\System.Net.Sockets.dll" />
+    <Content Include="bin\roslyn\System.Reflection.Metadata.dll" />
+    <Content Include="bin\roslyn\System.Runtime.InteropServices.RuntimeInformation.dll" />
+    <Content Include="bin\roslyn\System.Security.Cryptography.Algorithms.dll" />
+    <Content Include="bin\roslyn\System.Security.Cryptography.Encoding.dll" />
+    <Content Include="bin\roslyn\System.Security.Cryptography.Primitives.dll" />
+    <Content Include="bin\roslyn\System.Security.Cryptography.X509Certificates.dll" />
+    <Content Include="bin\roslyn\System.Text.Encoding.CodePages.dll" />
+    <Content Include="bin\roslyn\System.Threading.Tasks.Extensions.dll" />
+    <Content Include="bin\roslyn\System.ValueTuple.dll" />
+    <Content Include="bin\roslyn\System.Xml.ReaderWriter.dll" />
+    <Content Include="bin\roslyn\System.Xml.XmlDocument.dll" />
+    <Content Include="bin\roslyn\System.Xml.XPath.dll" />
+    <Content Include="bin\roslyn\System.Xml.XPath.XDocument.dll" />
+    <Content Include="bin\roslyn\vbc.exe" />
+    <Content Include="bin\roslyn\VBCSCompiler.exe" />
+    <Content Include="bin\System.Buffers.dll" />
+    <Content Include="bin\System.Buffers.xml" />
+    <Content Include="bin\System.Memory.dll" />
+    <Content Include="bin\System.Memory.xml" />
+    <Content Include="bin\System.Numerics.Vectors.dll" />
+    <Content Include="bin\System.Numerics.Vectors.xml" />
+    <Content Include="bin\System.Runtime.CompilerServices.Unsafe.dll" />
+    <Content Include="bin\System.Runtime.CompilerServices.Unsafe.xml" />
+    <Content Include="bin\WebAssignment.dll" />
+    <Content Include="bin\WebAssignment.pdb" />
+    <Content Include="Brayden\CreateTables.sql" />
+    <Content Include="Brayden\Enchantment.aspx" />
+    <Content Include="Brayden\FixMojibake.sql" />
+    <Content Include="Brayden\FixMojibake_out.txt" />
+    <Content Include="Brayden\Minigame.aspx" />
+    <Content Include="Brayden\Potion.aspx" />
+    <Content Include="Brayden\SQLQuery2.sql" />
     <Content Include="images\frames\diamondFrame.jpg" />
     <Content Include="images\frames\diamondFrame.png" />
     <Content Include="images\profiles\DPick.jpg" />
@@ -106,6 +162,9 @@
     <Content Include="Lee Wei Zhe\aspx\Login.aspx" />
     <Content Include="Lee Wei Zhe\js\Login.js" />
     <Content Include="Lee Wei Zhe\js\nav.js" />
+    <Content Include="obj\Debug\WebAssignment.csproj.FileListAbsolute.txt" />
+    <Content Include="obj\Debug\WebAssignment.dll" />
+    <Content Include="obj\Debug\WebAssignment.pdb" />
     <Content Include="test.js" />
     <Content Include="test1.aspx" />
     <Content Include="test1.css" />
@@ -120,6 +179,46 @@
     <Content Include="Wong Zhang Zhe\EditProfile.aspx" />
     <Content Include="Wong Zhang Zhe\Home.aspx" />
     <Content Include="Wong Zhang Zhe\pic\1_iron.png" />
+    <Content Include="Wong Zhang Zhe\pic\enchant\baneofarthropods_detail.png" />
+    <Content Include="Wong Zhang Zhe\pic\enchant\baneofarthropods_thumb.png" />
+    <Content Include="Wong Zhang Zhe\pic\enchant\channeling_detail.png" />
+    <Content Include="Wong Zhang Zhe\pic\enchant\channeling_thumb.png" />
+    <Content Include="Wong Zhang Zhe\pic\enchant\depthstrider_detail.png" />
+    <Content Include="Wong Zhang Zhe\pic\enchant\depthstrider_thumb.png" />
+    <Content Include="Wong Zhang Zhe\pic\enchant\efficiency_detail.png" />
+    <Content Include="Wong Zhang Zhe\pic\enchant\efficiency_thumb.png" />
+    <Content Include="Wong Zhang Zhe\pic\enchant\featherfalling_detail.png" />
+    <Content Include="Wong Zhang Zhe\pic\enchant\featherfalling_thumb.png" />
+    <Content Include="Wong Zhang Zhe\pic\enchant\fireaspect_detail.png" />
+    <Content Include="Wong Zhang Zhe\pic\enchant\fireaspect_thumb.png" />
+    <Content Include="Wong Zhang Zhe\pic\enchant\flame_detail.png" />
+    <Content Include="Wong Zhang Zhe\pic\enchant\flame_thumb.png" />
+    <Content Include="Wong Zhang Zhe\pic\enchant\fortune_detail.png" />
+    <Content Include="Wong Zhang Zhe\pic\enchant\fortune_thumb.png" />
+    <Content Include="Wong Zhang Zhe\pic\enchant\infinity_detail.png" />
+    <Content Include="Wong Zhang Zhe\pic\enchant\infinity_thumb.png" />
+    <Content Include="Wong Zhang Zhe\pic\enchant\looting_detail.png" />
+    <Content Include="Wong Zhang Zhe\pic\enchant\looting_thumb.png" />
+    <Content Include="Wong Zhang Zhe\pic\enchant\mending_detail.png" />
+    <Content Include="Wong Zhang Zhe\pic\enchant\mending_thumb.png" />
+    <Content Include="Wong Zhang Zhe\pic\enchant\power_detail.png" />
+    <Content Include="Wong Zhang Zhe\pic\enchant\power_thumb.png" />
+    <Content Include="Wong Zhang Zhe\pic\enchant\protection_detail.png" />
+    <Content Include="Wong Zhang Zhe\pic\enchant\protection_thumb.png" />
+    <Content Include="Wong Zhang Zhe\pic\enchant\riptide_detail.png" />
+    <Content Include="Wong Zhang Zhe\pic\enchant\riptide_thumb.png" />
+    <Content Include="Wong Zhang Zhe\pic\enchant\sharpness_detail.png" />
+    <Content Include="Wong Zhang Zhe\pic\enchant\sharpness_thumb.png" />
+    <Content Include="Wong Zhang Zhe\pic\enchant\silktouch_detail.png" />
+    <Content Include="Wong Zhang Zhe\pic\enchant\silktouch_thumb.png" />
+    <Content Include="Wong Zhang Zhe\pic\enchant\smite_detail.png" />
+    <Content Include="Wong Zhang Zhe\pic\enchant\smite_thumb.png" />
+    <Content Include="Wong Zhang Zhe\pic\enchant\sweepingedge_detail.png" />
+    <Content Include="Wong Zhang Zhe\pic\enchant\sweepingedge_thumb.png" />
+    <Content Include="Wong Zhang Zhe\pic\enchant\swiftsneak_detail.png" />
+    <Content Include="Wong Zhang Zhe\pic\enchant\swiftsneak_thumb.png" />
+    <Content Include="Wong Zhang Zhe\pic\enchant\thorns_detail.png" />
+    <Content Include="Wong Zhang Zhe\pic\enchant\thorns_thumb.png" />
     <Content Include="Wong Zhang Zhe\pic\food_icon.png" />
     <Content Include="Wong Zhang Zhe\pic\gold_icon.png" />
     <Content Include="Wong Zhang Zhe\pic\iron_1.png" />
@@ -154,6 +253,54 @@
     <Content Include="Wong Zhang Zhe\pic\1_stone.png" />
     <Content Include="Wong Zhang Zhe\pic\3_stone.png" />
     <Content Include="Wong Zhang Zhe\pic\iron_icon.png" />
+    <Content Include="Wong Zhang Zhe\pic\potion\decay_ingredient.png" />
+    <Content Include="Wong Zhang Zhe\pic\potion\decay_thumb.png" />
+    <Content Include="Wong Zhang Zhe\pic\potion\fireresistance_ingredient.png" />
+    <Content Include="Wong Zhang Zhe\pic\potion\fireresistance_thumb.png" />
+    <Content Include="Wong Zhang Zhe\pic\potion\harming_ingredient.png" />
+    <Content Include="Wong Zhang Zhe\pic\potion\harming_thumb.png" />
+    <Content Include="Wong Zhang Zhe\pic\potion\healing_ingredient.png" />
+    <Content Include="Wong Zhang Zhe\pic\potion\healing_thumb.png" />
+    <Content Include="Wong Zhang Zhe\pic\potion\infestation_ingredient.png" />
+    <Content Include="Wong Zhang Zhe\pic\potion\infestation_thumb.png" />
+    <Content Include="Wong Zhang Zhe\pic\potion\invisibility_ingredient.png" />
+    <Content Include="Wong Zhang Zhe\pic\potion\invisibility_thumb.png" />
+    <Content Include="Wong Zhang Zhe\pic\potion\leaping_ingredient.png" />
+    <Content Include="Wong Zhang Zhe\pic\potion\leaping_thumb.png" />
+    <Content Include="Wong Zhang Zhe\pic\potion\nightvision_ingredient.png" />
+    <Content Include="Wong Zhang Zhe\pic\potion\nightvision_thumb.png" />
+    <Content Include="Wong Zhang Zhe\pic\potion\oozing_ingredient.png" />
+    <Content Include="Wong Zhang Zhe\pic\potion\oozing_thumb.png" />
+    <Content Include="Wong Zhang Zhe\pic\potion\poison_ingredient.png" />
+    <Content Include="Wong Zhang Zhe\pic\potion\poison_thumb.png" />
+    <Content Include="Wong Zhang Zhe\pic\potion\regeneration_ingredient.png" />
+    <Content Include="Wong Zhang Zhe\pic\potion\regeneration_thumb.png" />
+    <Content Include="Wong Zhang Zhe\pic\potion\slowfalling_ingredient.png" />
+    <Content Include="Wong Zhang Zhe\pic\potion\slowfalling_thumb.png" />
+    <Content Include="Wong Zhang Zhe\pic\potion\slowness_ingredient.png" />
+    <Content Include="Wong Zhang Zhe\pic\potion\slowness_thumb.png" />
+    <Content Include="Wong Zhang Zhe\pic\potion\speed_ingredient.png" />
+    <Content Include="Wong Zhang Zhe\pic\potion\speed_thumb.png" />
+    <Content Include="Wong Zhang Zhe\pic\potion\strength_ingredient.png" />
+    <Content Include="Wong Zhang Zhe\pic\potion\strength_thumb.png" />
+    <Content Include="Wong Zhang Zhe\pic\potion\turtlemaster_ingredient.png" />
+    <Content Include="Wong Zhang Zhe\pic\potion\turtlemaster_thumb.png" />
+    <Content Include="Wong Zhang Zhe\pic\potion\waterbreathing_ingredient.png" />
+    <Content Include="Wong Zhang Zhe\pic\potion\waterbreathing_thumb.png" />
+    <Content Include="Wong Zhang Zhe\pic\potion\weakness_ingredient.png" />
+    <Content Include="Wong Zhang Zhe\pic\potion\weakness_thumb.png" />
+    <Content Include="Wong Zhang Zhe\pic\potion\weaving_ingredient.png" />
+    <Content Include="Wong Zhang Zhe\pic\potion\weaving_thumb.png" />
+    <Content Include="Wong Zhang Zhe\pic\shop\tag_diamond.png" />
+    <Content Include="Wong Zhang Zhe\pic\shop\tag_dirt.png" />
+    <Content Include="Wong Zhang Zhe\pic\shop\tag_ender.png" />
+    <Content Include="Wong Zhang Zhe\pic\shop\tag_gold.png" />
+    <Content Include="Wong Zhang Zhe\pic\shop\tag_iron.png" />
+    <Content Include="Wong Zhang Zhe\pic\shop\tag_netherite.png" />
+    <Content Include="Wong Zhang Zhe\pic\shop\tag_redstone.png" />
+    <Content Include="Wong Zhang Zhe\pic\shop\tag_stone.png" />
+    <Content Include="Wong Zhang Zhe\pic\shop\tag_supreme.png" />
+    <Content Include="Wong Zhang Zhe\pic\shop\tag_wither.png" />
     <Content Include="Wong Zhang Zhe\pic\stone_3.png" />
     <Content Include="Wong Zhang Zhe\pic\stone1M.png" />
     <Content Include="Wong Zhang Zhe\pic\stone_1.png" />
@@ -182,6 +329,27 @@
     <Content Include="Wong Zhang Zhe\FarmDetails.aspx" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Brayden\Enchantment.aspx.cs">
+      <DependentUpon>Enchantment.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Brayden\Enchantment.aspx.designer.cs">
+      <DependentUpon>Enchantment.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Brayden\Minigame.aspx.cs">
+      <DependentUpon>Minigame.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Brayden\Minigame.aspx.designer.cs">
+      <DependentUpon>Minigame.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Brayden\Potion.aspx.cs">
+      <DependentUpon>Potion.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Brayden\Potion.aspx.designer.cs">
+      <DependentUpon>Potion.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Lee Wei Zhe\aspx\BeginnerGuide.aspx.cs">
       <DependentUpon>BeginnerGuide.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -233,6 +401,8 @@
     </Compile>
     <Compile Include="Lee Wei Zhe\myClass\EmailHelper.cs" />
     <Compile Include="Lee Wei Zhe\myClass\OtpHelper.cs" />
+    <Compile Include="obj\Debug\.NETFramework,Version=v4.7.2.AssemblyAttributes.cs" />
+    <Compile Include="obj\Release\.NETFramework,Version=v4.7.2.AssemblyAttributes.cs" />
     <Compile Include="Site.Master.cs">
       <DependentUpon>Site.Master</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -267,6 +437,23 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="bin\roslyn\csc.exe.config" />
+    <Content Include="bin\roslyn\csc.rsp" />
+    <Content Include="bin\roslyn\csi.exe.config" />
+    <Content Include="bin\roslyn\csi.rsp" />
+    <Content Include="bin\roslyn\Microsoft.CSharp.Core.targets" />
+    <Content Include="bin\roslyn\Microsoft.Managed.Core.targets" />
+    <Content Include="bin\roslyn\Microsoft.VisualBasic.Core.targets" />
+    <Content Include="bin\roslyn\vbc.exe.config" />
+    <Content Include="bin\roslyn\vbc.rsp" />
+    <Content Include="bin\roslyn\VBCSCompiler.exe.config" />
+    <Content Include="bin\WebAssignment.dll.config" />
+    <Content Include="obj\Debug\DesignTimeResolveAssemblyReferences.cache" />
+    <Content Include="obj\Debug\DesignTimeResolveAssemblyReferencesInput.cache" />
+    <Content Include="obj\Debug\WebAssig.90E3F4AD.Up2Date" />
+    <Content Include="obj\Debug\WebAssignment.csproj.AssemblyReference.cache" />
+    <Content Include="obj\Debug\WebAssignment.csproj.CoreCompileInputs.cache" />
+    <Content Include="obj\Release\WebAssignment.csproj.AssemblyReference.cache" />
     <None Include="packages.config" />
     <Content Include="Site.Master" />
     <Content Include="WAPPdb.dacpac" />
@@ -277,7 +464,9 @@
       <DependentUpon>Web.config</DependentUpon>
     </None>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="obj\Debug\TempPE\" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

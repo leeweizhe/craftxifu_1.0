@@ -39,6 +39,9 @@ namespace WebAssignment
                 {
                     imgFrame.Visible = false;
                 }
+                // make Minigame nav link interactive for logged-in users
+                // find the minigame anchor by its href and ensure it points to the page
+                // (Site.Master uses static markup so no server-side anchor control is present)
             }
             else
             {

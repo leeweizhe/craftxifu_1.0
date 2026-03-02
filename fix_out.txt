@@ -1,0 +1,26 @@
+﻿
+(0 rows affected)
+
+(0 rows affected)
+
+(0 rows affected)
+
+(0 rows affected)
+
+(0 rows affected)
+
+(0 rows affected)
+PotionId    FullContent                                                                                                                                                                                                                                                     
+----------- ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+          1 <b>Brewing chain:</b><br>Water Bottle â†’ +Nether Wart â†’ Awkward Potion â†’ +Glistering Melon Slice â†’ Healing I<br>Healing I â†’ +Glowstone Dust â†’ Healing II<br>Healing I â†’ +Gunpowder â†’ Splash Potion of Healing<br><br><b>Glistering Melon craft:</
+          2 <b>Brewing chain:</b><br>Awkward Potion â†’ +Ghast Tear â†’ Regen I (0:45)<br>Regen I â†’ +Redstone â†’ Regen I Extended (2:00)<br>Regen I â†’ +Glowstone Dust â†’ Regen II (0:22)<br><br><b>Ghast Tear farming:</b> Shoot Ghasts with a bow in the Nether. Only
+          3 <b>Brewing chain:</b><br>Awkward Potion â†’ +Blaze Powder â†’ Strength I (3:00)<br>Strength I â†’ +Redstone â†’ Strength I Extended (8:00)<br>Strength I â†’ +Glowstone Dust â†’ Strength II (1:30)<br><br><b>Blaze Powder source:</b> Blaze Rods from Blaze in 
+          4 <b>Brewing chain:</b><br>Awkward Potion â†’ +Sugar â†’ Speed I (3:00)<br>Speed I â†’ +Redstone â†’ Speed I Extended (8:00)<br>Speed I â†’ +Glowstone Dust â†’ Speed II (1:30)<br><br><b>Sugar source:</b> Craft from Sugar Cane. One of the cheapest potions to 
+          5 <b>Brewing chain:</b><br>Awkward Potion â†’ +Magma Cream â†’ Fire Resistance (3:00)<br>Fire Resistance â†’ +Redstone â†’ Fire Resistance Extended (8:00)<br>Cannot be leveled up â€“ only one tier exists.<br><br><b>Magma Cream sources:</b> Killed Magma Cubes
+          6 <b>Brewing chain:</b><br>Awkward Potion â†’ +Golden Carrot â†’ Night Vision (3:00)<br>Night Vision â†’ +Redstone â†’ Night Vision Extended (8:00)<br>Night Vision â†’ +Fermented Spider Eye â†’ Invisibility (corruption path)<br><br><b>Golden Carrot craft:</b
+          7 <b>Brewing chain:</b><br>Awkward Potion â†’ +Pufferfish â†’ Water Breathing (3:00)<br>Water Breathing â†’ +Redstone â†’ Water Breathing Extended (8:00)<br>Cannot be leveled up.<br><br><b>Pufferfish source:</b> Fishing in any water body (uncommon), or found
+          8 <b>Brewing chain:</b><br>First brew Night Vision (Awkward + Golden Carrot)<br>Night Vision â†’ +Fermented Spider Eye â†’ Invisibility (3:00)<br>Invisibility â†’ +Redstone â†’ Invisibility Extended (8:00)<br><br><b>Armor warning:</b> If ANY armor is visible
+          9 <b>Brewing chain:</b><br>Awkward Potion â†’ +Phantom Membrane â†’ Slow Falling (1:30)<br>Slow Falling â†’ +Redstone â†’ Slow Falling Extended (4:00)<br>Cannot be leveled up.<br><br><b>Phantom Membrane source:</b> Kill Phantoms. They spawn when a player has
+         10 <b>Brewing chain:</b><br>Awkward Potion â†’ +Rabbit's Foot â†’ Leaping I (3:00)<br>Leaping I â†’ +Redstone â†’ Leaping I Extended (8:00)<br>Leaping I â†’ +Glowstone Dust â†’ Leaping II (1:30)<br>Leaping (any) â†’ +Fermented Spider Eye â†’ Slowness<br><br><
+
+(10 rows affected)
