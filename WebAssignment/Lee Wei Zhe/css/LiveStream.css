@@ -1,13 +1,4 @@
-﻿.stream-page-wrapper {
-    background: #fff;
-    border-radius: 10px;
-    padding: 20px;
-    max-width: 1100px;
-    margin: 30px auto;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.15);
-}
-
-/* Side-by-side layout: video left, chat right */
+﻿/* Side-by-side layout: video left, chat right */
 .stream-wrapper {
     display: flex;
     gap: 20px;
@@ -175,3 +166,107 @@
         flex-direction: column;
     }
 }
+
+/* ===== INSTRUCTOR PANEL ===== */
+.instructor-panel {
+    margin-top: 16px;
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+    border-left: 4px solid #e03131; /* Red accent */
+    border-radius: 8px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.panel-title {
+    font-size: 15px;
+    font-weight: bold;
+    margin: 0;
+}
+
+/* Viewer count stat box */
+.stat-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: 6px;
+    padding: 10px 14px;
+}
+
+.stat-label {
+    color: #888;
+    font-size: 13px;
+}
+
+.stat-value {
+    font-weight: bold;
+    font-size: 20px;
+    color: #e03131;
+}
+
+/* Control groups (label + input + button) */
+.control-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+    .control-group label {
+        font-size: 13px;
+        font-weight: bold;
+        color: #555;
+    }
+
+/* Go Live button (green) */
+.btn-golive {
+    padding: 10px;
+    background: #2f9e44;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    width: 100%;
+}
+
+    .btn-golive:hover {
+        background: #276136;
+    }
+
+/* End Stream button (dark grey) */
+.btn-endstream {
+    padding: 10px;
+    background: #495057;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    width: 100%;
+}
+
+    .btn-endstream:hover {
+        background: #343a40;
+    }
+
+/* Save title button */
+.btn-secondary {
+    padding: 8px;
+    background: #1971c2;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 13px;
+    cursor: pointer;
+    width: 100%;
+}
+
+    .btn-secondary:hover {
+        background: #1864ab;
+    }

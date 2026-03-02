@@ -51,6 +51,69 @@ namespace WebAssignment.Lee_Wei_Zhe.aspx
         protected global::System.Web.UI.WebControls.Label lblViewerCount;
 
         /// <summary>
+        /// pnlInstructorControls control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel pnlInstructorControls;
+
+        /// <summary>
+        /// litViewerCount control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal litViewerCount;
+
+        /// <summary>
+        /// txtStreamTitle control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtStreamTitle;
+
+        /// <summary>
+        /// btnSaveTitle control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnSaveTitle;
+
+        /// <summary>
+        /// btnStartStream control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnStartStream;
+
+        /// <summary>
+        /// btnEndStream control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnEndStream;
+
+        /// <summary>
+        /// lblPanelFeedback control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblPanelFeedback;
+
+        /// <summary>
         /// litChatMessages control.
         /// </summary>
         /// <remarks>
