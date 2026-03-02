@@ -1,0 +1,3 @@
+PotionId FullContent
+-------- -----------
+1 <b>Brewing chain:</b><br>Water Bottle → +Nether Wart → Awkward Potion → +Glistering Melon Slice → Healing I<br>Healing I → +Glowstone Dust → Healing II<br>Healing I → +Gunpowder → Splash Potion of Healing<br><br><b>Glistering Melon craft:</

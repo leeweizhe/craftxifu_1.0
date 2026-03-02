@@ -4,6 +4,7 @@
 
 <html>
 <head runat="server">
+    <meta charset="utf-8" />
     <title>Minecraft Community</title>
     <link href="https://fonts.cdnfonts.com/css/minecraft-4" rel="stylesheet" />
     <link href="SiteMaster.css" rel="stylesheet" type="text/css" runat="server" />
@@ -17,8 +18,8 @@
             <ul class="main-nav">
                 <li><a href="/Wong Zhang Zhe/Home.aspx" class="main-link">Home</a></li>
                 <li><a href="/Wong Zhang Zhe/Guide.aspx" class="main-link">Guide</a></li>
-                <li><a class="main-link">Minigame</a></li>
-                <li><a class="main-link">Live Stream</a></li>
+                <li><a href="/Brayden/Minigame.aspx" class="main-link">Minigame</a></li>
+                <li><a href="/Wong Zhang Zhe/LiveStream.aspx" class="main-link">Live Stream</a></li>
                 <li><a href="/Wong Zhang Zhe/ContactUs.aspx" class="main-link">Contact US</a></li>
 
                 <asp:PlaceHolder ID="phVisitor" runat="server">

@@ -9,21 +9,19 @@
 <script runat="server">
     protected void Page_Load(object sender, EventArgs e)
     {
-        // 根据 Session 判断显示内容：登录玩家显示专属面板，访客显示引导面板
-
-        //Session["UserId"] = 5;
+        Session["UserId"] = 5;
         if (Session["UserId"] != null)
         {
-            visitorPanel.Visible = false;
-            playerPanel.Visible = true;
-            memberExclusiveSection.Visible = true; // 开启 Member 专属区域
+            visitorSection.Visible = false;
+            memberSection.Visible = true;
+            memberDataCards.Visible = true; // 登录后显示数据卡片
             LoadUserStatus();
         }
         else
         {
-            visitorPanel.Visible = true;
-            playerPanel.Visible = false;
-            memberExclusiveSection.Visible = false; // 隐藏 Member 专属区域
+            visitorSection.Visible = true;
+            memberSection.Visible = false;
+            memberDataCards.Visible = false; // 访客隐藏数据卡片
         }
     }
 
@@ -34,24 +32,19 @@
 
         using (SqlConnection conn = new SqlConnection(connString))
         {
-            // 从 userTable 抓取 Member 的实时数据
-            string sql = "SELECT Username, Role, Currency, ProfilePicture FROM userTable WHERE UserId = @id";
+            string sql = "SELECT Currency FROM userTable WHERE UserId = @id";
             SqlCommand cmd = new SqlCommand(sql, conn);
             cmd.Parameters.AddWithValue("@id", userId);
             conn.Open();
             SqlDataReader reader = cmd.ExecuteReader();
             if (reader.Read())
             {
-                lblPlayerName.Text = reader["Username"].ToString().ToUpper();
-                lblRoleDisplay.Text = reader["Role"].ToString();
                 lblEmeralds.Text = reader["Currency"].ToString();
-                imgSmallAvatar.ImageUrl = reader["ProfilePicture"].ToString();
             }
             conn.Close();
         }
     }
 
-    // 跨文件夹跳转至邻居 Lee Wei Zhe 的登录页
     protected void btnLoginRedirect_Click(object sender, EventArgs e)
     {
         Response.Redirect("../Lee Wei Zhe/aspx/Login.aspx"); 
@@ -60,115 +53,109 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <style type="text/css">
-        .home-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 30px; width: 90%; margin: 30px auto; color: #fff; }
+        .home-wrapper { width: 100%; color: #fff; font-family: 'Minecraft', sans-serif; }
         
-        /* 介绍区域样式 */
-        .intro-box { background: rgba(0,0,0,0.85); border-left: 10px solid #68ff00; padding: 40px; }
-        .intro-title { font-size: 3rem; color: #68ff00; margin-bottom: 20px; text-transform: uppercase; }
+        /* Hero Section - 所有人可见 */
+        .hero-banner { 
+            background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url('/Wong Zhang Zhe/pic/autofarm_cover.png');
+            background-size: cover;
+            background-position: center;
+            padding: 100px 10%;
+            text-align: center;
+            border-bottom: 5px solid #68ff00;
+        }
+        .hero-title { font-size: 4.5rem; color: #68ff00; text-shadow: 4px 4px #000; margin-bottom: 20px; }
+        .hero-subtitle { font-size: 1.3rem; color: #ddd; max-width: 800px; margin: 0 auto; line-height: 1.6; }
         
-        /* Member 专属仪表盘样式 */
-        .member-dashboard { background: rgba(17, 17, 17, 0.95); border: 2px solid #68ff00; padding: 30px; margin-top: 25px; box-shadow: 0 0 15px rgba(104, 255, 0, 0.2); }
-        .quest-bar-bg { background: #333; height: 20px; width: 100%; border-radius: 10px; margin: 15px 0; overflow: hidden; border: 1px solid #444; }
-        .quest-bar-fill { background: linear-gradient(90deg, #52cc00, #68ff00); height: 100%; width: 75%; /* 模拟进度 */ box-shadow: 0 0 10px #68ff00; }
+        /* 会员状态栏 */
+        .status-bar { 
+            background: #111; padding: 20px 10%; display: flex; justify-content: space-around; 
+            border-bottom: 1px solid #333; font-size: 1.2rem;
+        }
+        .status-item span { color: #fbbf24; margin-left: 10px; }
+
+        /* 介绍区域 - 所有人可见 */
+        .about-section { padding: 60px 10%; background: #0a0a0a; text-align: center; border-bottom: 1px solid #222; }
+        .about-title { color: #68ff00; font-size: 2rem; margin-bottom: 20px; text-transform: uppercase; }
         
-        .status-card { background: #111; border: 3px solid #333; padding: 30px; position: sticky; top: 20px; }
-        .section-header { border-bottom: 2px solid #68ff00; padding-bottom: 10px; margin-bottom: 20px; color: #68ff00; text-transform: uppercase; letter-spacing: 2px; }
-        
-        /* 按钮与交互 */
-        .login-btn { background: #68ff00; color: #000; padding: 15px; display: block; text-align: center; font-weight: bold; margin-top: 20px; border: none; cursor: pointer; width: 100%; font-size: 1.2rem; }
-        .login-btn:hover { background: #52cc00; box-shadow: 0 0 10px #68ff00; }
-        
-        .stat-line { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; }
-        .avatar-small { width: 55px; height: 55px; border: 2px solid #68ff00; image-rendering: pixelated; object-fit: cover; }
-        
-        .info-pill { background: #222; padding: 15px; border: 1px solid #444; text-align: center; }
-        .info-pill span { display: block; font-size: 1.5rem; color: #fbbf24; }
+        /* 模块化卡片区域 - 仅限会员 */
+        .main-content-area { padding: 40px 10%; background: #000; }
+        .dashboard-grid { 
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+            gap: 25px; 
+        }
+        .modern-card { background: rgba(20,20,20,0.9); border: 2px solid #333; padding: 25px; transition: 0.3s; }
+        .modern-card:hover { border-color: #68ff00; }
+        .card-header { color: #68ff00; border-bottom: 2px solid #68ff00; padding-bottom: 10px; margin-bottom: 20px; }
+
+        .progress-container { background: #222; height: 12px; border: 1px solid #444; margin: 15px 0; }
+        .progress-fill { background: #68ff00; height: 100%; width: 75%; box-shadow: 0 0 10px #68ff00; }
+
+        .action-btn { 
+            background: #68ff00; color: #000; padding: 15px 40px; border: none; 
+            cursor: pointer; font-size: 1.1rem; font-weight: bold; margin-top: 30px;
+        }
     </style>
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-    <div class="home-grid">
-        <div>
-            <div class="intro-box">
-                <h1 class="intro-title">Server Command Center</h1>
-                <p style="font-size: 1.2rem; line-height: 1.8; color: #ccc;">
-                    Welcome back to the Realm. As a registered member, you have access to advanced tracking tools and server-wide statistics. 
-                    Prepare your gear, manage your treasury, and dominate the leaderboard.
-                </p>
-            </div>
-
-            <%-- Member 专属内容面板 --%>
-            <asp:Panel ID="memberExclusiveSection" runat="server">
-                <div class="member-dashboard">
-                    <h3 class="section-header">Live Quest: Emerald Tycoon</h3>
-                    <div style="display:flex; justify-content:space-between; color:#fbbf24;">
-                        <span>Progress: 750 / 1000 Emeralds</span>
-                        <span>75%</span>
-                    </div>
-                    <div class="quest-bar-bg">
-                        <div class="quest-bar-fill"></div>
-                    </div>
-                    <p style="font-size: 0.9rem; color: #888; margin-top: 5px;">*Complete this quest to earn the [Merchant] Rank and bonus loot.</p>
-                    
-                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-top: 30px;">
-                        <div class="info-pill">
-                            <small>PVP KILLS</small>
-                            <span>128</span>
-                        </div>
-                        <div class="info-pill">
-                            <small>WORLD RANK</small>
-                            <span>#42</span>
-                        </div>
-                        <div class="info-pill">
-                            <small>UPGRADE STATUS</small>
-                            <span style="font-size: 1rem; color:#68ff00;">ELIGIBLE</span>
-                        </div>
-                    </div>
-                </div>
+    <div class="home-wrapper">
+        
+        <div class="hero-banner">
+            <asp:Panel ID="memberSection" runat="server">
+                <h1 class="hero-title">SYSTEM ONLINE</h1>
+                <p class="hero-subtitle">Welcome to the Command Center. Your automated empire awaits. Monitor your resources and manage your technical support tickets from this hub.</p>
             </asp:Panel>
 
-            <div class="news-box" style="margin-top: 40px;">
-                <h3 class="section-header">Latest Server Intel</h3>
-                <div style="background: #1a1a1a; padding: 20px; border-left: 4px solid #fbbf24; margin-bottom: 15px;">
-                    <strong style="color:#fbbf24;">[MAINTENANCE]</strong> Server hardware upgrade scheduled for March 1st.
-                </div>
-                <div style="background: #1a1a1a; padding: 20px; border-left: 4px solid #68ff00;">
-                    <strong style="color:#68ff00;">[NEW FEATURE]</strong> Use the Contact Us page to request Rank Upgrades directly. [cite: 2026-02-09]
-                </div>
-            </div>
-        </div>
-
-        <div>
-            <%-- 登录玩家状态卡片 --%>
-            <asp:Panel ID="playerPanel" runat="server" CssClass="status-card">
-                <h3 class="section-header">Active Character</h3>
-                <div class="stat-line">
-                    <asp:Image ID="imgSmallAvatar" runat="server" CssClass="avatar-small" />
-                    <div>
-                        <asp:Label ID="lblPlayerName" runat="server" style="font-weight:bold; font-size:1.4rem;" /><br />
-                        <span style="color:#fbbf24; font-size:0.9rem;">RANK: <asp:Label ID="lblRoleDisplay" runat="server" /></span>
-                    </div>
-                </div>
-                <div style="background:#000; padding:20px; border:1px solid #333; margin-top:20px; text-align:center;">
-                    <small style="color:#888;">CURRENT TREASURY</small><br />
-                    <span style="font-size:2rem; color:#68ff00;"><asp:Label ID="lblEmeralds" runat="server" /> 💎</span>
-                </div>
-            </asp:Panel>
-
-            <%-- 访客引导卡片 --%>
-            <asp:Panel ID="visitorPanel" runat="server" CssClass="status-card">
-                <h3 class="section-header">Restricted Access</h3>
-                <p style="color:#aaa; line-height:1.6;">
-                    You are viewing the hub as a Guest. Join the server to unlock your personalized dashboard and track your survival progress.
-                </p>
-                <asp:Button ID="btnLoginRedirect" runat="server" Text="[ LOGIN TO UNLOCK ]" OnClick="btnLoginRedirect_Click" CssClass="login-btn" />
-                <p style="text-align:center; margin-top:20px;">
-                    <%-- 跨文件夹跳转至邻居 Lee Wei Zhe 的注册页 --%>
-                    <a href="../Lee Wei Zhe/aspx/RegistrationPage.aspx" style="color:#68ff00; font-size:0.9rem; text-decoration:none;">
-                        Become a Member? Register here
-                    </a>
-                </p>
+            <asp:Panel ID="visitorSection" runat="server">
+                <h1 class="hero-title">MINECRAFT COMMUNITY</h1>
+                <p class="hero-subtitle">The ultimate destination for Minecraft technical players. Learn to build advanced Auto Farms, master Alchemy, and optimize your survival experience.</p>
+                <asp:Button ID="btnLoginRedirect" runat="server" Text="[ INITIALIZE LOGIN ]" OnClick="btnLoginRedirect_Click" CssClass="action-btn" />
             </asp:Panel>
         </div>
+
+        <% if (Session["UserId"] != null) { %>
+        <div class="status-bar">
+            <div class="status-item">TREASURY: <span><asp:Label ID="lblEmeralds" runat="server" /> 💎</span></div>
+            <div class="status-item">SERVER STATUS: <span style="color:#68ff00;">STABLE</span></div>
+            <div class="status-item">GLOBAL RANK: <span>#42</span></div>
+        </div>
+        <% } %>
+
+        <div class="about-section">
+            <h2 class="about-title">What is Minecraft Hub?</h2>
+            <p style="color:#aaa; line-height:1.8; max-width:900px; margin:0 auto;">
+                Our platform provides professional-grade tools for players to track their survival progress. 
+                From our <b>Auto Farm Database</b> featuring Redstone innovations, to our comprehensive <b>Bestiary</b>, 
+                we ensure every member has the knowledge to dominate their world.
+            </p>
+        </div>
+
+        <asp:Panel ID="memberDataCards" runat="server" CssClass="main-content-area">
+            <div class="dashboard-grid">
+                <div class="modern-card">
+                    <h3 class="card-header">Live Quest</h3>
+                    <p>Emerald Tycoon: 750 / 1000</p>
+                    <div class="progress-container"><div class="progress-fill"></div></div>
+                    <small style="color:#888;">Reward: [Merchant] Prefix</small>
+                </div>
+
+                <div class="modern-card">
+                    <h3 class="card-header">Server Intel</h3>
+                    <p style="margin-bottom:10px;"><b style="color:#fbbf24;">[!]</b> Maintenance on March 1st.</p>
+                    <p><b style="color:#68ff00;">[+]</b> New Support Ticket system active. [cite: 2026-02-09]</p>
+                </div>
+
+                <div class="modern-card">
+                    <h3 class="card-header">Quick Access</h3>
+                    <ul style="list-style:none; padding:0; line-height:2;">
+                        <li><a href="AutoFarm.aspx" style="color:#fff; text-decoration:none;">> Farm Database</a></li>
+                        <li><a href="Guide.aspx" style="color:#fff; text-decoration:none;">> Training Center</a></li>
+                        <li><a href="ContactUs.aspx" style="color:#fff; text-decoration:none;">> Open Support Ticket</a></li>
+                    </ul>
+                </div>
+            </div>
+        </asp:Panel>
+
     </div>
 </asp:Content>

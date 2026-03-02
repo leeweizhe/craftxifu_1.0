@@ -1,0 +1,2 @@
+PotionId FullContent
+-------- -----------
