@@ -1,5 +1,4 @@
 ﻿* {
-    user-select: none;
     box-sizing: border-box;
     font-family: 'Minecraft', sans-serif;
     margin: 0;
@@ -38,6 +37,7 @@ nav {
     background-repeat: repeat-x;
     background-size: cover;
     image-rendering: pixelated;
+    user-select: none;
 }
 
 .main-nav {
@@ -185,4 +185,5 @@ nav {
 footer {
     color: white;
     font-size: 1.6rem;
+    user-select: none;
 }
