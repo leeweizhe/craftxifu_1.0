@@ -114,6 +114,7 @@
     <Content Include="Tong Yu Hong\aspx\Mob.aspx" />
     <Content Include="Tong Yu Hong\aspx\MobDetail.aspx" />
     <Content Include="Tong Yu Hong\aspx\SupportChat.aspx" />
+    <Content Include="Tong Yu Hong\aspx\ViewStatistic.aspx" />
     <Content Include="Tong Yu Hong\Image\creeper_logo.png" />
     <Content Include="Tong Yu Hong\mobImage\allay.png" />
     <Content Include="Tong Yu Hong\mobImage\axolotl.png" />
@@ -319,6 +320,13 @@
     <Compile Include="Tong Yu Hong\aspx\SupportChat.aspx.designer.cs">
       <DependentUpon>SupportChat.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Tong Yu Hong\aspx\ViewStatistic.aspx.cs">
+      <DependentUpon>ViewStatistic.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Tong Yu Hong\aspx\ViewStatistic.aspx.designer.cs">
+      <DependentUpon>ViewStatistic.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Wong Zhang Zhe\AutoFarm.aspx.cs">
       <DependentUpon>AutoFarm.aspx</DependentUpon>
     </Compile>
@@ -355,9 +363,7 @@
       <DependentUpon>Web.config</DependentUpon>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Tong Yu Hong\js\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
