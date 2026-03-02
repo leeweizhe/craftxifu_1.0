@@ -1,8 +1,75 @@
-﻿.guide-container h1,
+﻿html {
+    scroll-behavior: smooth;
+}
+
+.page-layout {
+    display: flex;
+    align-items: flex-start; /* Keeps the sidebar from stretching to the bottom */
+    gap: 30px;
+    width: 100%;
+    max-width: 1200px; /* Limits how wide the whole page can get */
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* --- NEW: Sidebar Menu --- */
+.toc-sidebar {
+    width: 250px;
+    background-color: white;
+    border: 2px solid #808080;
+    border-radius: 8px;
+    padding: 20px;
+    /* This makes it stick to the screen as you scroll! */
+    position: sticky;
+    top: 130px;
+    left:40px;
+}
+
+    .toc-sidebar h3 {
+        font-family: 'Minecraft', sans-serif;
+        color: black;
+        margin-bottom: 15px;
+        border-bottom: 2px solid #555;
+        padding-bottom: 10px;
+        font-weight: normal;
+    }
+
+    .toc-sidebar ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .toc-sidebar li {
+        margin-bottom: 10px;
+    }
+
+    .toc-sidebar a {
+        color: black;
+        font-family: 'PT Serif', serif;
+        font-size: 1.1rem;
+        text-decoration: none;
+        transition: color 0.2s, padding-left 0.2s;
+        display: block;
+    }
+
+        .toc-sidebar a:hover {
+            color: #00b63b;
+            padding-left: 5px; /* Cool hover effect that nudges the text right */
+        }
+
+.guide-container h1,
 .guide-container h2,
 .accordion-item summary {
     font-weight: normal !important; /* Forces the font to its thinnest state */
     letter-spacing: 1px; /* Adds a tiny bit of breathing room between letters */
+}
+
+.step-content p, .accordion-text p {
+    font-family: 'PT Serif', serif;
+    font-size: 1.1rem;
+    line-height: 1.6; /* Adds breathing room between lines */
+    color: #1e1e1e;
 }
 
 .all-guides-wrapper {
@@ -11,17 +78,19 @@
     align-items: center;
     gap: 40px; /* Space between the two containers */
     width: 100%;
+    flex: 1;
 }
 
 .guide-container {
     background-color: #1e1e1e; /* Dark theme background */
-    border-radius:10px;
+    border-radius: 10px;
     padding: 40px;
     width: 100%;
     max-width: 900px;
     margin: 0 auto;
     font-family: 'Minecraft', sans-serif; /* Assumes you have your font loaded */
     color: white;
+    scroll-margin-top: 140px;
 }
 
 .guide-title {
@@ -91,17 +160,10 @@
     align-items: center;
     justify-content: center;
     min-height: 150px;
+    max-height: 250px;
     font-weight: bold;
     color: #555;
 }
-
-    .step-image-box.multiple-images {
-        display: flex;
-        flex-direction: column;
-        gap: 15px;
-        padding: 15px;
-
-    }
 
 .guide-img {
     width: 100%; /* Forces the image to fill the width of its column */
@@ -170,4 +232,277 @@
 
 .accordion-text {
     flex: 2; /* Takes up 2/3 of the space */
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   INSTRUCTOR INLINE EDITOR STYLES
+   These match the dark theme of the existing .guide-container
+   ══════════════════════════════════════════════════════════════════ */
+
+/* --- Part title row layout (view + edit mode share this) ---------- */
+.guide-title-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+}
+
+    /* Remove the margin from guide-title since the row handles spacing */
+    .guide-title-row .guide-title {
+        margin-bottom: 0;
+    }
+
+.instructor-controls {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+/* --- Large title input (for editing part title inline) ------------ */
+.edit-title-input {
+    font-family: 'Minecraft', sans-serif !important;
+    font-size: 2rem !important;
+    text-align: center;
+    background-color: #2e2e2e !important;
+    color: #00b63b !important;
+    border: 2px solid #00b63b !important;
+    padding: 8px 16px;
+    border-radius: 6px;
+    width: 100%;
+    max-width: 500px;
+}
+
+/* --- Step view panel (keeps existing flex layout of step-card) ---- */
+.step-view-panel {
+    display: contents; /* inherits the parent flex layout — acts invisible as a wrapper */
+}
+
+/* --- Step edit panel (replaces the card interior) ----------------- */
+.step-edit-panel {
+    display: flex; /* shown as flex when active */
+    gap: 20px;
+    width: 100%;
+    padding-top: 15px; /* pushes content down below the step badge */
+    align-items: flex-start;
+    flex-wrap: wrap;
+}
+
+.step-edit-fields {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 200px;
+}
+
+/* --- Shared input styles (dark theme to match the card) ----------- */
+.edit-label {
+    font-family: 'Minecraft', sans-serif;
+    font-size: 0.85rem;
+    color: #1e1e1e;
+    letter-spacing: 0.5px;
+}
+
+.edit-hint {
+    color: #808080;
+    font-size: 0.8rem;
+}
+
+.edit-input {
+    width: 100%;
+    padding: 8px 12px;
+    background-color: #f0f0f0;
+    border: 2px solid #808080;
+    border-radius: 5px;
+    font-family: 'PT Serif', serif;
+    font-size: 0.95rem;
+    color: #1e1e1e;
+    box-sizing: border-box;
+    transition: border-color 0.2s;
+}
+
+    .edit-input:focus {
+        outline: none;
+        border-color: #00b63b;
+    }
+
+.edit-textarea {
+    resize: vertical;
+    min-height: 90px;
+}
+
+.edit-select {
+    cursor: pointer;
+}
+
+/* --- Save/Cancel button row --------------------------------------- */
+.inline-form-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+/* --- Instructor controls stacked on right of step card ------------ */
+.step-instructor-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    justify-content: center;
+    padding-left: 15px;
+    border-left: 2px solid #808080;
+    flex-shrink: 0;
+}
+
+/* --- Add Step row at bottom of each part -------------------------- */
+.add-step-row {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 2px dashed #555;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.add-step-form {
+    background-color: #d5d5d5;
+    border: 2px solid #808080;
+    border-radius: 8px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.add-step-form-title {
+    font-family: 'Minecraft', sans-serif;
+    font-size: 1.1rem;
+    font-weight: normal;
+    color: #1e1e1e;
+    margin-bottom: 6px;
+}
+
+/* --- Separator "+" button between parts --------------------------- */
+.add-part-separator-wrapper {
+    display: none; /* hidden by default — JS shows it for instructors */
+    justify-content: center;
+    align-items: center;
+    padding: 8px 0;
+}
+
+.add-part-separator-btn {
+    background: none;
+    border: 2px dashed #808080;
+    color: #d5d5d5;
+    font-family: 'Minecraft', sans-serif;
+    font-size: 1rem;
+    padding: 6px 30px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 1px;
+}
+
+    .add-part-separator-btn:hover {
+        border-color: #00b63b;
+        color: #00b63b;
+        background-color: rgba(0, 182, 59, 0.05);
+    }
+
+/* --- "Add Section at End" row ------------------------------------- */
+.end-add-part-row {
+    display: flex;
+    justify-content: center;
+    padding: 10px 0 20px;
+}
+
+/* --- Add Part overlay (full-screen dimmed backdrop) --------------- */
+.add-part-overlay {
+    position: fixed; /* stays in place even when scrolling */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex; /* JS sets this to flex to show it */
+    align-items: center;
+    justify-content: center;
+    z-index: 10000; /* above everything, including the sticky nav */
+}
+
+.add-part-form-inner {
+    background-color: #1e1e1e;
+    border: 2px solid #00b63b;
+    border-radius: 10px;
+    padding: 35px;
+    width: 100%;
+    max-width: 500px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    color: white;
+}
+
+.add-part-form-title {
+    font-family: 'Minecraft', sans-serif;
+    font-size: 1.5rem;
+    font-weight: normal;
+    color: #00b63b;
+    text-align: center;
+    margin-bottom: 12px;
+    letter-spacing: 1px;
+}
+
+.form-error {
+    color: #ff4444;
+    font-size: 0.85rem;
+    font-family: 'PT Serif', serif;
+}
+
+.btn-instructor {
+    padding: 8px 16px;
+    border: 2px solid black;
+    border-radius: 5px;
+    font-family: 'Minecraft', sans-serif;
+    font-size: 0.9rem;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: transform 0.1s, opacity 0.2s;
+}
+
+    .btn-instructor:hover {
+        transform: translateY(-2px);
+        opacity: 0.9;
+    }
+
+.btn-save {
+    background-color: #00b63b;
+    color: white;
+    -webkit-text-stroke: 0.1px black;
+}
+
+.btn-edit {
+    background-color: #f0a500;
+    color: white;
+    -webkit-text-stroke: 0.1px black;
+}
+
+.btn-delete {
+    background-color: #cc2222;
+    color: white;
+    -webkit-text-stroke: 0.1px black;
+}
+
+.btn-add {
+    background-color: #00b63b;
+    color: white;
+    -webkit-text-stroke: 0.1px black;
+}
+
+.btn-cancel {
+    background-color: #555;
+    color: white;
 }
