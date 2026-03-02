@@ -1,0 +1,3 @@
+PotionId FullContent
+-------- -----------
+15 <b>Bedrock brewing:</b> Awkward Potion + Wither Rose → Potion of Decay<br><br><b>Wither effect details:</b><br>- Deals 1 HP damage per second<br>- Turns hearts black (making it hard to see real HP)<br>- Bypasses armour entirely (only Wither Resistance fr
