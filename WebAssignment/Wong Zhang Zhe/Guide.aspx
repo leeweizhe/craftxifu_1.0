@@ -112,14 +112,6 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
     <div class="guide-hub-wrapper">
         <div class="guide-grid">
-            <asp:LinkButton ID="btnAutoFarm" runat="server" CssClass="guide-card" OnClick="Guide_Click" CommandArgument="AutoFarm">
-                <img src="/Wong Zhang Zhe/pic/autofarm_cover.png" class="card-img" />
-                <div class="card-title">Auto Farm</div>
-                <div class="card-intro">
-                    <p>An Auto Farm is a player-made machine in Minecraft that harvests and stores resources without manual intervention. By using Redstone and game mechanics (like plant growth or mob spawning), it turns manual labor into a continuous, hands-free supply of items.</p>
-                    <div class="click-hint">[ Click to Enter ]</div>
-                </div>
-            </asp:LinkButton>
 
             <asp:LinkButton ID="btnBeginner" runat="server" CssClass="guide-card" OnClick="Guide_Click" CommandArgument="Beginner">
                 <img src="/Wong Zhang Zhe/pic/beginner_cover.png" class="card-img" />
@@ -144,6 +136,15 @@
                 <div class="card-title">Potion & Enchantment</div>
                 <div class="card-intro">
                     <p>Potions are consumable liquids from a Brewing Stand that grant temporary status effects like fire resistance or underwater breathing, essential for surviving extreme environments. Enchantments are permanent magical upgrades for gear applied via an Enchanting Table or Anvils, boosting power and durability for late-game challenges and boss fights.</p>
+                    <div class="click-hint">[ Click to Enter ]</div>
+                </div>
+            </asp:LinkButton>
+
+            <asp:LinkButton ID="btnAutoFarm" runat="server" CssClass="guide-card" OnClick="Guide_Click" CommandArgument="AutoFarm">
+                <img src="/Wong Zhang Zhe/pic/autofarm_cover.png" class="card-img" />
+                <div class="card-title">Auto Farm</div>
+                <div class="card-intro">
+                    <p>An Auto Farm is a player-made machine in Minecraft that harvests and stores resources without manual intervention. By using Redstone and game mechanics (like plant growth or mob spawning), it turns manual labor into a continuous, hands-free supply of items.</p>
                     <div class="click-hint">[ Click to Enter ]</div>
                 </div>
             </asp:LinkButton>
