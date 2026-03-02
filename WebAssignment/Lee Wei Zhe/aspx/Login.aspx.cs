@@ -60,7 +60,9 @@ namespace WebAssignment
                                 Session["profilePic"] = dr["ProfilePicture"].ToString().Trim();
                                 Session["avatarFrame"] = dr["AvatarFrame"] != DBNull.Value ? dr["AvatarFrame"].ToString() : "";
 
-                                Response.Redirect("~/Wong Zhang Zhe/Home.aspx");
+
+                                Response.Redirect("BeginnerGuide.aspx");
+                                //Response.Redirect("~/Wong Zhang Zhe/Home.aspx");
                             }
                             else
                             {

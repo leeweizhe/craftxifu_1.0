@@ -160,6 +160,7 @@
     <Content Include="images\backgrounds\Grass_texture.jpg" />
     <Content Include="images\profiles\troll.jpg" />
     <Content Include="Lee Wei Zhe\aspx\Login.aspx" />
+    <Content Include="Lee Wei Zhe\js\BeginnerGuide.js" />
     <Content Include="Lee Wei Zhe\js\Login.js" />
     <Content Include="Lee Wei Zhe\js\nav.js" />
     <Content Include="obj\Debug\WebAssignment.csproj.FileListAbsolute.txt" />
@@ -177,6 +178,7 @@
       <DependentUpon>Database1.mdf</DependentUpon>
     </Content>
     <Content Include="Wong Zhang Zhe\EditProfile.aspx" />
+    <Content Include="Wong Zhang Zhe\Guide.aspx" />
     <Content Include="Wong Zhang Zhe\Home.aspx" />
     <Content Include="Wong Zhang Zhe\pic\1_iron.png" />
     <Content Include="Wong Zhang Zhe\pic\enchant\baneofarthropods_detail.png" />
@@ -434,6 +436,13 @@
     </Compile>
     <Compile Include="Wong Zhang Zhe\FarmDetails.aspx.designer.cs">
       <DependentUpon>FarmDetails.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Wong Zhang Zhe\Guide.aspx.cs">
+      <DependentUpon>Guide.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Wong Zhang Zhe\Guide.aspx.designer.cs">
+      <DependentUpon>Guide.aspx</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

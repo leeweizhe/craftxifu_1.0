@@ -1,5 +1,4 @@
 ﻿* {
-    user-select: none;
     box-sizing: border-box;
     /* Keep pixel font but allow emoji fallback from system fonts */
     font-family: 'Minecraft', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji', sans-serif;
@@ -38,6 +37,7 @@ nav {
     background-image: url('images/backgrounds/grass_texture.jpg');
     background-repeat: repeat;
     image-rendering: pixelated;
+    user-select: none;
 }
 
 .main-nav {
@@ -185,4 +185,5 @@ nav {
 footer {
     color: white;
     font-size: 1.6rem;
+    user-select: none;
 }

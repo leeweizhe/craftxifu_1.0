@@ -4,6 +4,8 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using System.Data.SqlClient; // 必须导入
+using System.Configuration;   // 必须导入
 
 namespace WebAssignment
 {
@@ -11,10 +13,8 @@ namespace WebAssignment
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (!IsPostBack)
-            {
-                CheckLoginStatus();
-            }
+            // 每次页面加载都检查，确保状态实时更新
+            CheckLoginStatus();
         }
 
         private void CheckLoginStatus()
@@ -24,12 +24,28 @@ namespace WebAssignment
                 phVisitor.Visible = false;
                 phMember.Visible = true;
 
-                string picPath = Session["profilePic"].ToString();
+                // 【核心修复】如果 Session 里的详细资料丢了，直接从数据库抓取最新的
                 int userId = Convert.ToInt32(Session["userId"]);
-                lblUsername.Text = Session["username"].ToString();
-                imgProfile.ImageUrl = picPath;
+                LoadUserDataFromDb(userId);
+            }
+            else
+            {
+                phVisitor.Visible = true;
+                phMember.Visible = false;
+            }
+        }
 
-                if (Session["avatarFrame"] != null && !string.IsNullOrEmpty(Session["avatarFrame"].ToString()))
+        private void LoadUserDataFromDb(int userId)
+        {
+            string connString = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
+            using (SqlConnection conn = new SqlConnection(connString))
+            {
+                // 从 userTable 获取该用户的实时数据
+                string sql = "SELECT Username, ProfilePicture FROM userTable WHERE UserId = @id";
+                SqlCommand cmd = new SqlCommand(sql, conn);
+                cmd.Parameters.AddWithValue("@id", userId);
+
+                try
                 {
                     string framePath = Session["avatarFrame"].ToString();
                     imgFrame.ImageUrl = framePath;
@@ -55,6 +71,7 @@ namespace WebAssignment
         {
             Session.Clear();
             Session.Abandon();
+            // 跨文件夹重定向至邻居的登录页
             Response.Redirect("~/Lee Wei Zhe/aspx/Login.aspx");
         }
     }
