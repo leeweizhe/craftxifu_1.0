@@ -4,7 +4,7 @@ using System.Data.SqlClient;
 using System.Configuration;
 using System.Web.UI.WebControls;
 
-namespace WebAssignment.Wong_Zhang_Zhe
+namespace WebAssignment.Brayden
 {
     public partial class Potion : System.Web.UI.Page
     {
