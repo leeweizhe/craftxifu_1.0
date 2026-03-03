@@ -4,14 +4,143 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using System.Data;
+using System.Data.SqlClient;
+using System.Configuration;
 
-namespace WebAssignment.Wong_Zhang_Zhe
+namespace WebAssignment
 {
-    public partial class WebForm1 : System.Web.UI.Page
+    public partial class FarmDetails : System.Web.UI.Page
     {
+        private string connString = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;    
         protected void Page_Load(object sender, EventArgs e)
         {
+            Session["userId"] = 8; // 保持测试 ID，确保母版页能正常读取
 
+
+            if (Session["username"] == null) Session["username"] = "Steve";
+            if (Session["profilePic"] == null) Session["profilePic"] = "~/Images/profiles/DPick.jpg";
+
+            string farmId = Request.QueryString["id"];
+            if (string.IsNullOrEmpty(farmId))
+            {
+                Response.Redirect("AutoFarm.aspx");
+                return;
+            }
+
+            if (!IsPostBack)
+            {
+                LoadFarmDetails(farmId);
+                LoadComments(farmId);
+                CheckCommentPermission();
+            }
+        }
+
+        private void CheckCommentPermission()
+        {
+            if (Session["userId"] != null)
+            {
+                pnlAddComment.Visible = true;
+                litVisitorMsg.Text = "";
+            }
+            else
+            {
+                pnlAddComment.Visible = false;
+                litVisitorMsg.Text = "<p style='color: #fbbf24; text-align: center;'>[ <a href='Login.aspx' style='color: #68ff00;'>Login</a> to join the discussion ]</p>";
+            }
+        }
+        private void LoadComments(string farmId)
+        {
+            using (SqlConnection conn = new SqlConnection(connString))
+            {
+                // 使用 JOIN 获取用户名
+                string sql = @"SELECT c.*, u.Username FROM commentTable c 
+                               JOIN userTable u ON c.UserId = u.UserId 
+                               WHERE c.FarmId = @fid ORDER BY c.CommentDate DESC";
+                SqlCommand cmd = new SqlCommand(sql, conn);
+                cmd.Parameters.AddWithValue("@fid", farmId);
+
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+                rptComments.DataSource = dt;
+                rptComments.DataBind();
+            }
+        }
+
+        protected void btnSubmitComment_Click(object sender, EventArgs e)
+        {
+            string farmId = Request.QueryString["id"];
+            string commentText = txtComment.Text.Trim();
+
+            if (!string.IsNullOrEmpty(commentText) && Session["userId"] != null)
+            {
+                using (SqlConnection conn = new SqlConnection(connString))
+                {
+                    string sql = "INSERT INTO commentTable (FarmId, UserId, CommentText) VALUES (@fid, @uid, @text)";
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@fid", farmId);
+                    cmd.Parameters.AddWithValue("@uid", Session["userId"]);
+                    cmd.Parameters.AddWithValue("@text", commentText);
+
+                    conn.Open();
+                    cmd.ExecuteNonQuery();
+                    conn.Close();
+                }
+                txtComment.Text = ""; // 清空输入框
+                LoadComments(farmId); // 刷新评论列表
+            }
+        }
+
+        private void LoadFarmDetails(string id)
+        {
+            string connString = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
+            using (SqlConnection conn = new SqlConnection(connString))
+            {
+                string sql = "SELECT * FROM farmTable WHERE FarmId = @id";
+                SqlCommand cmd = new SqlCommand(sql, conn);
+                cmd.Parameters.AddWithValue("@id", id);
+
+                conn.Open();
+                SqlDataReader reader = cmd.ExecuteReader();
+                if (reader.Read())
+                {
+                    // 1. 绑定基础文字信息
+                    lblTitle.Text = reader["Title"].ToString();
+                    lblDesc.Text = reader["Description"].ToString();
+                    lblEfficiency.Text = reader["Efficiency"].ToString();
+                    litContent.Text = reader["FullContent"].ToString();
+
+                    // 2. 绑定详情页大图
+                    imgFarmDisplay.ImageUrl = reader["DetailImage"].ToString();
+
+                    // 3. 绑定材料清单图片
+                    string matImg = reader["MaterialImage"].ToString();
+                    if (!string.IsNullOrEmpty(matImg))
+                    {
+                        imgMaterial.ImageUrl = matImg;
+                        materialPanel.Visible = true;
+                    }
+
+                    // 4. 处理视频 URL (兼容长短链接)
+                    string videoUrl = reader["VideoUrl"].ToString();
+                    if (!string.IsNullOrEmpty(videoUrl))
+                    {
+                        string finalEmbedUrl = "";
+                        if (videoUrl.Contains("watch?v="))
+                        {
+                            finalEmbedUrl = videoUrl.Replace("watch?v=", "embed/");
+                        }
+                        else if (videoUrl.Contains("youtu.be/"))
+                        {
+                            finalEmbedUrl = videoUrl.Replace("youtu.be/", "www.youtube.com/embed/");
+                        }
+                        videoFrame.Src = finalEmbedUrl;
+                        videoPanel.Visible = true;
+                    }
+                }
+                conn.Close();
+            }
         }
     }
 }

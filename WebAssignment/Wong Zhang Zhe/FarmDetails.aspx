@@ -1,75 +1,4 @@
-﻿<%-- 1. 页面指令与母版页关联 --%>
-<%@ Page Title="Farm Details" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" %>
-
-<%-- 2. 导入命名空间 --%>
-<%@ Import Namespace="System.Data" %>
-<%@ Import Namespace="System.Data.SqlClient" %>
-<%@ Import Namespace="System.Configuration" %>
-
-<script runat="server">
-    protected void Page_Load(object sender, EventArgs e)
-    {
-        string farmId = Request.QueryString["id"];
-
-        if (!string.IsNullOrEmpty(farmId))
-        {
-            LoadFarmDetails(farmId);
-        }
-        else
-        {
-            Response.Redirect("AutoFarm.aspx");
-        }
-    }
-
-    private void LoadFarmDetails(string id)
-    {
-        string connString = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
-        using (SqlConnection conn = new SqlConnection(connString))
-        {
-            string sql = "SELECT * FROM farmTable WHERE FarmId = @id";
-            SqlCommand cmd = new SqlCommand(sql, conn);
-            cmd.Parameters.AddWithValue("@id", id);
-            
-            conn.Open();
-            SqlDataReader reader = cmd.ExecuteReader();
-            if (reader.Read())
-            {
-                // 1. 绑定基础文字信息
-                lblTitle.Text = reader["Title"].ToString();
-                lblDesc.Text = reader["Description"].ToString();
-                lblEfficiency.Text = reader["Efficiency"].ToString();
-                litContent.Text = reader["FullContent"].ToString();
-
-                // 2. 绑定详情页大图
-                imgFarmDisplay.ImageUrl = reader["DetailImage"].ToString();
-
-                // 3. 绑定材料清单图片 (新功能)
-                string matImg = reader["MaterialImage"].ToString();
-                if (!string.IsNullOrEmpty(matImg))
-                {
-                    imgMaterial.ImageUrl = matImg;
-                    materialPanel.Visible = true;
-                }
-
-                // 4. 处理视频 URL (兼容长短链接)
-                string videoUrl = reader["VideoUrl"].ToString();
-                if (!string.IsNullOrEmpty(videoUrl))
-                {
-                    string finalEmbedUrl = "";
-                    if (videoUrl.Contains("watch?v=")) {
-                        finalEmbedUrl = videoUrl.Replace("watch?v=", "embed/");
-                    }
-                    else if (videoUrl.Contains("youtu.be/")) {
-                        finalEmbedUrl = videoUrl.Replace("youtu.be/", "www.youtube.com/embed/");
-                    }
-                    videoFrame.Src = finalEmbedUrl;
-                    videoPanel.Visible = true;
-                }
-            }
-            conn.Close();
-        }
-    }
-</script>
+﻿<%@ Page Title="Farm Details" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="FarmDetails.aspx.cs" Inherits="WebAssignment.FarmDetails" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <style type="text/css">
@@ -114,7 +43,7 @@
             </div>
         </asp:Panel>
 
-        <%-- 3. 材料清单 (新增加部分) --%>
+        <%-- 3. 材料清单 --%>
         <asp:Panel ID="materialPanel" runat="server" Visible="false">
             <span class="section-label">Required Materials</span>
             <div style="text-align:center; padding: 20px; background: rgba(0,0,0,0.5); margin-bottom: 30px;">
@@ -126,6 +55,36 @@
         <span class="section-label"> Description </span>
         <div class="content-box">
             <asp:Literal ID="litContent" runat="server" />
+        </div>
+
+        <%-- 5. 评论区 --%>
+        <span class="section-label">Player Discussions</span>
+        <div class="content-box">
+            <%-- 评论列表 --%>
+            <asp:Repeater ID="rptComments" runat="server">
+                <ItemTemplate>
+                    <div style="border-bottom: 1px dashed #333; padding: 15px 0; margin-bottom: 10px;">
+                        <strong style="color: #68ff00;"><%# Eval("Username") %></strong> 
+                        <span style="color: #666; font-size: 0.8rem;">- <%# Eval("CommentDate", "{0:yyyy-MM-dd HH:mm}") %></span>
+                        <p style="margin-top: 8px; color: #ccc;"><%# Eval("CommentText") %></p>
+                    </div>
+                </ItemTemplate>
+            </asp:Repeater>
+
+            <%-- 发表评论 (仅对 Member 可见) --%>
+            <asp:Panel ID="pnlAddComment" runat="server" Visible="false" style="margin-top: 30px; border-top: 2px solid #333; padding-top: 20px;">
+                <h4 style="color: #fbbf24; margin-bottom: 10px;">ADD YOUR THOUGHTS</h4>
+                <asp:TextBox ID="txtComment" runat="server" TextMode="MultiLine" Rows="4" 
+                    style="width: 100%; background: #000; color: #fff; border: 1px solid #68ff00; padding: 10px; font-family: 'Minecraft', sans-serif;" 
+                    placeholder="Type your comment here..." />
+                <br />
+                <asp:Button ID="btnSubmitComment" runat="server" Text="[ POST COMMENT ]" 
+                    OnClick="btnSubmitComment_Click" 
+                    style="margin-top: 15px; background: #68ff00; color: #000; border: none; padding: 10px 25px; font-weight: bold; cursor: pointer;" />
+            </asp:Panel>
+
+            <%-- 对 Visitor 的提示 --%>
+            <asp:Literal ID="litVisitorMsg" runat="server" />
         </div>
     </div>
 </asp:Content>

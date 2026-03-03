@@ -466,8 +466,6 @@
     </Compile>
     <Compile Include="Lee Wei Zhe\myClass\EmailHelper.cs" />
     <Compile Include="Lee Wei Zhe\myClass\OtpHelper.cs" />
-    <Compile Include="obj\Debug\.NETFramework,Version=v4.7.2.AssemblyAttributes.cs" />
-    <Compile Include="obj\Release\.NETFramework,Version=v4.7.2.AssemblyAttributes.cs" />
     <Compile Include="Site.Master.cs">
       <DependentUpon>Site.Master</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -513,6 +511,17 @@
     </Compile>
     <Compile Include="Wong Zhang Zhe\AutoFarm.aspx.cs">
       <DependentUpon>AutoFarm.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Wong Zhang Zhe\AutoFarm.aspx.designer.cs">
+      <DependentUpon>AutoFarm.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Wong Zhang Zhe\ContactUs.aspx.cs">
+      <DependentUpon>ContactUs.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Wong Zhang Zhe\ContactUs.aspx.designer.cs">
+      <DependentUpon>ContactUs.aspx</DependentUpon>
     </Compile>
     <Compile Include="Wong Zhang Zhe\EditProfile.aspx.cs">
       <DependentUpon>EditProfile.aspx</DependentUpon>
@@ -534,6 +543,20 @@
     </Compile>
     <Compile Include="Wong Zhang Zhe\Guide.aspx.designer.cs">
       <DependentUpon>Guide.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Wong Zhang Zhe\Home.aspx.cs">
+      <DependentUpon>Home.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Wong Zhang Zhe\Home.aspx.designer.cs">
+      <DependentUpon>Home.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Wong Zhang Zhe\UserProfile.aspx.cs">
+      <DependentUpon>UserProfile.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Wong Zhang Zhe\UserProfile.aspx.designer.cs">
+      <DependentUpon>UserProfile.aspx</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

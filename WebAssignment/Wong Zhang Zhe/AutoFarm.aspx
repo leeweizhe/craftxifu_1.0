@@ -1,76 +1,8 @@
 ﻿<%-- 1. 页面指令与母版页关联 --%>
-<%@ Page Title="Auto Farm Guides" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" %>
+<%@ Page Title="Auto Farm Guides" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="AutoFarm.aspx.cs" Inherits="WebAssignment.AutoFarm" %>
 <%@ Import Namespace="System.Data" %>
 <%@ Import Namespace="System.Data.SqlClient" %>
 <%@ Import Namespace="System.Configuration" %>
-
-<script runat="server">
-    protected void Page_Load(object sender, EventArgs e)
-    {
-        if (!IsPostBack)
-        {
-            // 初始状态：显示动态分类面板，隐藏具体列表
-            categoryPanel.Visible = true;
-            subFarmPanel.Visible = false;
-            LoadDynamicCategories();
-        }
-    }
-
-    // 从数据库抓取所有不重复的分类（Iron, Gold, Wood, Stone, Food, XP 等）
-    private void LoadDynamicCategories()
-    {
-        string connString = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
-        using (SqlConnection conn = new SqlConnection(connString))
-        {
-            // 使用 DISTINCT 关键字确保每个分类只生成一张卡片
-            string sql = "SELECT DISTINCT Category FROM farmTable";
-            SqlCommand cmd = new SqlCommand(sql, conn);
-            SqlDataAdapter da = new SqlDataAdapter(cmd);
-            DataTable dt = new DataTable();
-            da.Fill(dt);
-
-            // 绑定到分类 Repeater
-            categoryRepeater.DataSource = dt;
-            categoryRepeater.DataBind();
-        }
-    }
-
-    protected void SelectCategory(object sender, EventArgs e)
-    {
-        LinkButton btn = (LinkButton)sender;
-        string category = btn.CommandArgument; 
-        
-        lblCategoryTitle.Text = category + " Farms Database";
-        LoadFarmsByCategory(category);
-        
-        categoryPanel.Visible = false;
-        subFarmPanel.Visible = true;
-    }
-
-    private void LoadFarmsByCategory(string category)
-    {
-        string connString = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
-        using (SqlConnection conn = new SqlConnection(connString))
-        {
-            string sql = "SELECT * FROM farmTable WHERE Category = @cat";
-            SqlCommand cmd = new SqlCommand(sql, conn);
-            cmd.Parameters.AddWithValue("@cat", category);
-            
-            SqlDataAdapter da = new SqlDataAdapter(cmd);
-            DataTable dt = new DataTable();
-            da.Fill(dt);
-            
-            farmRepeater.DataSource = dt;
-            farmRepeater.DataBind();
-        }
-    }
-
-    protected void BackToCategories(object sender, EventArgs e)
-    {
-        categoryPanel.Visible = true;
-        subFarmPanel.Visible = false;
-    }
-</script>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <style type="text/css">
@@ -116,7 +48,7 @@
                         </asp:LinkButton>
                     </ItemTemplate>
                 </asp:Repeater>
-            </div>
+            </div> 
         </asp:Panel>
 
         <%-- 面板 2：农场具体列表 --%>
