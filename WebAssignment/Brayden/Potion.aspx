@@ -92,8 +92,8 @@
                     <asp:LinkButton runat="server"
                         CssClass='<%# "pot-cat-card " + Eval("Category").ToString().ToLower() + "-card" %>'
                         CommandArgument='<%# Eval("Category") %>' OnClick="SelectCategory">
-                        <span class="cat-icon-big"><%# ((WebAssignment.Wong_Zhang_Zhe.Potion)Page).GetCategoryIcon(Eval("Category").ToString()) %></span>
-                        <h2 style='color:<%# ((WebAssignment.Wong_Zhang_Zhe.Potion)Page).GetCategoryColor(Eval("Category").ToString()) %>'>
+                        <span class="cat-icon-big"><%# ((WebAssignment.Brayden.Potion)Page).GetCategoryIcon(Eval("Category").ToString()) %></span>
+                        <h2 style='color:<%# ((WebAssignment.Brayden.Potion)Page).GetCategoryColor(Eval("Category").ToString()) %>'>
                             <%# Eval("Category") %> Potions
                         </h2>
                         <p>Explore <%# Eval("Category").ToString().ToLower() %> effect brews</p>
@@ -138,7 +138,7 @@
                          class="pot-row-thumb"
                          onerror="this.style.display='none'" alt='<%# Eval("Name") %>' />
                     <div class="pot-row-info">
-                        <h3 style='color:<%# ((WebAssignment.Wong_Zhang_Zhe.Potion)Page).GetCategoryColor(Eval("Category").ToString()) %>'>
+                        <h3 style='color:<%# ((WebAssignment.Brayden.Potion)Page).GetCategoryColor(Eval("Category").ToString()) %>'>
                             <%# Eval("Name") %>
                             <span class='type-badge type-<%# Eval("PotionType").ToString().Replace(" ","") %>'><%# Eval("PotionType") %></span>
                         </h3>
