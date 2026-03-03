@@ -34,12 +34,9 @@
         
 <div class="input-section">
     <label class="static-label">Country</label>
-    <asp:DropDownList ID="ddlCountry" runat="server" CssClass="country-dropdown">
-        <asp:ListItem Text="Select your country" Value="" Selected="True" />
-        <asp:ListItem Text="Malaysia" Value="Malaysia" />
-        <asp:ListItem Text="United States" Value="United States" />
-        <asp:ListItem Text="United Kingdom" Value="United Kingdom" />
-    </asp:DropDownList>
+        <asp:DropDownList ID="ddlCountry" runat="server" CssClass="country-dropdown">
+            <asp:ListItem Text="-- Select Country --" Value="" />
+        </asp:DropDownList>
 </div>
         
     <div class="input-section">
