@@ -26,7 +26,13 @@ namespace WebAssignment.Tong_Yu_Hong.aspx
             using (SqlConnection conn = new SqlConnection(connString))
             {
                 // Selecting only existing columns
-                string query = "SELECT GuideName, ClickCount FROM guideStatsTable ORDER BY GuideName ASC";
+                string query = @"SELECT GuideName, ClickCount FROM guideStatsTable 
+                 ORDER BY CASE GuideName 
+                    WHEN 'Beginner' THEN 1 
+                    WHEN 'Mob' THEN 2 
+                    WHEN 'Potion' THEN 3 
+                    WHEN 'AutoFarm' THEN 4 
+                    ELSE 5 END";
 
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
