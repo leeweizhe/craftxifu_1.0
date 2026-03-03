@@ -36,8 +36,15 @@ namespace WebAssignment
                 }
 
                 // 3. Load user data for the phMember section
-                lblUsername.Text = Session["username"].ToString();
-                imgProfile.ImageUrl = Session["profilePic"].ToString();
+                //lblUsername.Text = Session["username"].ToString();
+                //imgProfile.ImageUrl = Session["profilePic"].ToString();
+                lblUsername.Text = Session["username"] != null ? Session["username"].ToString() : "Member";
+
+                // 使用小写 p: profilePic
+                if (Session["profilePic"] != null)
+                {
+                    imgProfile.ImageUrl = Session["profilePic"].ToString();
+                }
 
                 // Handle the frame
                 if (Session["avatarFrame"] != null && !string.IsNullOrEmpty(Session["avatarFrame"].ToString()))

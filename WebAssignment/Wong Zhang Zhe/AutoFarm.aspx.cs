@@ -17,11 +17,47 @@ namespace WebAssignment
         {
             if (!IsPostBack)
             {
-                // 默认显示分类，隐藏列表
+                // 1. 检查权限：该方法内部会使用登录时存入的 Session["userId"] [cite: 2026-02-09]
+                CheckInstructorPrivilege();
+
+                // 2. 初始化面板显示状态 [cite: 2026-01-23]
                 categoryPanel.Visible = true;
                 subFarmPanel.Visible = false;
+
+                // 3. 加载农场分类 [cite: 2026-01-23]
                 LoadDynamicCategories();
             }
+        }
+
+        private void CheckInstructorPrivilege()
+        {
+            if (Session["userId"] != null)
+            {
+                int userId = Convert.ToInt32(Session["userId"]);
+                string connString = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
+
+                using (SqlConnection conn = new SqlConnection(connString))
+                {
+                    string sql = "SELECT Role FROM userTable WHERE userId = @id";
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@id", userId);
+
+                    conn.Open();
+                    object roleObj = cmd.ExecuteScalar();
+                    conn.Close();
+
+                    if (roleObj != null && roleObj.ToString() == "Instructor")
+                    {
+                        btnAddFarm.Visible = true; // 只有角色为 Instructor 才显示
+                    }
+                }
+            }
+        }
+
+        protected void RedirectToAddFarm(object sender, EventArgs e)
+        {
+            // 确保路径正确，跳转到你的添加表单页面
+            Response.Redirect("~/Wong Zhang Zhe/AddAutoFarm.aspx");
         }
 
         private void LoadDynamicCategories()

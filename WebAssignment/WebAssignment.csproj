@@ -226,6 +226,7 @@
     <Content Include="Tong Yu Hong\mobImage\wolf.png" />
     <Content Include="Tong Yu Hong\mobImage\zombie.png" />
     <Content Include="Web.config" />
+    <Content Include="Wong Zhang Zhe\AddAutoFarm.aspx" />
     <Content Include="Wong Zhang Zhe\AutoFarm.aspx" />
     <Content Include="Wong Zhang Zhe\ContactUs.aspx" />
     <Content Include="Wong Zhang Zhe\Database1.mdf" />
@@ -528,6 +529,13 @@
     </Compile>
     <Compile Include="Tong Yu Hong\aspx\ViewStatistic.aspx.designer.cs">
       <DependentUpon>ViewStatistic.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Wong Zhang Zhe\AddAutoFarm.aspx.cs">
+      <DependentUpon>AddAutoFarm.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Wong Zhang Zhe\AddAutoFarm.aspx.designer.cs">
+      <DependentUpon>AddAutoFarm.aspx</DependentUpon>
     </Compile>
     <Compile Include="Wong Zhang Zhe\AutoFarm.aspx.cs">
       <DependentUpon>AutoFarm.aspx</DependentUpon>

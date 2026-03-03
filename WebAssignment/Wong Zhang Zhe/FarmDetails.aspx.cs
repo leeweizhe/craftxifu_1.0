@@ -15,24 +15,23 @@ namespace WebAssignment
         private string connString = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;    
         protected void Page_Load(object sender, EventArgs e)
         {
-            Session["userId"] = 8; // 保持测试 ID，确保母版页能正常读取
-
-
-            if (Session["username"] == null) Session["username"] = "Steve";
-            if (Session["profilePic"] == null) Session["profilePic"] = "~/Images/profiles/DPick.jpg";
-
-            string farmId = Request.QueryString["id"];
-            if (string.IsNullOrEmpty(farmId))
-            {
-                Response.Redirect("AutoFarm.aspx");
-                return;
-            }
 
             if (!IsPostBack)
             {
-                LoadFarmDetails(farmId);
-                LoadComments(farmId);
-                CheckCommentPermission();
+                string farmId = Request.QueryString["id"];
+
+                // 2. 检查逻辑：如果 farmId 不为空，则加载数据 [cite: 2026-02-09]
+                if (!string.IsNullOrEmpty(farmId))
+                {
+                    LoadFarmDetails(farmId);
+                    LoadComments(farmId);
+                    CheckCommentPermission(); // 此方法会根据登录后的 userId 判断权限 [cite: 2026-02-09]
+                }
+                else
+                {
+                    // 如果 URL 里没有 id，跳转回列表页 [cite: 2026-02-09]
+                    Response.Redirect("AutoFarm.aspx");
+                }
             }
         }
 
@@ -140,6 +139,42 @@ namespace WebAssignment
                     }
                 }
                 conn.Close();
+            }
+        }
+
+        protected void lnkReport_Command(object sender, CommandEventArgs e)
+        {
+            // 检查是否登录 [cite: 2026-02-09]
+            if (Session["userId"] == null)
+            {
+                Response.Redirect("Login.aspx");
+                return;
+            }
+
+            string commentId = e.CommandArgument.ToString();
+            string reporterId = Session["userId"].ToString();
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connString))
+                {
+                    // 插入举报记录 [cite: 2026-01-23, 2026-02-09]
+                    string sql = "INSERT INTO reportTable (CommentId, ReporterId) VALUES (@cid, @rid)";
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@cid", commentId);
+                    cmd.Parameters.AddWithValue("@rid", reporterId);
+
+                    conn.Open();
+                    cmd.ExecuteNonQuery();
+                    conn.Close();
+                }
+
+                // 使用脚本提示用户举报成功 [cite: 2026-02-09]
+                ScriptManager.RegisterStartupScript(this, GetType(), "showalert", "alert('Thank you. The comment has been reported for review.');", true);
+            }
+            catch (Exception ex)
+            {
+                // 处理错误
             }
         }
     }

@@ -14,14 +14,11 @@ namespace WebAssignment
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            // 1. 统一使用小写 userId 键名适配全站 [cite: 2026-02-03]
             if (Session["userId"] == null)
             {
-                Session["userId"] = 8; // 保持测试 ID
+                Response.Redirect("/Lee Wei Zhe/aspx/Login.aspx"); 
+                return;
             }
-
-            if (Session["username"] == null) Session["username"] = "Steve";
-            if (Session["profilePic"] == null) Session["profilePic"] = "~/Images/profiles/DPick.jpg";
 
             // 2. 在前端按钮点击时加入 JavaScript 询问确认
             btnUpdate.Attributes.Add("onclick", "return confirm('Are you sure you want to save these changes?');");
@@ -96,6 +93,7 @@ namespace WebAssignment
 
                 if (!string.IsNullOrEmpty(txtPassword.Text))
                 {
+                    string hashedPassword = BCrypt.Net.BCrypt.HashPassword(txtPassword.Text);
                     cmd.Parameters.AddWithValue("@pw", txtPassword.Text);
                 }
 

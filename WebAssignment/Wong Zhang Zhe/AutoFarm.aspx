@@ -32,6 +32,14 @@
         <asp:Panel ID="categoryPanel" runat="server">
             <h1 class="page-title">Farm Categories</h1>
             <div class="farm-grid">
+                <a id="btnAddFarm" runat="server" href="AddAutoFarm.aspx" class="category-card" 
+                   visible="false" style="border-style: dashed; border-color: #68ff00; text-decoration: none;">
+                    <img src="/Wong Zhang Zhe/pic/add_icon.png" class="category-icon" 
+                         onerror="this.src='https://img.icons8.com/color/96/plus--v1.png';" />
+                    <h2>Add New Farm</h2>
+                    <p style="color:#68ff00; font-size:0.9rem;">Instructor Access Only</p>
+                </a>
+
                 <asp:Repeater ID="categoryRepeater" runat="server">
                     <ItemTemplate>
                         <asp:LinkButton ID="btnCat" runat="server" CssClass="category-card" 

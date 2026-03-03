@@ -13,27 +13,15 @@ namespace WebAssignment
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            // --- 核心修复：防止 Site.Master.cs 报 NullReferenceException ---
-            // 必须在母版页执行 .ToString() 之前，确保这些小写的键名不是 null
-            Session["userId"] = 8; // 保持测试 ID，确保母版页能正常读取
-            if (Session["username"] == null) Session["username"] = "Steve";
-            if (Session["profilePic"] == null) Session["profilePic"] = "~/Images/profiles/DPick.jpg";
-
-            // 统一全站使用的键名：userId (小写)
-            // 如果你希望 Visitor 也能看这个页面但不触发母版页崩溃，
-            // 即使 userId 为空，只要 username 和 profilePic 有值，母版页就不会死。
-
-            // --- 权限控制逻辑 ---
-            // 如果用户未登录，锁定 Potion 和 AutoFarm 页面
             if (Session["userId"] == null)
             {
-                panelLockPotion.Visible = true;
-                panelLockAutoFarm.Visible = true;
+                if (panelLockPotion != null) panelLockPotion.Visible = true;
+                if (panelLockAutoFarm != null) panelLockAutoFarm.Visible = true;
             }
             else
             {
-                panelLockPotion.Visible = false;
-                panelLockAutoFarm.Visible = false;
+                if (panelLockPotion != null) panelLockPotion.Visible = false;
+                if (panelLockAutoFarm != null) panelLockAutoFarm.Visible = false;
             }
         }
 
@@ -61,7 +49,10 @@ namespace WebAssignment
             // 数据库点击计数逻辑
             UpdateClickStats(guideName);
 
-            Response.Redirect(targetUrl);
+            if (!string.IsNullOrEmpty(targetUrl))
+            {
+                Response.Redirect(targetUrl);
+            }
         }
 
         private void UpdateClickStats(string guideName)
