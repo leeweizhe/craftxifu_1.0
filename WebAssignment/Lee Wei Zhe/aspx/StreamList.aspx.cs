@@ -20,7 +20,6 @@ namespace WebAssignment.Lee_Wei_Zhe.aspx
         {
             if (!IsPostBack)
             {
-                Response.Write("Session userId: " + Session["userId"]);
                 LoadMyStream();       // Check if logged-in user is an instructor
                 LoadAllStreams();     // Load everyone else
             }
@@ -36,6 +35,10 @@ namespace WebAssignment.Lee_Wei_Zhe.aspx
             if (Session["userId"] == null) return;
 
             int userId = Convert.ToInt32(Session["userId"]);
+            string roleSql = "SELECT Role FROM userTable WHERE UserId = @userId";
+
+            DataTable roleDt = GetData(roleSql, new SqlParameter("@userId", userId));
+            if (roleDt.Rows[0]["Role"].ToString() != "Instructor") return;
 
             string sql = @"
                 SELECT ls.StreamID, ls.StreamTitle, ls.ViewerCount, ls.IsLive,
@@ -47,7 +50,11 @@ namespace WebAssignment.Lee_Wei_Zhe.aspx
             DataTable dt = GetData(sql, new SqlParameter("@userId", userId));
 
             // User has no stream — hide the "Your Stream" panel
-            if (dt.Rows.Count == 0) return;
+            if (dt.Rows.Count == 0)
+            {
+                pnlCreateStream.Visible = true; // No stream yet, show + button
+                return;
+            }
 
             DataRow row = dt.Rows[0];
             MyStreamID = Convert.ToInt32(row["StreamID"]);
@@ -63,6 +70,7 @@ namespace WebAssignment.Lee_Wei_Zhe.aspx
                 : "<span class='badge-offline'>OFFLINE</span>";
 
             pnlMyStream.Visible = true; // Show the panel
+
         }
         // -------------------------------------------------------
         // Load all streams EXCEPT the logged-in user's own stream
@@ -88,6 +96,42 @@ namespace WebAssignment.Lee_Wei_Zhe.aspx
 
             rptInstructors.DataSource = dt;
             rptInstructors.DataBind();
+        }
+
+        protected void btnCreateStream_Click(object sender, EventArgs e)
+        {
+            if (Session["userId"] == null) return;
+
+            int userId = Convert.ToInt32(Session["userId"]);
+            string defaultTitle = "Welcome to " + Session["username"] + "'s live stream";
+
+            // Insert a default row into LiveStreams
+            string sql = @"INSERT INTO LiveStreams (UserId, StreamTitle, ViewerCount, IsLive, YouTubeVideoID)
+                   VALUES (@userId, @title, 0, 0, NULL)";
+
+            ExecuteSQL(sql,
+                new SqlParameter("@userId", userId),
+                new SqlParameter("@title", defaultTitle));
+
+            // Get the newly created StreamID and redirect to LiveStream.aspx
+            DataTable newStream = GetData(
+                "SELECT StreamID FROM LiveStreams WHERE UserId = @userId",
+                new SqlParameter("@userId", userId));
+
+            int newStreamId = Convert.ToInt32(newStream.Rows[0]["StreamID"]);
+            Response.Redirect("LiveStream.aspx?id=" + newStreamId);
+        }
+
+        // Helper: INSERT / UPDATE / DELETE
+        private void ExecuteSQL(string sql, params SqlParameter[] parameters)
+        {
+            using (SqlConnection conn = new SqlConnection(connStr))
+            using (SqlCommand cmd = new SqlCommand(sql, conn))
+            {
+                if (parameters != null) cmd.Parameters.AddRange(parameters);
+                conn.Open();
+                cmd.ExecuteNonQuery();
+            }
         }
 
         // Helper: run SQL and return a DataTable

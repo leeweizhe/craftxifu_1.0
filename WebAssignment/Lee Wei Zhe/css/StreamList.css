@@ -153,6 +153,26 @@
     box-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }
 
+.create-card {
+    width: 160px;
+    min-height: 200px;
+    border: 2px dashed #ccc;
+    border-radius: 10px;
+    background: transparent;
+    color: #aaa;
+    font-size: 14px;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s, color 0.2s;
+    margin-bottom: 16px;
+    display: inline-block;
+}
+
+    .create-card:hover {
+        border-color: #e03131;
+        background: #fff5f5;
+        color: #e03131;
+    }
+
 .empty-msg {
     display: block;
     text-align: center;

@@ -41,6 +41,18 @@
             <hr class="divider" />
         </asp:Panel>
 
+                <asp:Panel ID="pnlCreateStream" runat="server" Visible="false">
+            <h3 class="section-label">Your Stream</h3>
+
+            <%-- One click: creates the room and redirects to LiveStream.aspx --%>
+            <asp:Button ID="btnCreateStream" runat="server"
+                Text="+ Create a Live Room"
+                CssClass="create-card"
+                OnClick="btnCreateStream_Click" />
+
+            <hr class="divider" />
+        </asp:Panel>
+
         <%-- ============================================
              ALL OTHER instructors grid
              ============================================ --%>

@@ -12,14 +12,41 @@
     padding: 20px;
 }
 
-/* --- NEW: Sidebar Menu --- */
+/* Back Button*/
+.top-bar {
+    display: flex !important;
+    justify-content: flex-end;
+    margin-bottom: 12px;
+}
+
+.btn-back {
+    position: fixed; /* Sticks to the screen even when scrolling */
+    top: 130px; /* Adjust this to sit below your navbar */
+    left: 0px;
+    z-index: 999; /* Stays on top of other elements */
+    padding: 10px 20px;
+    background: #555;
+    color: #fff;
+    border: 1px solid #808080;
+    border-radius: 0 6px 6px 0;
+    font-size: 30px;
+    text-decoration: none;
+    font-family: 'Minecraft', sans-serif;
+    transition: background 0.2s;
+}
+
+    .btn-back:hover {
+        background: #e9ecef;
+        color: #333;
+    }
+
+/* Sidebar Menu */
 .toc-sidebar {
     width: 250px;
     background-color: white;
     border: 2px solid #808080;
     border-radius: 8px;
     padding: 20px;
-    /* This makes it stick to the screen as you scroll! */
     position: sticky;
     top: 130px;
     left:40px;

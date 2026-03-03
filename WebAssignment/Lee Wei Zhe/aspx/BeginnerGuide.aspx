@@ -50,7 +50,9 @@
             </div>
         </div>
     </asp:Panel>
-
+    <div class="top-bar">
+        <a href="javascript:history.back()" class="btn-back">Back</a>
+    </div>
     <div class="page-layout">
 
         <%-- ═══════════════════════════════════════════════════════════════════

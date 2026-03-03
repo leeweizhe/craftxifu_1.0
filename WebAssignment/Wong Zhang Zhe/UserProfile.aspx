@@ -7,9 +7,9 @@
         .header-flex { display: flex; align-items: center; gap: 40px; border-bottom: 4px solid #68ff00; padding-bottom: 30px; }
         
         /* 头像容器 */
-        .avatar-container { position: relative; width: 180px; height: 180px; }
-        .avatar-main { width: 100%; height: 100%; border: 4px solid #68ff00; image-rendering: pixelated; object-fit: cover; }
-        .frame-overlay { position: absolute; top: -10px; left: -10px; width: 200px; height: 200px; pointer-events: none; image-rendering: pixelated; z-index: 10; }
+        .avatar-container { position: relative; width: 180px; height: 180px;  }
+        .avatar-main { width: 100%; height: 100%; border: 4px solid #68ff00; image-rendering: pixelated; object-fit: cover; border-radius: 50%}
+        .frame-overlay { position: absolute; top: -20px; left: -20px; width: calc(100% + 40px); height: calc(100% + 40px); pointer-events: none; image-rendering: pixelated; z-index: 10; border-radius: 50%}
 
         .name-main { font-size: 3.5rem; color: #68ff00; margin: 0; }
         
