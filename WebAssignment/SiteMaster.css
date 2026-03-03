@@ -1,7 +1,6 @@
 ﻿* {
     box-sizing: border-box;
-    /* Keep pixel font but allow emoji fallback from system fonts */
-    font-family: 'Minecraft', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji', sans-serif;
+    font-family: 'Minecraft', sans-serif;
     margin: 0;
     padding: 0;
 }
@@ -62,25 +61,25 @@ nav {
     transition: all 0.3s ease-out;
 }
 
-.main-link::after {  /* Underline */
-    content: ' ';
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    width: 0%;
-    height: 4px;
-    background-color: #68ff00;
-    transition: all 0.3s ease-out;
-    transform: translateX(-50%);
-}
+    .main-link::after { /* Underline */
+        content: ' ';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        width: 0%;
+        height: 4px;
+        background-color: #68ff00;
+        transition: all 0.3s ease-out;
+        transform: translateX(-50%);
+    }
 
-.main-link:hover::after{
-    width: 100%;
-}
+    .main-link:hover::after {
+        width: 100%;
+    }
 
-.main-link:hover {
-    color: #68ff00;
-}
+    .main-link:hover {
+        color: #68ff00;
+    }
 
 .move-right {
     margin-left: auto;
@@ -124,13 +123,10 @@ nav {
     position: absolute;
     top: 100%;
     left: 0;
-
     opacity: 0;
     visibility: hidden;
     transform: translateY(10px);
     transition: all 0.3s ease;
-
-
     background-color: black;
     color: white;
     width: 100%;

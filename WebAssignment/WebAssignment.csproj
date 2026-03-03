@@ -149,11 +149,15 @@
     <Content Include="images\profiles\DPick.jpg" />
     <Content Include="Lee Wei Zhe\aspx\BeginnerGuide.aspx" />
     <Content Include="Lee Wei Zhe\aspx\ForgotPass.aspx" />
+    <Content Include="Lee Wei Zhe\aspx\LiveStream.aspx" />
+    <Content Include="Lee Wei Zhe\aspx\LiveStreamHome.aspx" />
     <Content Include="Lee Wei Zhe\aspx\RegistrationPage.aspx" />
     <Content Include="Lee Wei Zhe\aspx\ResetPassword.aspx" />
     <Content Include="Lee Wei Zhe\aspx\VerifyOtpFp.aspx" />
     <Content Include="Lee Wei Zhe\aspx\VerifyOtpR.aspx" />
     <Content Include="Lee Wei Zhe\css\BeginnerGuide.css" />
+    <Content Include="Lee Wei Zhe\css\LiveStreamHome.css" />
+    <Content Include="Lee Wei Zhe\css\LiveStream.css" />
     <Content Include="Lee Wei Zhe\css\RegistrationPage.css" />
     <Content Include="Lee Wei Zhe\css\Login.css" />
     <Content Include="images\backgrounds\Dirt_texture.jpg" />
@@ -170,6 +174,51 @@
     <Content Include="test1.aspx" />
     <Content Include="test1.css" />
     <Content Include="SiteMaster.css" />
+    <Content Include="Tong Yu Hong\aspx\Mob.aspx" />
+    <Content Include="Tong Yu Hong\aspx\MobDetail.aspx" />
+    <Content Include="Tong Yu Hong\aspx\SupportChat.aspx" />
+    <Content Include="Tong Yu Hong\aspx\ViewStatistic.aspx" />
+    <Content Include="Tong Yu Hong\Image\creeper_logo.png" />
+    <Content Include="Tong Yu Hong\mobImage\allay.png" />
+    <Content Include="Tong Yu Hong\mobImage\axolotl.png" />
+    <Content Include="Tong Yu Hong\mobImage\bee.png" />
+    <Content Include="Tong Yu Hong\mobImage\blaze.png" />
+    <Content Include="Tong Yu Hong\mobImage\cat.png" />
+    <Content Include="Tong Yu Hong\mobImage\cave_spider.png" />
+    <Content Include="Tong Yu Hong\mobImage\chicken.png" />
+    <Content Include="Tong Yu Hong\mobImage\cow.png" />
+    <Content Include="Tong Yu Hong\mobImage\creeper.png" />
+    <Content Include="Tong Yu Hong\mobImage\dolphin.png" />
+    <Content Include="Tong Yu Hong\mobImage\donkey.png" />
+    <Content Include="Tong Yu Hong\mobImage\enderman.png" />
+    <Content Include="Tong Yu Hong\mobImage\ender_dragon.png" />
+    <Content Include="Tong Yu Hong\mobImage\frog.png" />
+    <Content Include="Tong Yu Hong\mobImage\ghast.png" />
+    <Content Include="Tong Yu Hong\mobImage\goat.png" />
+    <Content Include="Tong Yu Hong\mobImage\guardian.png" />
+    <Content Include="Tong Yu Hong\mobImage\horse.png" />
+    <Content Include="Tong Yu Hong\mobImage\iron_golem.png" />
+    <Content Include="Tong Yu Hong\mobImage\magma_cube.png" />
+    <Content Include="Tong Yu Hong\mobImage\mooshroom.png" />
+    <Content Include="Tong Yu Hong\mobImage\panda.png" />
+    <Content Include="Tong Yu Hong\mobImage\phantom.png" />
+    <Content Include="Tong Yu Hong\mobImage\pig.png" />
+    <Content Include="Tong Yu Hong\mobImage\piglin.png" />
+    <Content Include="Tong Yu Hong\mobImage\pillager.png" />
+    <Content Include="Tong Yu Hong\mobImage\rabbit.png" />
+    <Content Include="Tong Yu Hong\mobImage\sheep.png" />
+    <Content Include="Tong Yu Hong\mobImage\skeleton.png" />
+    <Content Include="Tong Yu Hong\mobImage\slime.png" />
+    <Content Include="Tong Yu Hong\mobImage\snow_golem.png" />
+    <Content Include="Tong Yu Hong\mobImage\spider.png" />
+    <Content Include="Tong Yu Hong\mobImage\turtle.png" />
+    <Content Include="Tong Yu Hong\mobImage\villager.png" />
+    <Content Include="Tong Yu Hong\mobImage\warden.png" />
+    <Content Include="Tong Yu Hong\mobImage\witch.png" />
+    <Content Include="Tong Yu Hong\mobImage\wither.png" />
+    <Content Include="Tong Yu Hong\mobImage\wither_skeleton.png" />
+    <Content Include="Tong Yu Hong\mobImage\wolf.png" />
+    <Content Include="Tong Yu Hong\mobImage\zombie.png" />
     <Content Include="Web.config" />
     <Content Include="Wong Zhang Zhe\AutoFarm.aspx" />
     <Content Include="Wong Zhang Zhe\ContactUs.aspx" />
@@ -366,6 +415,20 @@
     <Compile Include="Lee Wei Zhe\aspx\ForgotPass.aspx.designer.cs">
       <DependentUpon>ForgotPass.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Lee Wei Zhe\aspx\LiveStream.aspx.cs">
+      <DependentUpon>LiveStream.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Lee Wei Zhe\aspx\LiveStream.aspx.designer.cs">
+      <DependentUpon>LiveStream.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Lee Wei Zhe\aspx\LiveStreamHome.aspx.cs">
+      <DependentUpon>LiveStreamHome.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Lee Wei Zhe\aspx\LiveStreamHome.aspx.designer.cs">
+      <DependentUpon>LiveStreamHome.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Lee Wei Zhe\aspx\Login.aspx.cs">
       <DependentUpon>Login.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -420,6 +483,34 @@
       <DependentUpon>test1.aspx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Tong Yu Hong\aspx\Mob.aspx.cs">
+      <DependentUpon>Mob.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Tong Yu Hong\aspx\Mob.aspx.designer.cs">
+      <DependentUpon>Mob.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Tong Yu Hong\aspx\MobDetail.aspx.cs">
+      <DependentUpon>MobDetail.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Tong Yu Hong\aspx\MobDetail.aspx.designer.cs">
+      <DependentUpon>MobDetail.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Tong Yu Hong\aspx\SupportChat.aspx.cs">
+      <DependentUpon>SupportChat.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Tong Yu Hong\aspx\SupportChat.aspx.designer.cs">
+      <DependentUpon>SupportChat.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Tong Yu Hong\aspx\ViewStatistic.aspx.cs">
+      <DependentUpon>ViewStatistic.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Tong Yu Hong\aspx\ViewStatistic.aspx.designer.cs">
+      <DependentUpon>ViewStatistic.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Wong Zhang Zhe\AutoFarm.aspx.cs">
       <DependentUpon>AutoFarm.aspx</DependentUpon>
     </Compile>

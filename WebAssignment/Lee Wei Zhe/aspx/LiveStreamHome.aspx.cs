@@ -5,9 +5,9 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
-namespace WebAssignment.Brayden_Wong_Guan_Wei
+namespace WebAssignment.Lee_Wei_Zhe.aspx
 {
-    public partial class Enchancement : System.Web.UI.Page
+    public partial class LiveStreamHome : System.Web.UI.Page
     {
         protected void Page_Load(object sender, EventArgs e)
         {
