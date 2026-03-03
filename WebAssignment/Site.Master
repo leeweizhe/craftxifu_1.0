@@ -19,7 +19,7 @@
                 <li><a href="/Wong Zhang Zhe/Home.aspx" class="main-link">Home</a></li>
                 <li><a href="/Wong Zhang Zhe/Guide.aspx" class="main-link">Guide</a></li>
                 <li><a href="/Brayden/Minigame.aspx" class="main-link">Minigame</a></li>
-                <li><a href="/Wong Zhang Zhe/LiveStream.aspx" class="main-link">Live Stream</a></li>
+                <li><a href="/Lee Wei Zhe/aspx/LiveStream.aspx" class="main-link">Live Stream</a></li>
                 <li><a href="/Wong Zhang Zhe/ContactUs.aspx" class="main-link">Contact US</a></li>
 
                 <asp:PlaceHolder ID="phVisitor" runat="server">

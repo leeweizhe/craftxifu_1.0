@@ -19,14 +19,14 @@ namespace WebAssignment
 
         private void CheckLoginStatus()
         {
-            if (Session["userId"] != null)
+            if (Session["userId"] != null && !string.IsNullOrEmpty(Session["userId"].ToString()))
             {
                 phVisitor.Visible = false;
                 phMember.Visible = true;
 
-                string picPath = Session["profilePic"].ToString();
+                string picPath = Convert.ToString(Session["profilePic"]);
                 int userId = Convert.ToInt32(Session["userId"]);
-                lblUsername.Text = Session["username"].ToString();
+                lblUsername.Text = Convert.ToString(Session["username"]);
                 imgProfile.ImageUrl = picPath;
 
                 if (Session["avatarFrame"] != null && !string.IsNullOrEmpty(Session["avatarFrame"].ToString()))
@@ -52,7 +52,7 @@ namespace WebAssignment
         {
             Session.Clear();
             Session.Abandon();
-            Response.Redirect("~/Lee Wei Zhe/aspx/Login.aspx");
+            Response.Redirect("~/Lee Wei Zhe/aspx/Login.aspx", true);
         }
     }
 }

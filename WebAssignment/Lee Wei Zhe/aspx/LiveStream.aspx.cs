@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
@@ -11,16 +12,14 @@ namespace WebAssignment.Lee_Wei_Zhe.aspx
 {
     public partial class LiveStream : System.Web.UI.Page
     {
-        private string connStr = System.Web.Configuration.WebConfigurationManager
-                            .ConnectionStrings["DefaultConnection"].ConnectionString;
+        private string connStr = System.Web.Configuration.WebConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
 
-        // Stores the StreamID from the URL (?id=X)
         private int streamId = 0;
 
-        // Tracks if the logged-in user owns this stream
-        private bool isOwner = false;
+        // Exposed to .aspx so JavaScript can read it
+        public string YouTubeVideoID { get; set; }
 
-        // Chat stored in Session (key includes StreamID so chats don't mix)
+        // Chat stored per stream in Session so chats don't mix between streams
         private List<string> ChatMessages
         {
             get
@@ -33,10 +32,10 @@ namespace WebAssignment.Lee_Wei_Zhe.aspx
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            // Read StreamID from URL e.g. LiveStream.aspx?id=3
+            // Read StreamID from URL: LiveStream.aspx?id=3
             if (!int.TryParse(Request.QueryString["id"], out streamId))
             {
-                Response.Redirect("InstructorList.aspx"); // No ID? go back to list
+                Response.Redirect("StreamList.aspx");
                 return;
             }
 
@@ -44,129 +43,143 @@ namespace WebAssignment.Lee_Wei_Zhe.aspx
             {
                 LoadStream();
                 LoadChat();
+                CountViewer(increment: true); // Add 1 to viewer count when page loads
             }
         }
 
         // -------------------------------------------------------
-        // Load stream data from database and set up the page
+        // Subtract viewer count when user leaves the page
+        // -------------------------------------------------------
+        protected void Page_Unload(object sender, EventArgs e)
+        {
+            // Only decrement on first load (not on every postback)
+            if (!IsPostBack && streamId > 0)
+                CountViewer(increment: false);
+        }
+
+        // -------------------------------------------------------
+        // Load stream data and set up the page
         // -------------------------------------------------------
         private void LoadStream()
         {
             string sql = @"
-                SELECT ls.StreamID, ls.StreamTitle, ls.ViewerCount, ls.IsLive, ls.userId,
-                       u.userName AS UserName    -- ⚠️ change userName to your actual column
+                SELECT ls.StreamID, ls.StreamTitle, ls.ViewerCount,
+                       ls.IsLive, ls.UserId, ls.YouTubeVideoID,
+                       u.Username AS UserName
                 FROM LiveStreams ls
-                INNER JOIN userTable u ON ls.userId = u.userId
+                INNER JOIN userTable u ON ls.UserId = u.UserId
                 WHERE ls.StreamID = @streamId";
 
             DataTable dt = GetData(sql, new SqlParameter("@streamId", streamId));
 
-            if (dt.Rows.Count == 0)
-            {
-                Response.Redirect("InstructorList.aspx"); // Stream not found
-                return;
-            }
+            if (dt.Rows.Count == 0) { Response.Redirect("InstructorList.aspx"); return; }
 
             DataRow row = dt.Rows[0];
             bool isLive = Convert.ToBoolean(row["IsLive"]);
-            int ownerUserId = Convert.ToInt32(row["userId"]);
+            int ownerUserId = Convert.ToInt32(row["UserId"]);
+            string ytID = row["YouTubeVideoID"] == DBNull.Value ? "" : row["YouTubeVideoID"].ToString().Trim();
 
-            // Check if the logged-in user owns this stream
-            isOwner = Session["userId"] != null &&
-                      Convert.ToInt32(Session["userId"]) == ownerUserId;
+            // Pass YouTube ID to JavaScript
+            YouTubeVideoID = ytID;
 
-            // Set video player stream URL
-            hdnStreamUrl.Value = "http://localhost:8080/hls/stream.m3u8";
-
-            // Set stream title + viewer count below video
-            lblStreamTitle.Text = row["UserName"] + " — " + row["StreamTitle"];
-            lblViewerCount.Text = row["ViewerCount"] + " viewers";
-
-            // Set LIVE badge
+            // LIVE / OFFLINE badge
             lblStatus.Text = isLive ? "LIVE" : "OFFLINE";
             lblStatus.CssClass = isLive ? "status-badge live" : "status-badge";
 
-            // ---- Show instructor panel only if this is their stream ----
+            // Stream title + viewer count below video
+            lblStreamTitle.Text = row["UserName"] + " — " + row["StreamTitle"];
+            lblViewerCount.Text = row["ViewerCount"] + " viewers";
+
+            // Show YouTube video if ID exists, else show placeholder
+            if (!string.IsNullOrEmpty(ytID))
+            {
+                pnlVideo.Visible = true;
+                pnlNoVideo.Visible = false;
+                pnlYouTubeChat.Visible = true;  // Show YouTube chat
+                pnlOwnChat.Visible = false;   // Hide our fallback chat
+            }
+            else
+            {
+                pnlVideo.Visible = false;
+                pnlNoVideo.Visible = true;    // Show placeholder
+                pnlYouTubeChat.Visible = false;
+                pnlOwnChat.Visible = true;    // Show fallback chat
+            }
+
+            // Check if logged-in user owns this stream
+            bool isOwner = Session["userId"] != null &&
+                           Convert.ToInt32(Session["userId"]) == ownerUserId;
+
             if (isOwner)
             {
                 pnlInstructorControls.Visible = true;
-
-                // Pre-fill the title textbox with current title
                 txtStreamTitle.Text = row["StreamTitle"].ToString();
-
-                // Show viewer count in the stat box
+                txtYouTubeID.Text = ytID;
                 litViewerCount.Text = row["ViewerCount"].ToString();
-
-                // Show only the relevant button (Go Live OR End Stream, not both)
-                btnStartStream.Visible = !isLive; // Show "Go Live" if currently offline
-                btnEndStream.Visible = isLive;  // Show "End Stream" if currently live
+                btnStartStream.Visible = !isLive;
+                btnEndStream.Visible = isLive;
             }
         }
 
         // -------------------------------------------------------
-        // Save new stream title to database
+        // Increment or decrement ViewerCount in database
+        // -------------------------------------------------------
+        private void CountViewer(bool increment)
+        {
+            string sql = increment
+                ? "UPDATE LiveStreams SET ViewerCount = ViewerCount + 1 WHERE StreamID = @id"
+                : "UPDATE LiveStreams SET ViewerCount = CASE WHEN ViewerCount > 0 THEN ViewerCount - 1 ELSE 0 END WHERE StreamID = @id";
+
+            ExecuteSQL(sql, new SqlParameter("@id", streamId));
+        }
+
+        // -------------------------------------------------------
+        // Save new stream title
         // -------------------------------------------------------
         protected void btnSaveTitle_Click(object sender, EventArgs e)
         {
             string newTitle = txtStreamTitle.Text.Trim();
-
             if (string.IsNullOrEmpty(newTitle))
             {
-                lblPanelFeedback.Text = "Title cannot be empty.";
-                lblPanelFeedback.CssClass = "chat-feedback error";
-                LoadStream(); LoadChat();
+                ShowFeedback("Title cannot be empty.", false);
                 return;
             }
-
-            string sql = "UPDATE LiveStreams SET StreamTitle = @title WHERE StreamID = @id";
-            ExecuteSQL(sql,
+            ExecuteSQL("UPDATE LiveStreams SET StreamTitle = @title WHERE StreamID = @id",
                 new SqlParameter("@title", newTitle),
                 new SqlParameter("@id", streamId));
-
-            lblPanelFeedback.Text = "Title updated!";
-            lblPanelFeedback.CssClass = "chat-feedback success";
-            LoadStream(); LoadChat();
+            ShowFeedback("Title updated!", true);
         }
 
         // -------------------------------------------------------
-        // Set IsLive = 1 (Go Live)
+        // Save YouTube Video ID
+        // -------------------------------------------------------
+        protected void btnSaveYouTubeID_Click(object sender, EventArgs e)
+        {
+            string ytID = txtYouTubeID.Text.Trim();
+            ExecuteSQL("UPDATE LiveStreams SET YouTubeVideoID = @ytID WHERE StreamID = @id",
+                new SqlParameter("@ytID", ytID),
+                new SqlParameter("@id", streamId));
+            ShowFeedback("YouTube ID saved! Reload to see the stream.", true);
+        }
+
+        // -------------------------------------------------------
+        // Go Live: set IsLive = 1
         // -------------------------------------------------------
         protected void btnStartStream_Click(object sender, EventArgs e)
         {
-            string sql = "UPDATE LiveStreams SET IsLive = 1 WHERE StreamID = @id";
-            ExecuteSQL(sql, new SqlParameter("@id", streamId));
-
-            lblPanelFeedback.Text = "You are now LIVE!";
-            lblPanelFeedback.CssClass = "chat-feedback success";
-            LoadStream(); LoadChat();
+            ExecuteSQL("UPDATE LiveStreams SET IsLive = 1 WHERE StreamID = @id",
+                new SqlParameter("@id", streamId));
+            ShowFeedback("You are now LIVE!", true);
         }
 
         // -------------------------------------------------------
-        // Set IsLive = 0 (End Stream)
+        // End Stream: set IsLive = 0 and reset viewer count
         // -------------------------------------------------------
         protected void btnEndStream_Click(object sender, EventArgs e)
         {
-            string sql = "UPDATE LiveStreams SET IsLive = 0 WHERE StreamID = @id";
-            ExecuteSQL(sql, new SqlParameter("@id", streamId));
-
-            lblPanelFeedback.Text = "Stream ended.";
-            lblPanelFeedback.CssClass = "chat-feedback error";
-            LoadStream(); LoadChat();
-        }
-
-        // -------------------------------------------------------
-        // Chat: load messages
-        // -------------------------------------------------------
-        private void LoadChat()
-        {
-            string html = "";
-            foreach (string msg in ChatMessages)
-                html += "<div class='chat-message'>" + msg + "</div>";
-
-            if (html == "")
-                html = "<p class='no-messages'>No messages yet. Say hello!</p>";
-
-            litChatMessages.Text = html;
+            ExecuteSQL("UPDATE LiveStreams SET IsLive = 0, ViewerCount = 0 WHERE StreamID = @id",
+                new SqlParameter("@id", streamId));
+            ShowFeedback("Stream ended.", false);
         }
 
         // -------------------------------------------------------
@@ -174,7 +187,7 @@ namespace WebAssignment.Lee_Wei_Zhe.aspx
         // -------------------------------------------------------
         protected void btnSend_Click(object sender, EventArgs e)
         {
-            string name = txtUsername.Text.Trim();
+            string name = Session["username"].ToString();
             string msg = txtMessage.Text.Trim();
 
             if (string.IsNullOrEmpty(name) || string.IsNullOrEmpty(msg))
@@ -192,15 +205,37 @@ namespace WebAssignment.Lee_Wei_Zhe.aspx
 
             ChatMessages.Add(formatted);
             txtMessage.Text = "";
-
             lblFeedback.Text = "Message sent!";
             lblFeedback.CssClass = "chat-feedback success";
             LoadStream(); LoadChat();
         }
 
         // -------------------------------------------------------
-        // Helper: run a SELECT and return DataTable
+        // Chat: load messages into Literal
         // -------------------------------------------------------
+        private void LoadChat()
+        {
+            string html = "";
+            foreach (string msg in ChatMessages)
+                html += "<div class='chat-message'>" + msg + "</div>";
+
+            if (html == "")
+                html = "<p class='no-messages'>No messages yet. Say hello!</p>";
+
+            litChatMessages.Text = html;
+        }
+
+        // -------------------------------------------------------
+        // Helper: show feedback in instructor panel
+        // -------------------------------------------------------
+        private void ShowFeedback(string msg, bool success)
+        {
+            lblPanelFeedback.Text = msg;
+            lblPanelFeedback.CssClass = success ? "chat-feedback success" : "chat-feedback error";
+            LoadStream(); LoadChat();
+        }
+
+        // Helper: run SELECT → DataTable
         private DataTable GetData(string sql, params SqlParameter[] parameters)
         {
             DataTable dt = new DataTable();
@@ -214,9 +249,7 @@ namespace WebAssignment.Lee_Wei_Zhe.aspx
             return dt;
         }
 
-        // -------------------------------------------------------
-        // Helper: run an INSERT/UPDATE/DELETE
-        // -------------------------------------------------------
+        // Helper: run INSERT / UPDATE / DELETE
         private void ExecuteSQL(string sql, params SqlParameter[] parameters)
         {
             using (SqlConnection conn = new SqlConnection(connStr))
@@ -228,6 +261,4 @@ namespace WebAssignment.Lee_Wei_Zhe.aspx
             }
         }
     }
-
-
 }

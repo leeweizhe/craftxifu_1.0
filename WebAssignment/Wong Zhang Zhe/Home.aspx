@@ -9,7 +9,6 @@
 <script runat="server">
     protected void Page_Load(object sender, EventArgs e)
     {
-        Session["UserId"] = 5;
         if (Session["UserId"] != null)
         {
             visitorSection.Visible = false;

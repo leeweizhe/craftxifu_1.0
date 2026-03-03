@@ -24,13 +24,22 @@ namespace WebAssignment.Lee_Wei_Zhe.aspx
         protected global::System.Web.UI.WebControls.Label lblStatus;
 
         /// <summary>
-        /// hdnStreamUrl control.
+        /// pnlVideo control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.HiddenField hdnStreamUrl;
+        protected global::System.Web.UI.WebControls.Panel pnlVideo;
+
+        /// <summary>
+        /// pnlNoVideo control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel pnlNoVideo;
 
         /// <summary>
         /// lblStreamTitle control.
@@ -87,6 +96,24 @@ namespace WebAssignment.Lee_Wei_Zhe.aspx
         protected global::System.Web.UI.WebControls.Button btnSaveTitle;
 
         /// <summary>
+        /// txtYouTubeID control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtYouTubeID;
+
+        /// <summary>
+        /// btnSaveYouTubeID control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnSaveYouTubeID;
+
+        /// <summary>
         /// btnStartStream control.
         /// </summary>
         /// <remarks>
@@ -114,6 +141,24 @@ namespace WebAssignment.Lee_Wei_Zhe.aspx
         protected global::System.Web.UI.WebControls.Label lblPanelFeedback;
 
         /// <summary>
+        /// pnlYouTubeChat control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel pnlYouTubeChat;
+
+        /// <summary>
+        /// pnlOwnChat control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel pnlOwnChat;
+
+        /// <summary>
         /// litChatMessages control.
         /// </summary>
         /// <remarks>
@@ -121,15 +166,6 @@ namespace WebAssignment.Lee_Wei_Zhe.aspx
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Literal litChatMessages;
-
-        /// <summary>
-        /// txtUsername control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtUsername;
 
         /// <summary>
         /// txtMessage control.
