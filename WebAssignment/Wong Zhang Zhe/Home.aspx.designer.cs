@@ -11,61 +11,61 @@ namespace WebAssignment
 {
 
 
-    public partial class Guide
+    public partial class Home
     {
 
         /// <summary>
-        /// btnBeginner control.
+        /// memberSection control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.LinkButton btnBeginner;
+        protected global::System.Web.UI.WebControls.Panel memberSection;
 
         /// <summary>
-        /// btnMob control.
+        /// visitorSection control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.LinkButton btnMob;
+        protected global::System.Web.UI.WebControls.Panel visitorSection;
 
         /// <summary>
-        /// btnPotion control.
+        /// btnLoginRedirect control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.LinkButton btnPotion;
+        protected global::System.Web.UI.WebControls.Button btnLoginRedirect;
 
         /// <summary>
-        /// panelLockPotion control.
+        /// phMemberStatus control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel panelLockPotion;
+        protected global::System.Web.UI.WebControls.PlaceHolder phMemberStatus;
 
         /// <summary>
-        /// btnAutoFarm control.
+        /// lblEmeralds control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.LinkButton btnAutoFarm;
+        protected global::System.Web.UI.WebControls.Label lblEmeralds;
 
         /// <summary>
-        /// panelLockAutoFarm control.
+        /// memberDataCards control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel panelLockAutoFarm;
+        protected global::System.Web.UI.WebControls.Panel memberDataCards;
     }
 }

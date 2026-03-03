@@ -1,4 +1,4 @@
-<%@ Page Title="Minigame & Shop" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Minigame.aspx.cs" Inherits="WebAssignment.Wong_Zhang_Zhe.Minigame" %>
+<%@ Page Title="Minigame & Shop" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Minigame.aspx.cs" Inherits="WebAssignment.Brayden.Minigame" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <style type="text/css">

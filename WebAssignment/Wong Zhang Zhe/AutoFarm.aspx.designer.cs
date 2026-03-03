@@ -11,61 +11,61 @@ namespace WebAssignment
 {
 
 
-    public partial class Guide
+    public partial class AutoFarm
     {
 
         /// <summary>
-        /// btnBeginner control.
+        /// categoryPanel control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.LinkButton btnBeginner;
+        protected global::System.Web.UI.WebControls.Panel categoryPanel;
 
         /// <summary>
-        /// btnMob control.
+        /// categoryRepeater control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.LinkButton btnMob;
+        protected global::System.Web.UI.WebControls.Repeater categoryRepeater;
 
         /// <summary>
-        /// btnPotion control.
+        /// subFarmPanel control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.LinkButton btnPotion;
+        protected global::System.Web.UI.WebControls.Panel subFarmPanel;
 
         /// <summary>
-        /// panelLockPotion control.
+        /// btnBack control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel panelLockPotion;
+        protected global::System.Web.UI.WebControls.LinkButton btnBack;
 
         /// <summary>
-        /// btnAutoFarm control.
+        /// lblCategoryTitle control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.LinkButton btnAutoFarm;
+        protected global::System.Web.UI.WebControls.Label lblCategoryTitle;
 
         /// <summary>
-        /// panelLockAutoFarm control.
+        /// farmRepeater control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel panelLockAutoFarm;
+        protected global::System.Web.UI.WebControls.Repeater farmRepeater;
     }
 }
