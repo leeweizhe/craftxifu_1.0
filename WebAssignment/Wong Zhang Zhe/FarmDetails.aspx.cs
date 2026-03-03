@@ -140,40 +140,5 @@ namespace WebAssignment
             }
         }
 
-        protected void lnkReport_Command(object sender, CommandEventArgs e)
-        {
-            // Check if you are logged in
-            if (Session["userId"] == null)
-            {
-                Response.Redirect("Login.aspx");
-                return;
-            }
-
-            string commentId = e.CommandArgument.ToString();
-            string reporterId = Session["userId"].ToString();
-
-            try
-            {
-                using (SqlConnection conn = new SqlConnection(connString))
-                {
-                    // Insert report record
-                    string sql = "INSERT INTO reportTable (CommentId, ReporterId) VALUES (@cid, @rid)";
-                    SqlCommand cmd = new SqlCommand(sql, conn);
-                    cmd.Parameters.AddWithValue("@cid", commentId);
-                    cmd.Parameters.AddWithValue("@rid", reporterId);
-
-                    conn.Open();
-                    cmd.ExecuteNonQuery();
-                    conn.Close();
-                }
-
-                // The script notifies the user that the report was successful
-                ScriptManager.RegisterStartupScript(this, GetType(), "showalert", "alert('Thank you. The comment has been reported for review.');", true);
-            }
-            catch (Exception ex)
-            {
-
-            }
-        }
     }
 }
