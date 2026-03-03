@@ -4,6 +4,7 @@ using System.Configuration;
 using System.Data.SqlClient;
 using System.Drawing; 
 using System.Linq;
+using System.Globalization;
 using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.UI;
@@ -19,6 +20,8 @@ namespace WebAssignment.Lee_Wei_Zhe.aspx
             errorMsg.Visible = false;
             if (!IsPostBack)
             {
+                BindCountries();
+
                 if (Session["RegEmail"] != null) //auto load back
                 {
                     txtFname.Text = Session["RegFName"].ToString();
@@ -141,6 +144,30 @@ namespace WebAssignment.Lee_Wei_Zhe.aspx
             }
         }
 
+        private void BindCountries()
+        {
+            // 1. Get all regions from the system
+            List<string> countryList = new List<string>();
+
+            foreach (CultureInfo ci in CultureInfo.GetCultures(CultureTypes.SpecificCultures))
+            {
+                RegionInfo ri = new RegionInfo(ci.Name);
+                if (!countryList.Contains(ri.EnglishName))
+                {
+                    countryList.Add(ri.EnglishName);
+                }
+            }
+
+            // 2. Sort them alphabetically
+            countryList.Sort();
+
+            // 3. Bind to the DropDownList
+            ddlCountry.DataSource = countryList;
+            ddlCountry.DataBind();
+
+            // 4. Add the default "Select" item at the top
+            ddlCountry.Items.Insert(0, new ListItem("-- Select Country --", ""));
+        }
         protected void lnkHaveAccount_Click(object sender, EventArgs e)
         {
             Response.Redirect("~/Lee Wei Zhe/aspx/Login.aspx");

@@ -1,4 +1,4 @@
-<%@ Page Title="Enchantment Guide" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Enchantment.aspx.cs" Inherits="WebAssignment.Wong_Zhang_Zhe.Enchantment" %>
+<%@ Page Title="Enchantment Guide" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Enchantment.aspx.cs" Inherits="WebAssignment.Brayden.Enchantment" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <style type="text/css">

@@ -1,4 +1,4 @@
-<%@ Page Title="Potion Guide" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Potion.aspx.cs" Inherits="WebAssignment.Wong_Zhang_Zhe.Potion" %>
+<%@ Page Title="Potion Guide" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Potion.aspx.cs" Inherits="WebAssignment.Brayden.Potion" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <style type="text/css">
