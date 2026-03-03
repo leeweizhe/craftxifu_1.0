@@ -21,30 +21,38 @@ namespace WebAssignment
         {
             if (Session["userId"] != null && !string.IsNullOrEmpty(Session["userId"].ToString()))
             {
+                // 1. ALWAYS show the profile section on the right for all logged-in users
                 phVisitor.Visible = false;
                 phMember.Visible = true;
 
-                string picPath = Convert.ToString(Session["profilePic"]);
-                int userId = Convert.ToInt32(Session["userId"]);
-                lblUsername.Text = Convert.ToString(Session["username"]);
-                imgProfile.ImageUrl = picPath;
-
-                if (Session["avatarFrame"] != null && !string.IsNullOrEmpty(Session["avatarFrame"].ToString()))
+                // 2. Extra check: Are you an Admin?
+                if (Session["UserRole"] != null && Session["UserRole"].ToString() == "Admin")
                 {
-                    string framePath = Session["avatarFrame"].ToString();
-                    imgFrame.ImageUrl = framePath;
-                    imgFrame.Visible = true;
+                    phAdmin.Visible = true; // This shows the "Admin" menu next to Contact Us
                 }
                 else
                 {
-                    imgFrame.Visible = false;
+                    phAdmin.Visible = false;
                 }
+
+                // 3. Load user data for the phMember section
+                lblUsername.Text = Session["username"].ToString();
+                imgProfile.ImageUrl = Session["profilePic"].ToString();
+
+                // Handle the frame
+                if (Session["avatarFrame"] != null && !string.IsNullOrEmpty(Session["avatarFrame"].ToString()))
+                {
+                    imgFrame.ImageUrl = Session["avatarFrame"].ToString();
+                    imgFrame.Visible = true;
+                }
+                else { imgFrame.Visible = false; }
             }
             else
             {
-                // No session means they are a visitor
+                // 4. Visitor state
                 phVisitor.Visible = true;
                 phMember.Visible = false;
+                phAdmin.Visible = false;
             }
         }
 
@@ -52,7 +60,7 @@ namespace WebAssignment
         {
             Session.Clear();
             Session.Abandon();
-            Response.Redirect("~/Lee Wei Zhe/aspx/Login.aspx", true);
+            Response.Redirect("~/Lee Wei Zhe/aspx/Login.aspx");
         }
     }
 }

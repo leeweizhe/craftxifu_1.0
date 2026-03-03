@@ -170,12 +170,12 @@
         <div class="shop-grid">
             <asp:Repeater ID="shopRepeater" runat="server">
                 <ItemTemplate>
-                    <div class="shop-card" style='border-color:<%# ((WebAssignment.Wong_Zhang_Zhe.Minigame)Page).GetRarityColor(Eval("Rarity").ToString()) %>'>
-                        <div class="rarity-banner" style='background:<%# ((WebAssignment.Wong_Zhang_Zhe.Minigame)Page).GetRarityColor(Eval("Rarity").ToString()) %>; color:#000;'>
+                    <div class="shop-card" style='border-color:<%# ((WebAssignment.Brayden.Minigame)Page).GetRarityColor(Eval("Rarity").ToString()) %>'>
+                        <div class="rarity-banner" style='background:<%# ((WebAssignment.Brayden.Minigame)Page).GetRarityColor(Eval("Rarity").ToString()) %>; color:#000;'>
                             <%# Eval("Rarity") %>
                         </div>
                         <img src='<%# ResolveUrl(Eval("ImagePath").ToString()) %>' class="shop-item-img" onerror="this.style.display='none'" alt='<%# Eval("Name") %>' />
-                        <div class="shop-item-name" style='color:<%# ((WebAssignment.Wong_Zhang_Zhe.Minigame)Page).GetRarityColor(Eval("Rarity").ToString()) %>'>
+                        <div class="shop-item-name" style='color:<%# ((WebAssignment.Brayden.Minigame)Page).GetRarityColor(Eval("Rarity").ToString()) %>'>
                             <%# Eval("Name") %>
                         </div>
                         <div class="shop-item-desc"><%# Eval("Description") %></div>
@@ -218,15 +218,15 @@
             <asp:Repeater ID="inventoryRepeater" runat="server">
                 <ItemTemplate>
                     <div class='inv-card <%# Eval("IsEquipped").ToString()=="True" ? "equipped" : "" %>'
-                         style='border-color:<%# ((WebAssignment.Wong_Zhang_Zhe.Minigame)Page).GetRarityColor(Eval("Rarity").ToString()) %>'>
+                         style='border-color:<%# ((WebAssignment.Brayden.Minigame)Page).GetRarityColor(Eval("Rarity").ToString()) %>'>
                         <%# Eval("IsEquipped").ToString()=="True" ? "<div class='equipped-badge'>✓ EQUIPPED</div>" : "" %>
                         <img src='<%# ResolveUrl(Eval("ImagePath")!=null && Eval("ImagePath").ToString().Length>0 ? Eval("ImagePath").ToString() : (Eval("FrameImagePath")!=null ? Eval("FrameImagePath").ToString() : "") ) %>'
                              class="inv-item-img" onerror="this.style.display='none'" alt='<%# Eval("Name") %>' />
-                        <div style='color:<%# ((WebAssignment.Wong_Zhang_Zhe.Minigame)Page).GetRarityColor(Eval("Rarity").ToString()) %>; font-size:1.1rem; margin-bottom:5px;'>
+                        <div style='color:<%# ((WebAssignment.Brayden.Minigame)Page).GetRarityColor(Eval("Rarity").ToString()) %>; font-size:1.1rem; margin-bottom:5px;'>
                             <%# Eval("Name") %>
                         </div>
                         <div style="color:#888; font-size:0.8rem; margin-bottom:8px;">
-                            <span style='background:<%# ((WebAssignment.Wong_Zhang_Zhe.Minigame)Page).GetRarityColor(Eval("Rarity").ToString()) %>; color:#000; padding:1px 8px;'><%# Eval("Rarity") %></span>
+                            <span style='background:<%# ((WebAssignment.Brayden.Minigame)Page).GetRarityColor(Eval("Rarity").ToString()) %>; color:#000; padding:1px 8px;'><%# Eval("Rarity") %></span>
                         </div>
                         <div style="color:#666; font-size:0.8rem; margin-bottom:10px;">
                             Purchased: <%# Eval("PurchaseDate", "{0:MMM dd, yyyy}") %>

@@ -1,4 +1,4 @@
-﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site.Master.cs" Inherits="WebAssignment.Site" %>
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site.master.cs" Inherits="WebAssignment.Site" %>
 
 <!DOCTYPE html>
 
@@ -21,6 +21,17 @@
                 <li><a href="/Brayden/Minigame.aspx" class="main-link">Minigame</a></li>
                 <li><a href="/Lee Wei Zhe/aspx/LiveStream.aspx" class="main-link">Live Stream</a></li>
                 <li><a href="/Wong Zhang Zhe/ContactUs.aspx" class="main-link">Contact US</a></li>
+
+                <asp:PlaceHolder ID="phAdmin" runat="server" Visible="false">
+                    <li class="dropdown-parent">
+                        <a class="main-link">Admin</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="/Tong Yu Hong/aspx/ManageUser.aspx" class="sub-link">Manage Users</a></li>
+                            <li><a href="/Tong Yu Hong/aspx/ViewStatistic.aspx" class="sub-link">View Statistic</a></li>
+                            <li><a href="/Tong Yu Hong/aspx/SupportChat.aspx" class="sub-link">Ticket Support</a></li>
+                        </ul>
+                    </li>
+                </asp:PlaceHolder>
 
                 <asp:PlaceHolder ID="phVisitor" runat="server">
                     <li class="move-right">
@@ -59,5 +70,25 @@
         </footer>
         
     </form>
+    <script type="text/javascript">
+        document.addEventListener('DOMContentLoaded', function () {
+            var parents = document.querySelectorAll('.dropdown-parent');
+            
+            parents.forEach(function (item) {
+                item.addEventListener('click', function (e) {
+                    e.stopPropagation();
+                    // Close other menus if one is clicked
+                    parents.forEach(p => { if (p !== item) p.classList.remove('open'); });
+                    // Toggle the 'open' class for the clicked menu
+                    item.classList.toggle('open');
+                });
+            });
+
+            // Close all dropdowns if you click anywhere else on the screen
+            document.addEventListener('click', function () {
+                parents.forEach(p => p.classList.remove('open'));
+            });
+        });
+    </script>
 </body>
 </html>
