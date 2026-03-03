@@ -53,7 +53,7 @@ namespace WebAssignment
                     {
                         lblEmeralds.Text = reader["Currency"].ToString();
 
-                        // 同步 Session 给母版页
+                        // Synchronize Session with Master Page
                         Session["username"] = reader["Username"].ToString();
                         Session["profilePic"] = reader["ProfilePicture"].ToString();
 

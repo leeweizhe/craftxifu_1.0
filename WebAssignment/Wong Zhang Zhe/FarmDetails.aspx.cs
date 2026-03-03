@@ -20,16 +20,15 @@ namespace WebAssignment
             {
                 string farmId = Request.QueryString["id"];
 
-                // 2. 检查逻辑：如果 farmId 不为空，则加载数据 [cite: 2026-02-09]
+                // Check logic: If farmId is not empty, load the data.
                 if (!string.IsNullOrEmpty(farmId))
                 {
                     LoadFarmDetails(farmId);
                     LoadComments(farmId);
-                    CheckCommentPermission(); // 此方法会根据登录后的 userId 判断权限 [cite: 2026-02-09]
+                    CheckCommentPermission();
                 }
                 else
                 {
-                    // 如果 URL 里没有 id，跳转回列表页 [cite: 2026-02-09]
                     Response.Redirect("AutoFarm.aspx");
                 }
             }
@@ -52,7 +51,6 @@ namespace WebAssignment
         {
             using (SqlConnection conn = new SqlConnection(connString))
             {
-                // 使用 JOIN 获取用户名
                 string sql = @"SELECT c.*, u.Username FROM commentTable c 
                                JOIN userTable u ON c.UserId = u.UserId 
                                WHERE c.FarmId = @fid ORDER BY c.CommentDate DESC";
@@ -86,8 +84,8 @@ namespace WebAssignment
                     cmd.ExecuteNonQuery();
                     conn.Close();
                 }
-                txtComment.Text = ""; // 清空输入框
-                LoadComments(farmId); // 刷新评论列表
+                txtComment.Text = ""; 
+                LoadComments(farmId); 
             }
         }
 
@@ -104,16 +102,16 @@ namespace WebAssignment
                 SqlDataReader reader = cmd.ExecuteReader();
                 if (reader.Read())
                 {
-                    // 1. 绑定基础文字信息
+                    // Binding basic text information
                     lblTitle.Text = reader["Title"].ToString();
                     lblDesc.Text = reader["Description"].ToString();
                     lblEfficiency.Text = reader["Efficiency"].ToString();
                     litContent.Text = reader["FullContent"].ToString();
 
-                    // 2. 绑定详情页大图
+                    // Binding details page large image
                     imgFarmDisplay.ImageUrl = reader["DetailImage"].ToString();
 
-                    // 3. 绑定材料清单图片
+                    // Image of the binding materials list
                     string matImg = reader["MaterialImage"].ToString();
                     if (!string.IsNullOrEmpty(matImg))
                     {
@@ -121,7 +119,7 @@ namespace WebAssignment
                         materialPanel.Visible = true;
                     }
 
-                    // 4. 处理视频 URL (兼容长短链接)
+                    // Handle video URL
                     string videoUrl = reader["VideoUrl"].ToString();
                     if (!string.IsNullOrEmpty(videoUrl))
                     {
@@ -144,7 +142,7 @@ namespace WebAssignment
 
         protected void lnkReport_Command(object sender, CommandEventArgs e)
         {
-            // 检查是否登录 [cite: 2026-02-09]
+            // Check if you are logged in
             if (Session["userId"] == null)
             {
                 Response.Redirect("Login.aspx");
@@ -158,7 +156,7 @@ namespace WebAssignment
             {
                 using (SqlConnection conn = new SqlConnection(connString))
                 {
-                    // 插入举报记录 [cite: 2026-01-23, 2026-02-09]
+                    // Insert report record
                     string sql = "INSERT INTO reportTable (CommentId, ReporterId) VALUES (@cid, @rid)";
                     SqlCommand cmd = new SqlCommand(sql, conn);
                     cmd.Parameters.AddWithValue("@cid", commentId);
@@ -169,12 +167,12 @@ namespace WebAssignment
                     conn.Close();
                 }
 
-                // 使用脚本提示用户举报成功 [cite: 2026-02-09]
+                // The script notifies the user that the report was successful
                 ScriptManager.RegisterStartupScript(this, GetType(), "showalert", "alert('Thank you. The comment has been reported for review.');", true);
             }
             catch (Exception ex)
             {
-                // 处理错误
+
             }
         }
     }

@@ -20,7 +20,7 @@ namespace WebAssignment
                 return;
             }
 
-            // 2. 在前端按钮点击时加入 JavaScript 询问确认
+            // Add JavaScript to prompt for confirmation when the front-end button is clicked.
             btnUpdate.Attributes.Add("onclick", "return confirm('Are you sure you want to save these changes?');");
 
             if (!IsPostBack)
@@ -31,7 +31,6 @@ namespace WebAssignment
 
         private void LoadCurrentData()
         {
-            // 使用统一的小写键名读取
             int userId = Convert.ToInt32(Session["userId"]);
             string connString = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
 
@@ -102,7 +101,7 @@ namespace WebAssignment
                 conn.Close();
             }
 
-            // 更新成功后确保 Session 里的 userId 依然存在
+            // After a successful update, ensure that the userId still exists in the Session.
             Session["userId"] = userId;
             Response.Redirect("UserProfile.aspx");
         }

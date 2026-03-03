@@ -10,11 +10,10 @@ namespace WebAssignment
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            // 检查是否登录以及角色是否为 Instructor
-            // 注意：这里必须和 Login.aspx.cs 存入的键名 "userId" 和 "userRole" 完全一致
+
             if (Session["userId"] == null || Session["userRole"]?.ToString().Trim() != "Instructor")
             {
-                // 如果不是老师，直接踢回列表页 [cite: 2026-02-09]
+                // if not Instructor then redirect to list page
                 Response.Redirect("AutoFarm.aspx");
             }
         }
@@ -49,7 +48,7 @@ namespace WebAssignment
 
                 lblMsg.Text = "SUCCESS: FARM DESIGN PUBLISHED!";
                 lblMsg.ForeColor = System.Drawing.Color.LimeGreen;
-                // 3秒后跳转回列表
+                // jump back to list after 3 seconds
                 Response.AppendHeader("Refresh", "2;url=AutoFarm.aspx");
             }
             catch (Exception ex)
@@ -64,13 +63,13 @@ namespace WebAssignment
             if (fileUpload.HasFile)
             {
                 string fileName = prefix + Guid.NewGuid().ToString().Substring(0, 8) + Path.GetExtension(fileUpload.FileName);
-                // 物理路径指向你的 pic 文件夹 [cite: 2026-02-09]
+                
                 string folderPath = Server.MapPath("~/Wong Zhang Zhe/pic/");
 
                 if (!Directory.Exists(folderPath)) Directory.CreateDirectory(folderPath);
 
                 fileUpload.SaveAs(Path.Combine(folderPath, fileName));
-                return "/Wong Zhang Zhe/pic/" + fileName; // 返回相对路径存入数据库 [cite: 2026-02-09]
+                return "/Wong Zhang Zhe/pic/" + fileName; 
             }
             return "";
         }

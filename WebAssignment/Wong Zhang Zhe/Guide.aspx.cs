@@ -30,7 +30,7 @@ namespace WebAssignment
             LinkButton btn = (LinkButton)sender;
             string guideName = btn.CommandArgument;
 
-            // 安全检查：防止 Visitor 绕过 UI 点击锁定内容
+            // Security check: Prevent visitors from bypassing the UI to click and lock content.
             if (Session["userId"] == null && (guideName == "Potion" || guideName == "AutoFarm"))
             {
                 Response.Redirect("/Lee Wei Zhe/aspx/Login.aspx");
@@ -46,7 +46,7 @@ namespace WebAssignment
                 case "Potion": targetUrl = "/Brayden/Potion.aspx"; break;
             }
 
-            // 数据库点击计数逻辑
+            // Database click counting logic
             UpdateClickStats(guideName);
 
             if (!string.IsNullOrEmpty(targetUrl))

@@ -14,38 +14,46 @@ namespace WebAssignment
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            // 如果有初始化逻辑可以放在这里
+
         }
 
         protected void btnSubmit_Click(object sender, EventArgs e)
         {
-            if (Session["UserId"] == null)
-            {
-                Session["UserId"] = 5; // 仅供测试
-            }
+            object userId = Session["userId"];
 
-            int userId = Convert.ToInt32(Session["UserId"]);
             string connString = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
 
-            using (SqlConnection conn = new SqlConnection(connString))
+            try
             {
-                string sql = "INSERT INTO contactTable (UserId, Subject, Message, Status) VALUES (@uid, @sub, @msg, @status)";
-                SqlCommand cmd = new SqlCommand(sql, conn);
+                using (SqlConnection conn = new SqlConnection(connString))
+                {
+                    // Insert a feedback record. If guest submissions are allowed, the UserId field in the database should be allowed to be NULL.
+                    string sql = "INSERT INTO contactTable (UserId, Subject, Message, Status) VALUES (@uid, @sub, @msg, @status)";
+                    SqlCommand cmd = new SqlCommand(sql, conn);
 
-                cmd.Parameters.AddWithValue("@uid", userId);
-                cmd.Parameters.AddWithValue("@sub", ddlSubject.SelectedValue);
-                cmd.Parameters.AddWithValue("@msg", txtMessage.Text);
-                cmd.Parameters.AddWithValue("@status", "Submitted");
+                    // If userId is null, then store DBNull.Value in the database
+                    cmd.Parameters.AddWithValue("@uid", userId ?? DBNull.Value);
+                    cmd.Parameters.AddWithValue("@sub", ddlSubject.SelectedValue);
+                    cmd.Parameters.AddWithValue("@msg", txtMessage.Text.Trim());
+                    cmd.Parameters.AddWithValue("@status", "Submitted");
 
-                conn.Open();
-                cmd.ExecuteNonQuery();
-                conn.Close();
+                    conn.Open();
+                    cmd.ExecuteNonQuery();
+                    conn.Close();
+                }
+
+                // UI state switching
+                lblStatus.Text = "TICKET CREATED SUCCESSFULLY!";
+                lblStatus.ForeColor = System.Drawing.Color.LimeGreen;
+
+                if (formPanel != null) formPanel.Visible = false;
+                if (successPanel != null) successPanel.Visible = true;
             }
-
-            lblStatus.Text = "TICKET CREATED SUCCESSFULLY!";
-            lblStatus.ForeColor = System.Drawing.Color.LimeGreen;
-            formPanel.Visible = false;
-            successPanel.Visible = true;
+            catch (Exception ex)
+            {
+                lblStatus.Text = "ERROR: " + ex.Message;
+                lblStatus.ForeColor = System.Drawing.Color.Red;
+            }
         }
 
         protected void btnBackHome_Click(object sender, EventArgs e)

@@ -17,14 +17,9 @@ namespace WebAssignment
         {
             if (!IsPostBack)
             {
-                // 1. 检查权限：该方法内部会使用登录时存入的 Session["userId"] [cite: 2026-02-09]
                 CheckInstructorPrivilege();
-
-                // 2. 初始化面板显示状态 [cite: 2026-01-23]
                 categoryPanel.Visible = true;
                 subFarmPanel.Visible = false;
-
-                // 3. 加载农场分类 [cite: 2026-01-23]
                 LoadDynamicCategories();
             }
         }
@@ -48,7 +43,7 @@ namespace WebAssignment
 
                     if (roleObj != null && roleObj.ToString() == "Instructor")
                     {
-                        btnAddFarm.Visible = true; // 只有角色为 Instructor 才显示
+                        btnAddFarm.Visible = true; // only show for instructor
                     }
                 }
             }
@@ -56,7 +51,6 @@ namespace WebAssignment
 
         protected void RedirectToAddFarm(object sender, EventArgs e)
         {
-            // 确保路径正确，跳转到你的添加表单页面
             Response.Redirect("~/Wong Zhang Zhe/AddAutoFarm.aspx");
         }
 
@@ -84,7 +78,7 @@ namespace WebAssignment
             lblCategoryTitle.Text = category + " Farms Database";
             LoadFarmsByCategory(category);
 
-            // 切换面板
+            // Switch panel
             categoryPanel.Visible = false;
             subFarmPanel.Visible = true;
         }
