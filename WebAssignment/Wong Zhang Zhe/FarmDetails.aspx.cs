@@ -15,24 +15,22 @@ namespace WebAssignment
         private string connString = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;    
         protected void Page_Load(object sender, EventArgs e)
         {
-            Session["userId"] = 8; // 保持测试 ID，确保母版页能正常读取
-
-
-            if (Session["username"] == null) Session["username"] = "Steve";
-            if (Session["profilePic"] == null) Session["profilePic"] = "~/Images/profiles/DPick.jpg";
-
-            string farmId = Request.QueryString["id"];
-            if (string.IsNullOrEmpty(farmId))
-            {
-                Response.Redirect("AutoFarm.aspx");
-                return;
-            }
 
             if (!IsPostBack)
             {
-                LoadFarmDetails(farmId);
-                LoadComments(farmId);
-                CheckCommentPermission();
+                string farmId = Request.QueryString["id"];
+
+                // Check logic: If farmId is not empty, load the data.
+                if (!string.IsNullOrEmpty(farmId))
+                {
+                    LoadFarmDetails(farmId);
+                    LoadComments(farmId);
+                    CheckCommentPermission();
+                }
+                else
+                {
+                    Response.Redirect("AutoFarm.aspx");
+                }
             }
         }
 
@@ -53,7 +51,6 @@ namespace WebAssignment
         {
             using (SqlConnection conn = new SqlConnection(connString))
             {
-                // 使用 JOIN 获取用户名
                 string sql = @"SELECT c.*, u.Username FROM commentTable c 
                                JOIN userTable u ON c.UserId = u.UserId 
                                WHERE c.FarmId = @fid ORDER BY c.CommentDate DESC";
@@ -87,8 +84,8 @@ namespace WebAssignment
                     cmd.ExecuteNonQuery();
                     conn.Close();
                 }
-                txtComment.Text = ""; // 清空输入框
-                LoadComments(farmId); // 刷新评论列表
+                txtComment.Text = ""; 
+                LoadComments(farmId); 
             }
         }
 
@@ -105,16 +102,16 @@ namespace WebAssignment
                 SqlDataReader reader = cmd.ExecuteReader();
                 if (reader.Read())
                 {
-                    // 1. 绑定基础文字信息
+                    // Binding basic text information
                     lblTitle.Text = reader["Title"].ToString();
                     lblDesc.Text = reader["Description"].ToString();
                     lblEfficiency.Text = reader["Efficiency"].ToString();
                     litContent.Text = reader["FullContent"].ToString();
 
-                    // 2. 绑定详情页大图
+                    // Binding details page large image
                     imgFarmDisplay.ImageUrl = reader["DetailImage"].ToString();
 
-                    // 3. 绑定材料清单图片
+                    // Image of the binding materials list
                     string matImg = reader["MaterialImage"].ToString();
                     if (!string.IsNullOrEmpty(matImg))
                     {
@@ -122,7 +119,7 @@ namespace WebAssignment
                         materialPanel.Visible = true;
                     }
 
-                    // 4. 处理视频 URL (兼容长短链接)
+                    // Handle video URL
                     string videoUrl = reader["VideoUrl"].ToString();
                     if (!string.IsNullOrEmpty(videoUrl))
                     {
@@ -142,5 +139,6 @@ namespace WebAssignment
                 conn.Close();
             }
         }
+
     }
 }

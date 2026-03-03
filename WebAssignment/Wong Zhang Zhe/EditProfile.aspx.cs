@@ -14,16 +14,13 @@ namespace WebAssignment
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            // 1. 统一使用小写 userId 键名适配全站 [cite: 2026-02-03]
             if (Session["userId"] == null)
             {
-                Session["userId"] = 8; // 保持测试 ID
+                Response.Redirect("/Lee Wei Zhe/aspx/Login.aspx"); 
+                return;
             }
 
-            if (Session["username"] == null) Session["username"] = "Steve";
-            if (Session["profilePic"] == null) Session["profilePic"] = "~/Images/profiles/DPick.jpg";
-
-            // 2. 在前端按钮点击时加入 JavaScript 询问确认
+            // Add JavaScript to prompt for confirmation when the front-end button is clicked.
             btnUpdate.Attributes.Add("onclick", "return confirm('Are you sure you want to save these changes?');");
 
             if (!IsPostBack)
@@ -34,7 +31,6 @@ namespace WebAssignment
 
         private void LoadCurrentData()
         {
-            // 使用统一的小写键名读取
             int userId = Convert.ToInt32(Session["userId"]);
             string connString = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
 
@@ -96,6 +92,7 @@ namespace WebAssignment
 
                 if (!string.IsNullOrEmpty(txtPassword.Text))
                 {
+                    string hashedPassword = BCrypt.Net.BCrypt.HashPassword(txtPassword.Text);
                     cmd.Parameters.AddWithValue("@pw", txtPassword.Text);
                 }
 
@@ -104,7 +101,7 @@ namespace WebAssignment
                 conn.Close();
             }
 
-            // 更新成功后确保 Session 里的 userId 依然存在
+            // After a successful update, ensure that the userId still exists in the Session.
             Session["userId"] = userId;
             Response.Redirect("UserProfile.aspx");
         }

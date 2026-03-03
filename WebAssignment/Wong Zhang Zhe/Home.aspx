@@ -53,7 +53,7 @@
             </asp:Panel>
         </div>
 
-        <%-- 使用 PlaceHolder 替换原有的 if 逻辑 --%>
+        <%-- Replace the original if logic with PlaceHolder.s --%>
         <asp:PlaceHolder ID="phMemberStatus" runat="server" Visible="false">
             <div class="status-bar">
                 <div class="status-item">TREASURY: <span><asp:Label ID="lblEmeralds" runat="server" /> 💎</span></div>

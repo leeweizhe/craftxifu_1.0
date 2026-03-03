@@ -10,7 +10,7 @@
         .guide-card:hover .card-img { opacity: 0.40; transform: scale(1.1); }
         .card-title { position: absolute; bottom: 40px; left: 0; width: 100%; color: #fff; font-size: 2rem; text-align: center; text-shadow: 3px 3px #000; text-transform: uppercase; font-family: 'Minecraft', sans-serif; }
 
-        /* 像素风锁定遮罩 */
+        /* Pixel-style lock mask */
         .lock-overlay { 
             position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
             background: rgba(0,0,0,0.85); display: flex; flex-direction: column; 
@@ -18,10 +18,10 @@
             backdrop-filter: blur(4px);
         }
 
-        /* 纯 CSS 像素风锁头 */
+        /* Pure CSS pixel-style padlock */
         .pixel-lock {
             width: 60px; height: 50px; background: #fbbf24; position: relative;
-            box-shadow: 6px 0 0 #b45309, -6px 0 0 #b45309, 0 6px 0 #b45309, 0 -6px 0 #b45309; /* 像素边框 */
+            box-shadow: 6px 0 0 #b45309, -6px 0 0 #b45309, 0 6px 0 #b45309, 0 -6px 0 #b45309; /* Pixel border */
         }
         .pixel-lock::before {
             content: ""; position: absolute; top: -30px; left: 10px;
@@ -30,7 +30,7 @@
         }
         .pixel-lock::after {
             content: ""; position: absolute; top: 15px; left: 22px;
-            width: 16px; height: 20px; background: #000; /* 锁孔 */
+            width: 16px; height: 20px; background: #000; 
         }
 
         .lock-text { color: #fbbf24; margin-top: 30px; font-size: 1.2rem; text-transform: uppercase; font-weight: bold; }

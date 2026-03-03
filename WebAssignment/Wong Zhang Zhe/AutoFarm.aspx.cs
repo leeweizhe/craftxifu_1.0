@@ -17,11 +17,41 @@ namespace WebAssignment
         {
             if (!IsPostBack)
             {
-                // 默认显示分类，隐藏列表
+                CheckInstructorPrivilege();
                 categoryPanel.Visible = true;
                 subFarmPanel.Visible = false;
                 LoadDynamicCategories();
             }
+        }
+
+        private void CheckInstructorPrivilege()
+        {
+            if (Session["userId"] != null)
+            {
+                int userId = Convert.ToInt32(Session["userId"]);
+                string connString = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
+
+                using (SqlConnection conn = new SqlConnection(connString))
+                {
+                    string sql = "SELECT Role FROM userTable WHERE userId = @id";
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@id", userId);
+
+                    conn.Open();
+                    object roleObj = cmd.ExecuteScalar();
+                    conn.Close();
+
+                    if (roleObj != null && roleObj.ToString() == "Instructor")
+                    {
+                        btnAddFarm.Visible = true; // only show for instructor
+                    }
+                }
+            }
+        }
+
+        protected void RedirectToAddFarm(object sender, EventArgs e)
+        {
+            Response.Redirect("~/Wong Zhang Zhe/AddAutoFarm.aspx");
         }
 
         private void LoadDynamicCategories()
@@ -48,7 +78,7 @@ namespace WebAssignment
             lblCategoryTitle.Text = category + " Farms Database";
             LoadFarmsByCategory(category);
 
-            // 切换面板
+            // Switch panel
             categoryPanel.Visible = false;
             subFarmPanel.Visible = true;
         }

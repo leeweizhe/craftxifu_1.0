@@ -7,11 +7,11 @@
         .farm-header { border-bottom: 3px solid #68ff00; padding-bottom: 15px; margin-bottom: 30px; }
         .efficiency-badge { background: #fbbf24; color: #000; padding: 5px 15px; font-weight: bold; float: right; }
         
-        /* 图片通用样式 */
+        /* General style for pictures */
         .pixel-img { width: 100%; border: 4px solid #68ff00; margin-bottom: 30px; image-rendering: pixelated; object-fit: cover; }
         .mat-img { max-width: 600px; border: 2px dashed #fbbf24; display: block; margin: 0 auto; }
         
-        /* 视频容器 */
+        /* video container */
         .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; margin: 20px 0; border: 3px solid #333; background: #000; }
         .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
         
@@ -31,11 +31,11 @@
 
         <p style="font-size: 1.4rem; color: #fbbf24; margin-bottom: 30px;"><asp:Label ID="lblDesc" runat="server" /></p>
 
-        <%-- 1. 预览大图 --%>
+        <%-- Preview image --%>
         <span class="section-label">Gallery / Preview</span>
         <asp:Image ID="imgFarmDisplay" runat="server" CssClass="pixel-img" />
 
-        <%-- 2. 视频教程 --%>
+        <%-- Video tutorial --%>
         <asp:Panel ID="videoPanel" runat="server" Visible="false">
             <span class="section-label">Video Tutorial</span>
             <div class="video-wrapper">
@@ -43,7 +43,7 @@
             </div>
         </asp:Panel>
 
-        <%-- 3. 材料清单 --%>
+        <%-- Material list --%>
         <asp:Panel ID="materialPanel" runat="server" Visible="false">
             <span class="section-label">Required Materials</span>
             <div style="text-align:center; padding: 20px; background: rgba(0,0,0,0.5); margin-bottom: 30px;">
@@ -51,16 +51,16 @@
             </div>
         </asp:Panel>
 
-        <%-- 4. 详细步骤 --%>
+        <%-- Detailed steps --%>
         <span class="section-label"> Description </span>
         <div class="content-box">
             <asp:Literal ID="litContent" runat="server" />
         </div>
 
-        <%-- 5. 评论区 --%>
+        <%-- Comment area --%>
         <span class="section-label">Player Discussions</span>
         <div class="content-box">
-            <%-- 评论列表 --%>
+            <%-- Comment list --%>
             <asp:Repeater ID="rptComments" runat="server">
                 <ItemTemplate>
                     <div style="border-bottom: 1px dashed #333; padding: 15px 0; margin-bottom: 10px;">
@@ -71,7 +71,7 @@
                 </ItemTemplate>
             </asp:Repeater>
 
-            <%-- 发表评论 (仅对 Member 可见) --%>
+            <%-- Post a comment (visible only to Members) --%>
             <asp:Panel ID="pnlAddComment" runat="server" Visible="false" style="margin-top: 30px; border-top: 2px solid #333; padding-top: 20px;">
                 <h4 style="color: #fbbf24; margin-bottom: 10px;">ADD YOUR THOUGHTS</h4>
                 <asp:TextBox ID="txtComment" runat="server" TextMode="MultiLine" Rows="4" 
@@ -83,7 +83,7 @@
                     style="margin-top: 15px; background: #68ff00; color: #000; border: none; padding: 10px 25px; font-weight: bold; cursor: pointer;" />
             </asp:Panel>
 
-            <%-- 对 Visitor 的提示 --%>
+            <%-- Tips for Visitors --%>
             <asp:Literal ID="litVisitorMsg" runat="server" />
         </div>
     </div>

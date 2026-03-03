@@ -9,7 +9,7 @@
         .pixel-input { width: 100%; background: #000; color: #fff; border: 1px solid #444; padding: 10px; font-size: 1.5rem; box-sizing: border-box; }
         .pixel-input:focus { border-color: #68ff00; outline: none; }
         
-        /* 按钮样式 */
+        /* button design */
         .btn-update { background: #68ff00; color: #000; font-weight: bold; padding: 15px 40px; border: none; cursor: pointer; font-size: 1.2rem; }
         .btn-cancel { background: #ff4444; color: #fff; font-weight: bold; padding: 15px 40px; border: none; cursor: pointer; font-size: 1.2rem; margin-right: 10px; }
         .btn-cancel:hover { background: #cc0000; }

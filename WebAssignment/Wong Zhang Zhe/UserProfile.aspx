@@ -2,7 +2,7 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <style type="text/css">
-        /* 保持 Minecraft 像素风格 UI */
+        /* Maintain Minecraft pixel-style UI */
         .profile-box { background: rgba(0,0,0,0.9); border: 5px solid #464646; padding: 50px; width: 85%; margin: 40px auto; color: #FFF; box-shadow: 0 0 20px rgba(104, 255, 0, 0.3); }
         .header-flex { display: flex; align-items: center; gap: 40px; border-bottom: 4px solid #68ff00; padding-bottom: 30px; }
         
@@ -13,10 +13,10 @@
 
         .name-main { font-size: 3.5rem; color: #68ff00; margin: 0; }
         
-        /* 容器：让 Rank 和 NameTag 并排显示 */
+        /* Display Rank and NameTag side by side */
         .rank-tag-container { display: flex; align-items: center; gap: 10px; margin-top: 10px; }
 
-        /* 统一勋章样式：青框、青字、透明背景 */
+        /* Standardized medal design: blue border, blue text, transparent background */
         .rank-badge, .nametag-badge { 
             border: 2px solid #68ff00; 
             padding: 5px 15px; 
@@ -24,10 +24,9 @@
             font-size: 1.2rem; 
             display: inline-block; 
             text-transform: uppercase; 
-            background: transparent; /* 确保是透明背景 */
+            background: transparent;
         }
         
-        /* 覆盖原本可能存在的加粗或特殊边框设置，确保完全一致 */
         .nametag-badge { font-weight: normal; }
 
         .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 40px; }

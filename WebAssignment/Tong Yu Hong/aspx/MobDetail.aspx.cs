@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
@@ -11,6 +12,7 @@ namespace WebAssignment.Tong_Yu_Hong.aspx
 {
     public partial class MobDetail : System.Web.UI.Page
     {
+        private string connString = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
         protected void Page_Load(object sender, EventArgs e)
         {
             // Get the ID from the URL (e.g., MobDetail.aspx?ID=5)
@@ -20,11 +22,72 @@ namespace WebAssignment.Tong_Yu_Hong.aspx
             {
                 LoadMobDetails(mobId);
             }
+
+            if (!IsPostBack)
+            {
+                LoadComments(mobId);
+                CheckCommentPermission();
+            }
+        }
+
+        private void CheckCommentPermission()
+        {
+            if (Session["userId"] != null)
+            {
+                pnlAddComment.Visible = true;
+                litVisitorMsg.Text = "";
+            }
+            else
+            {
+                pnlAddComment.Visible = false;
+                litVisitorMsg.Text = "<p style='color: #fbbf24; text-align: center;'>[ <a href='/Lee Wei Zhe/aspx/Login.aspx' style='color: #68ff00;'>Login</a> to join the discussion ]</p>";
+            }
+        }
+        private void LoadComments(string mobId)
+        {
+            using (SqlConnection conn = new SqlConnection(connString))
+            {
+                // 使用 JOIN 获取用户名
+                string sql = @"SELECT c.*, u.Username FROM mobComment c 
+                               JOIN userTable u ON c.UserId = u.UserId 
+                               WHERE c.mobId = @mid ORDER BY c.CommentDate DESC";
+                SqlCommand cmd = new SqlCommand(sql, conn);
+                cmd.Parameters.AddWithValue("@mid", mobId);
+
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+                rptComments.DataSource = dt;
+                rptComments.DataBind();
+            }
+        }
+
+        protected void btnSubmitComment_Click(object sender, EventArgs e)
+        {
+            string mobId = Request.QueryString["id"];
+            string commentText = txtComment.Text.Trim();
+
+            if (!string.IsNullOrEmpty(commentText) && Session["userId"] != null)
+            {
+                using (SqlConnection conn = new SqlConnection(connString))
+                {
+                    string sql = "INSERT INTO mobComment (MobId, UserId, CommentText) VALUES (@mid, @uid, @text)";
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@mid", mobId);
+                    cmd.Parameters.AddWithValue("@uid", Session["userId"]);
+                    cmd.Parameters.AddWithValue("@text", commentText);
+
+                    conn.Open();
+                    cmd.ExecuteNonQuery();
+                    conn.Close();
+                }
+                txtComment.Text = ""; // 清空输入框
+                LoadComments(mobId); // 刷新评论列表
+            }
         }
 
         private void LoadMobDetails(string id)
         {
-            string connString = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
             using (SqlConnection conn = new SqlConnection(connString))
             {
                 // 1. Added 'HowToDefeat' to the SELECT query

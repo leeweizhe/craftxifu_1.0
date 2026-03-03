@@ -14,16 +14,6 @@ namespace WebAssignment
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            // 统一使用小写 userId
-            if (Session["userId"] == null)
-            {
-                Session["userId"] = 5;
-            }
-
-            // 初始化母版页依赖项
-            if (Session["username"] == null) Session["username"] = "Steve";
-            if (Session["profilePic"] == null) Session["profilePic"] = "~/Images/profiles/DPick.jpg";
-            Session["avatarFrame"] = null;
 
             if (Session["userId"] != null)
             {
@@ -39,6 +29,9 @@ namespace WebAssignment
                 memberSection.Visible = false;
                 memberDataCards.Visible = false;
                 phMemberStatus.Visible = false;
+
+                if (Session["username"] == null) Session["username"] = "Guest";
+                if (Session["profilePic"] == null) Session["profilePic"] = "~/Images/profiles/DPick.jpg";
             }
         }
 
@@ -60,7 +53,7 @@ namespace WebAssignment
                     {
                         lblEmeralds.Text = reader["Currency"].ToString();
 
-                        // 同步 Session 给母版页
+                        // Synchronize Session with Master Page
                         Session["username"] = reader["Username"].ToString();
                         Session["profilePic"] = reader["ProfilePicture"].ToString();
 

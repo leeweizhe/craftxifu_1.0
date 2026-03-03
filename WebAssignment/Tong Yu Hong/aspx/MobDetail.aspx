@@ -42,7 +42,6 @@
         <div class="detail-info">
             <div class="title-button-wrapper">
                 <a href="Mob.aspx" class="btn-back">← Back to Mobs</a>
-                
                 <asp:Label ID="lblMobName" runat="server" CssClass="detail-name" />
             </div>
             <asp:Label ID="lblDescription" runat="server" CssClass="detail-desc" />
@@ -75,9 +74,39 @@
                     </div>
                 </div>
             </asp:Panel>
-            
 
-        </div>
+            <div class="content-section" style="margin-top: 40px;">
+                <span class="section-header">💬 Player Discussions</span>
+                <div class="guide-box" style="border-color: #333; background: rgba(0,0,0,0.2);">
+                    
+                    <%-- Comment List --%>
+                    <asp:Repeater ID="rptComments" runat="server">
+                        <ItemTemplate>
+                            <div style="border-bottom: 1px dashed #444; padding: 15px 0; margin-bottom: 10px;">
+                                <strong style="color: #68ff00;"><%# Eval("Username") %></strong> 
+                                <span style="color: #888; font-size: 0.8rem;">- <%# Eval("CommentDate", "{0:yyyy-MM-dd HH:mm}") %></span>
+                                <p style="margin-top: 8px; color: #ddd; line-height: 1.4;"><%# Eval("CommentText") %></p>
+                            </div>
+                        </ItemTemplate>
+                    </asp:Repeater>
+
+                    <%-- Add Comment (Visible to Members/Admins) --%>
+                    <asp:Panel ID="pnlAddComment" runat="server" Visible="false" style="margin-top: 20px;">
+                        <h4 style="color: #fbbf24; margin-bottom: 10px; font-size: 1rem;">ADD YOUR THOUGHTS</h4>
+                        <asp:TextBox ID="txtComment" runat="server" TextMode="MultiLine" Rows="4" 
+                            style="width: 100%; background: #000; color: #fff; border: 1px solid #444; padding: 10px; font-family: 'Minecraft', sans-serif; resize: none;" 
+                            placeholder="Share your tips about this mob..." />
+                        <br />
+                        <asp:Button ID="btnSubmitComment" runat="server" Text="[ POST COMMENT ]" 
+                            OnClick="btnSubmitComment_Click" 
+                            style="margin-top: 15px; background: #68ff00; color: #000; border: none; padding: 10px 25px; font-weight: bold; cursor: pointer; font-family: 'Minecraft', sans-serif;" />
+                    </asp:Panel>
+
+                    <%-- Visitor Message --%>
+                    <asp:Literal ID="litVisitorMsg" runat="server" />
+                </div>
+            </div>
+            </div>
 
         <div class="detail-right-column">
             <div class="detail-image-box">
