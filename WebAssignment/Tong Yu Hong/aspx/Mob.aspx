@@ -54,7 +54,7 @@
                 <div class="mobs-wrapper">
                     <asp:Repeater ID="MobRepeater" runat="server">
                         <ItemTemplate>
-                            <a href='<%# "MobDetail.aspx?ID=" + Eval("MobID") %>' style="text-decoration: none; display: block; flex: 0 0 220px;">
+                            <a href='<%# "MobDetail.aspx?MobID=" + Eval("MobID") %>' style="text-decoration: none; display: block; flex: 0 0 220px;">
                                 <div class="mob-card" style="width: 100%; margin-bottom: 0;">
                                     <h2><%# Eval("MobName") %></h2>
                                     <img src='<%# ResolveUrl("~/Tong Yu Hong/mobImage/" + System.IO.Path.GetFileName(Eval("MobPicture").ToString())) %>' 
@@ -71,7 +71,7 @@
                 <div class="mobs-wrapper">
                     <asp:Repeater ID="rptPassive" runat="server">
                         <ItemTemplate>
-                             <a href='<%# "MobDetail.aspx?ID=" + Eval("MobID") %>' style="text-decoration: none; display: block; flex: 0 0 220px;">
+                             <a href='<%# "MobDetail.aspx?MobID=" + Eval("MobID") %>' style="text-decoration: none; display: block; flex: 0 0 220px;">
                                 <div class="mob-card">
                                     <h2><%# Eval("MobName") %></h2>
                                     <img src='<%# ResolveUrl("~/Tong Yu Hong/mobImage/" + System.IO.Path.GetFileName(Eval("MobPicture").ToString())) %>' class="mob-img" />
@@ -85,7 +85,7 @@
                 <div class="mobs-wrapper">
                     <asp:Repeater ID="rptNeutral" runat="server">
                         <ItemTemplate>
-                             <a href='<%# "MobDetail.aspx?ID=" + Eval("MobID") %>' style="text-decoration: none; display: block; flex: 0 0 220px;">
+                             <a href='<%# "MobDetail.aspx?MobID=" + Eval("MobID") %>' style="text-decoration: none; display: block; flex: 0 0 220px;">
                                 <div class="mob-card">
                                     <h2><%# Eval("MobName") %></h2>
                                     <img src='<%# ResolveUrl("~/Tong Yu Hong/mobImage/" + System.IO.Path.GetFileName(Eval("MobPicture").ToString())) %>' class="mob-img" />
@@ -99,7 +99,7 @@
                 <div class="mobs-wrapper">
                     <asp:Repeater ID="rptHostile" runat="server">
                         <ItemTemplate>
-                             <a href='<%# "MobDetail.aspx?ID=" + Eval("MobID") %>' style="text-decoration: none; display: block; flex: 0 0 220px;">
+                             <a href='<%# "MobDetail.aspx?MobID=" + Eval("MobID") %>' style="text-decoration: none; display: block; flex: 0 0 220px;">
                                 <div class="mob-card">
                                     <h2><%# Eval("MobName") %></h2>
                                     <img src='<%# ResolveUrl("~/Tong Yu Hong/mobImage/" + System.IO.Path.GetFileName(Eval("MobPicture").ToString())) %>' class="mob-img" />

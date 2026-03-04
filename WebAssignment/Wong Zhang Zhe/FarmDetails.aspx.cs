@@ -12,7 +12,7 @@ namespace WebAssignment
 {
     public partial class FarmDetails : System.Web.UI.Page
     {
-        private string connString = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;    
+        private string connString = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
         protected void Page_Load(object sender, EventArgs e)
         {
 
@@ -84,8 +84,8 @@ namespace WebAssignment
                     cmd.ExecuteNonQuery();
                     conn.Close();
                 }
-                txtComment.Text = ""; 
-                LoadComments(farmId); 
+                txtComment.Text = "";
+                LoadComments(farmId);
             }
         }
 
@@ -140,5 +140,45 @@ namespace WebAssignment
             }
         }
 
+        protected void lnkReport_Command(object sender, CommandEventArgs e)
+        {
+            if (Session["userId"] == null)
+            {
+                Response.Redirect("Login.aspx");
+                return;
+            }
+
+            // Split the combined argument (CommentId|FarmID)
+            string[] args = e.CommandArgument.ToString().Split('|');
+
+            if (args.Length < 2) return; // Safety check
+
+            string commentId = args[0];
+            string farmId = args[1];
+            string reporterId = Session["userId"].ToString();
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connString))
+                {
+                    // Make sure your table has a FarmID column!
+                    string sql = "INSERT INTO reportTable (CommentId, ReporterId, FarmID) VALUES (@cid, @rid, @fid)";
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@cid", commentId);
+                    cmd.Parameters.AddWithValue("@rid", reporterId);
+                    cmd.Parameters.AddWithValue("@fid", farmId);
+
+                    conn.Open();
+                    cmd.ExecuteNonQuery();
+                    conn.Close();
+                }
+
+                ScriptManager.RegisterStartupScript(this, GetType(), "showalert", "alert('Report submitted successfully.');", true);
+            }
+            catch (Exception ex)
+            {
+                // Optional: Log error
+            }
+        }
     }
 }
