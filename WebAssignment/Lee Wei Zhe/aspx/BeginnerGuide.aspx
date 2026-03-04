@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <%-- defer means the JS loads AFTER the HTML is ready --%>
     <script src="/Lee Wei Zhe/js/BeginnerGuide.js" defer></script>
+    <script src="/Lee Wei Zhe/js/CraftingRecipe.js" defer></script>
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
@@ -70,7 +71,12 @@
                         </li>
                     </ItemTemplate>
                 </asp:Repeater>
+
+                <li>
+                    <a href="#crafting-recipes">▶ Crafting Recipes</a>
+                </li>
             </ul>
+
 
             <%-- Shortcut "Add Section" in sidebar — only for instructors --%>
             <asp:Panel ID="pnlSidebarAddPart" runat="server" Visible="false">
@@ -320,32 +326,77 @@
                     onclick="showAddPartForm(); return false;">＋ Add New Section</button>
             </asp:Panel>
 
-            <%-- Static accordion section (unchanged) --%>
-            <div class="crafting-section">
-                <h2 class="section-title">Essential Crafting Recipes</h2>
+            <%-- ═══════════════════════════════════════════════════════════════════
+                 CRAFTING RECIPES SECTION
+                 All data comes from CraftingCategory + CraftingRecipe DB tables.
+                 Hovering a recipe card shows a mouse-following tooltip with
+                 the full recipe image and a short description.
+            ═══════════════════════════════════════════════════════════════════ --%>
+            <div class="crafting-section" id="crafting-recipes">
 
-                <details class="accordion-item">
-                    <summary>How to craft a Crafting Table</summary>
-                    <div class="accordion-content accordion-flex">
-                        <div class="accordion-text">
-                            <p>Place 4 Wooden Planks in your 2x2 inventory crafting grid.</p>
-                        </div>
-                        <div class="step-image-box multiple-images">
-                            <img src="../../images/profiles/troll.jpg" alt="Crafting Table" class="guide-img" />
-                            <img src="../../images/profiles/DPick.jpg" alt="Result" class="guide-img" />
-                        </div>
+                <%-- Header row: title on the left, search box on the right --%>
+                <div class="crafting-header-row">
+                    <h2 class="section-title" style="border-bottom:none; padding-bottom:0; margin:0;">
+                        Essential Crafting Recipes
+                    </h2>
+                    <div class="crafting-search-wrap">
+                        <span class="search-icon">🔍</span>
+                        <input type="text" id="craftingSearch"
+                               class="crafting-search-input"
+                               placeholder="Search recipes..."
+                               oninput="filterRecipes(this.value)" />
                     </div>
-                </details>
+                </div>
 
-                <details class="accordion-item">
-                    <summary>How to craft a Wooden Pickaxe</summary>
-                    <div class="accordion-content accordion-flex">
-                        <div class="accordion-text">
-                            <p>Place 3 Wooden Planks across the top row and 2 Sticks down the middle column.</p>
+                <%-- Mouse-following tooltip (shared, repositioned by JS) --%>
+                <div id="recipeTooltip" class="recipe-tooltip" style="display:none;">
+                    <img id="tooltipImg" src="" alt="" class="tooltip-big-img" />
+                    <p id="tooltipName" class="tooltip-name"></p>
+                    <p id="tooltipDesc" class="tooltip-desc"></p>
+                </div>
+
+                <%-- No-results message (hidden by default, shown by JS) --%>
+                <p id="noRecipesMsg" class="no-recipes-msg" style="display:none;">
+                    No recipes found matching your search.
+                </p>
+
+                <%-- Outer repeater: one block per category --%>
+                <asp:Repeater ID="rptCraftingCategories" runat="server"
+                    OnItemDataBound="rptCraftingCategories_ItemDataBound">
+                    <ItemTemplate>
+                        <div class="crafting-category"
+                             data-category='<%# Eval("CategoryName") %>'>
+
+                            <h3 class="crafting-category-title">
+                                <%# Eval("CategoryName") %>
+                            </h3>
+
+                            <div class="recipe-grid">
+                                <%-- Inner repeater: one card per recipe in this category --%>
+                                <asp:Repeater ID="rptRecipes" runat="server">
+                                    <ItemTemplate>
+                                        <div class="recipe-card"
+                                             data-name='<%# Eval("RecipeName") %>'
+                                             data-img='<%# ResolveUrl(Eval("RecipeImagePath").ToString()) %>'
+                                             data-desc='<%# Eval("Description") %>'
+                                             onmouseenter="showRecipeTooltip(event, this)"
+                                             onmousemove="moveRecipeTooltip(event)"
+                                             onmouseleave="hideRecipeTooltip()">
+                                            <div class="recipe-thumb-wrap">
+                                                <img src='<%# ResolveUrl(Eval("ThumbnailPath").ToString()) %>'
+                                                     alt='<%# Eval("RecipeName") %>'
+                                                     class="recipe-thumb" />
+                                            </div>
+                                            <span class="recipe-name"><%# Eval("RecipeName") %></span>
+                                        </div>
+                                    </ItemTemplate>
+                                </asp:Repeater>
+                            </div>
+
                         </div>
-                        <div class="step-image-box"><span>[Pickaxe Image]</span></div>
-                    </div>
-                </details>
+                    </ItemTemplate>
+                </asp:Repeater>
+
             </div>
 
         </div><%-- end .all-guides-wrapper --%>

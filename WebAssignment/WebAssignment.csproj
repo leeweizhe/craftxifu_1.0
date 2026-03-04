@@ -169,6 +169,7 @@
     <Content Include="images\profiles\troll.jpg" />
     <Content Include="Lee Wei Zhe\aspx\Login.aspx" />
     <Content Include="Lee Wei Zhe\js\BeginnerGuide.js" />
+    <Content Include="Lee Wei Zhe\js\CraftingRecipe.js" />
     <Content Include="Lee Wei Zhe\js\Login.js" />
     <Content Include="Lee Wei Zhe\js\nav.js" />
     <Content Include="obj\Debug\WebAssignment.csproj.FileListAbsolute.txt" />
