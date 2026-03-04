@@ -14,6 +14,7 @@ namespace WebAssignment
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+
             if (Session["userId"] == null)
             {
                 // If you are not logged in, you will be redirected to the login page.
@@ -75,22 +76,26 @@ namespace WebAssignment
                         // --- NameTag  ---
                         if (reader["NameTag"] != DBNull.Value && !string.IsNullOrEmpty(reader["NameTag"].ToString()))
                         {
-                            lblNameTag.Text = reader["NameTag"].ToString();
-                            lblNameTag.Visible = true;
+                            imgNameTag.ImageUrl = reader["NameTag"].ToString().Trim();
+                            imgNameTag.Visible = true;
+                        }
+                        else
+                        {
+                            imgNameTag.Visible = false;
                         }
 
                         // --- AvatarFrame ---
                         if (reader["AvatarFrame"] != DBNull.Value && !string.IsNullOrEmpty(reader["AvatarFrame"].ToString()))
                         {
                             string frameUrl = reader["AvatarFrame"].ToString().Trim();
-                            imgFrameOverlay.ImageUrl = frameUrl;
-                            imgFrameOverlay.Visible = true;
+                            imgFrameOverlay.ImageUrl = ResolveUrl(frameUrl); 
+                            imgFrameOverlay.Visible = true; 
 
                             Session["avatarFrame"] = frameUrl;
                         }
                         else
                         {
-                            imgFrameOverlay.Visible = false;
+                            imgFrameOverlay.Visible = false; 
                             Session["avatarFrame"] = null;
                         }
 

@@ -6,7 +6,7 @@
         .profile-box { background: rgba(0,0,0,0.9); border: 5px solid #464646; padding: 50px; width: 85%; margin: 40px auto; color: #FFF; box-shadow: 0 0 20px rgba(104, 255, 0, 0.3); }
         .header-flex { display: flex; align-items: center; gap: 40px; border-bottom: 4px solid #68ff00; padding-bottom: 30px; }
         
-        /* 头像容器 */
+        /* avatar container */
         .avatar-container { position: relative; width: 180px; height: 180px;  }
         .avatar-main { width: 100%; height: 100%; border: 4px solid #68ff00; image-rendering: pixelated; object-fit: cover; border-radius: 50%}
         .frame-overlay { position: absolute; top: -20px; left: -20px; width: calc(100% + 40px); height: calc(100% + 40px); pointer-events: none; image-rendering: pixelated; z-index: 10; border-radius: 50%}
@@ -26,8 +26,17 @@
             text-transform: uppercase; 
             background: transparent;
         }
+
+        .has-avatar-frame {
+        border-image-source: none; 
+        border-image-slice: 10;  
+        border-image-width: 10px; 
+        border-image-repeat: stretch;
+        border: 10px solid transparent; 
+        image-rendering: pixelated; 
+    }
         
-        .nametag-badge { font-weight: normal; }
+        .nametag-image { height: 55px; image-rendering: pixelated;vertical-align: middle;margin-left: 10px;position: relative;top: -5px;}
 
         .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 40px; }
         .data-item { background: #111; padding: 25px; border: 2px solid #333; }
@@ -52,8 +61,8 @@
                 <div class="rank-tag-container">
                     <span class="rank-badge">
                         Rank: <asp:Label ID="lblRole" runat="server" />
-                    </span>
-                    <asp:Label ID="lblNameTag" runat="server" CssClass="nametag-badge" Visible="false" />
+                    </span>  
+                    <asp:Image ID="imgNameTag" runat="server" CssClass="nametag-image" Visible="false" />
                 </div>
             </div>
         </div>

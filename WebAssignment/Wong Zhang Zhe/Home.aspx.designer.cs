@@ -24,6 +24,24 @@ namespace WebAssignment
         protected global::System.Web.UI.WebControls.Panel memberSection;
 
         /// <summary>
+        /// litUsername control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal litUsername;
+
+        /// <summary>
+        /// litRole control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal litRole;
+
+        /// <summary>
         /// visitorSection control.
         /// </summary>
         /// <remarks>
@@ -58,6 +76,24 @@ namespace WebAssignment
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblEmeralds;
+
+        /// <summary>
+        /// lblItemCount control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblItemCount;
+
+        /// <summary>
+        /// lblInvValue control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblInvValue;
 
         /// <summary>
         /// memberDataCards control.

@@ -50,7 +50,7 @@
                             <asp:Label ID="lblUsername" runat="server"></asp:Label>
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a class="sub-link">Profile</a></li>
+                            <<li><a href="/Wong Zhang Zhe/UserProfile.aspx" class="sub-link">Profile</a></li>
                             <li>
                                 <asp:LinkButton ID="btnLogout" runat="server" CssClass="sub-link" OnClick="btnLogout_Click" CausesValidation="false">Log out</asp:LinkButton>
                             </li>
