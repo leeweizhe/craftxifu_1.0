@@ -11,7 +11,7 @@ namespace WebAssignment.Lee_Wei_Zhe.aspx
 {
 
 
-    public partial class LiveStreamHome
+    public partial class StreamList
     {
 
         /// <summary>
@@ -24,13 +24,13 @@ namespace WebAssignment.Lee_Wei_Zhe.aspx
         protected global::System.Web.UI.WebControls.Panel pnlMyStream;
 
         /// <summary>
-        /// litMyInitial control.
+        /// litMyAvatar control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Literal litMyInitial;
+        protected global::System.Web.UI.WebControls.Literal litMyAvatar;
 
         /// <summary>
         /// litMyName control.
@@ -58,6 +58,24 @@ namespace WebAssignment.Lee_Wei_Zhe.aspx
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Literal litMyStatus;
+
+        /// <summary>
+        /// pnlCreateStream control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel pnlCreateStream;
+
+        /// <summary>
+        /// btnCreateStream control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnCreateStream;
 
         /// <summary>
         /// rptInstructors control.

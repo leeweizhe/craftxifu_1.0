@@ -154,13 +154,13 @@
     <Content Include="Lee Wei Zhe\aspx\BeginnerGuide.aspx" />
     <Content Include="Lee Wei Zhe\aspx\ForgotPass.aspx" />
     <Content Include="Lee Wei Zhe\aspx\LiveStream.aspx" />
-    <Content Include="Lee Wei Zhe\aspx\LiveStreamHome.aspx" />
     <Content Include="Lee Wei Zhe\aspx\RegistrationPage.aspx" />
     <Content Include="Lee Wei Zhe\aspx\ResetPassword.aspx" />
+    <Content Include="Lee Wei Zhe\aspx\StreamList.aspx" />
     <Content Include="Lee Wei Zhe\aspx\VerifyOtpFp.aspx" />
     <Content Include="Lee Wei Zhe\aspx\VerifyOtpR.aspx" />
     <Content Include="Lee Wei Zhe\css\BeginnerGuide.css" />
-    <Content Include="Lee Wei Zhe\css\LiveStreamHome.css" />
+    <Content Include="Lee Wei Zhe\css\StreamList.css" />
     <Content Include="Lee Wei Zhe\css\LiveStream.css" />
     <Content Include="Lee Wei Zhe\css\RegistrationPage.css" />
     <Content Include="Lee Wei Zhe\css\Login.css" />
@@ -169,6 +169,7 @@
     <Content Include="images\profiles\troll.jpg" />
     <Content Include="Lee Wei Zhe\aspx\Login.aspx" />
     <Content Include="Lee Wei Zhe\js\BeginnerGuide.js" />
+    <Content Include="Lee Wei Zhe\js\CraftingRecipe.js" />
     <Content Include="Lee Wei Zhe\js\Login.js" />
     <Content Include="Lee Wei Zhe\js\nav.js" />
     <Content Include="obj\Debug\WebAssignment.csproj.FileListAbsolute.txt" />
@@ -430,13 +431,6 @@
     <Compile Include="Lee Wei Zhe\aspx\LiveStream.aspx.designer.cs">
       <DependentUpon>LiveStream.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Lee Wei Zhe\aspx\LiveStreamHome.aspx.cs">
-      <DependentUpon>LiveStreamHome.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Lee Wei Zhe\aspx\LiveStreamHome.aspx.designer.cs">
-      <DependentUpon>LiveStreamHome.aspx</DependentUpon>
-    </Compile>
     <Compile Include="Lee Wei Zhe\aspx\Login.aspx.cs">
       <DependentUpon>Login.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -458,6 +452,13 @@
     <Compile Include="Lee Wei Zhe\aspx\ResetPassword.aspx.designer.cs">
       <DependentUpon>ResetPassword.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Lee Wei Zhe\aspx\StreamList.aspx.cs">
+      <DependentUpon>StreamList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Lee Wei Zhe\aspx\StreamList.aspx.designer.cs">
+      <DependentUpon>StreamList.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Lee Wei Zhe\aspx\VerifyOtpFp.aspx.cs">
       <DependentUpon>VerifyOtpFp.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -474,6 +475,7 @@
     </Compile>
     <Compile Include="Lee Wei Zhe\myClass\EmailHelper.cs" />
     <Compile Include="Lee Wei Zhe\myClass\OtpHelper.cs" />
+    <Compile Include="obj\Debug\.NETFramework,Version=v4.7.2.AssemblyAttributes.cs" />
     <Compile Include="Site.Master.cs">
       <DependentUpon>Site.Master</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

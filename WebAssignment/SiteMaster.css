@@ -32,7 +32,6 @@ nav {
     z-index: 9999;
     width: 100%;
     height: 100px;
-    margin-bottom: 20px;
     background-image: url('images/backgrounds/grass_texture.jpg');
     background-repeat: repeat;
     image-rendering: pixelated;

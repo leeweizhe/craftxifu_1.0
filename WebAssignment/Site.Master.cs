@@ -19,16 +19,14 @@ namespace WebAssignment
 
         private void CheckLoginStatus()
         {
-            if (Session["userId"] != null)
+            if (Session["userId"] != null && !string.IsNullOrEmpty(Session["userId"].ToString()))
             {
-                // 1. ALWAYS show the profile section on the right for all logged-in users
                 phVisitor.Visible = false;
                 phMember.Visible = true;
 
-                // 2. Extra check: Are you an Admin?
-                if (Session["UserRole"] != null && Session["UserRole"].ToString() == "Admin")
+                if (Session["userRole"] != null && Session["userRole"].ToString() == "Admin")
                 {
-                    phAdmin.Visible = true; // This shows the "Admin" menu next to Contact Us
+                    phAdmin.Visible = true;
                 }
                 else
                 {

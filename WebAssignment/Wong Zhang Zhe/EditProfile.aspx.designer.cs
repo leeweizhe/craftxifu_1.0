@@ -60,6 +60,24 @@ namespace WebAssignment
         protected global::System.Web.UI.WebControls.TextBox txtCountry;
 
         /// <summary>
+        /// ddlNameTag control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlNameTag;
+
+        /// <summary>
+        /// ddlAvatarFrame control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlAvatarFrame;
+
+        /// <summary>
         /// txtBio control.
         /// </summary>
         /// <remarks>
@@ -67,6 +85,15 @@ namespace WebAssignment
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtBio;
+
+        /// <summary>
+        /// fuProfilePic control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.FileUpload fuProfilePic;
 
         /// <summary>
         /// txtPassword control.

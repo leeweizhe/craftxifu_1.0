@@ -21,6 +21,7 @@ namespace WebAssignment.Lee_Wei_Zhe.aspx
             {
                 LoadGuideParts();
                 LoadPartPositionDropdown(); // fill the "Insert Position" dropdown in Add Part form
+                LoadCraftingRecipes();      // fill the crafting recipes section
 
                 bool instructor = IsInstructor();
 
@@ -434,6 +435,59 @@ namespace WebAssignment.Lee_Wei_Zhe.aspx
             {
                 cmd.Parameters.AddWithValue("@PartId", partId);
                 cmd.ExecuteNonQuery();
+            }
+        }
+
+        // ══════════════════════════════════════════════════════════════════
+        // LOAD: Fetch crafting categories and bind to rptCraftingCategories
+        // ══════════════════════════════════════════════════════════════════
+        private void LoadCraftingRecipes()
+        {
+            using (SqlConnection conn = new SqlConnection(connString))
+            {
+                string query = "SELECT CategoryId, CategoryName FROM CraftingCategory ORDER BY CategoryOrder ASC";
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                using (SqlDataAdapter sda = new SqlDataAdapter(cmd))
+                {
+                    DataTable dt = new DataTable();
+                    sda.Fill(dt);
+                    rptCraftingCategories.DataSource = dt;
+                    rptCraftingCategories.DataBind();
+                }
+            }
+        }
+
+        // ══════════════════════════════════════════════════════════════════
+        // ITEMDATABOUND: Load recipes for each category row
+        // ══════════════════════════════════════════════════════════════════
+        protected void rptCraftingCategories_ItemDataBound(object sender, RepeaterItemEventArgs e)
+        {
+            if (e.Item.ItemType != ListItemType.Item &&
+                e.Item.ItemType != ListItemType.AlternatingItem) return;
+
+            DataRowView row = (DataRowView)e.Item.DataItem;
+            int categoryId = Convert.ToInt32(row["CategoryId"]);
+
+            Repeater rptRecipes = (Repeater)e.Item.FindControl("rptRecipes");
+            if (rptRecipes == null) return;
+
+            using (SqlConnection conn = new SqlConnection(connString))
+            {
+                string query = @"SELECT RecipeId, RecipeName, ThumbnailPath, RecipeImagePath, Description
+                                 FROM CraftingRecipe
+                                 WHERE CategoryId = @CategoryId
+                                 ORDER BY RecipeOrder ASC";
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@CategoryId", categoryId);
+                    using (SqlDataAdapter sda = new SqlDataAdapter(cmd))
+                    {
+                        DataTable dt = new DataTable();
+                        sda.Fill(dt);
+                        rptRecipes.DataSource = dt;
+                        rptRecipes.DataBind();
+                    }
+                }
             }
         }
 

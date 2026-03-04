@@ -1,9 +1,15 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="LiveStreamHome.aspx.cs" Inherits="WebAssignment.Lee_Wei_Zhe.aspx.LiveStreamHome" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="StreamList.aspx.cs" Inherits="WebAssignment.Lee_Wei_Zhe.aspx.StreamList" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
-    <link rel="stylesheet" href="../css/LiveStreamHome.css" />
+    <link rel="stylesheet" href="/Lee Wei Zhe/css/StreamList.css" />
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-       <div class="page-wrapper">
+
+    <div class="hero-banner">
+        <h1 class="hero-title">WELCOME TO LIVE STREAM SECTION</h1>
+        <p class="hero-subtitle">Watch and learn from our expert instructors</p>
+    </div>
+
+    <div class="page-wrapper">
 
         <h2 class="page-title">Live Streams</h2>
         <p class="page-subtitle">Click on an instructor to watch their stream</p>
@@ -16,9 +22,9 @@
             <h3 class="section-label">Your Stream</h3>
 
             <%-- Single card for the logged-in instructor's own stream --%>
-            <a class="instructor-card my-stream-card" href='LiveStream.aspx?id=<%# MyStreamID %>'>
+            <a class="instructor-card my-stream-card" href='LiveStream.aspx?id=<%= MyStreamID %>'>
                 <div class="card-avatar my-avatar">
-                    <asp:Literal ID="litMyInitial" runat="server"></asp:Literal>
+                    <asp:Literal ID="litMyAvatar" runat="server"></asp:Literal>
                 </div>
                 <p class="card-name">
                     <asp:Literal ID="litMyName" runat="server"></asp:Literal>
@@ -35,6 +41,18 @@
             <hr class="divider" />
         </asp:Panel>
 
+                <asp:Panel ID="pnlCreateStream" runat="server" Visible="false">
+            <h3 class="section-label">Your Stream</h3>
+
+            <%-- One click: creates the room and redirects to LiveStream.aspx --%>
+            <asp:Button ID="btnCreateStream" runat="server"
+                Text="+ Create a Live Room"
+                CssClass="create-card"
+                OnClick="btnCreateStream_Click" />
+
+            <hr class="divider" />
+        </asp:Panel>
+
         <%-- ============================================
              ALL OTHER instructors grid
              ============================================ --%>
@@ -45,9 +63,15 @@
                 <ItemTemplate>
                     <a class="instructor-card" href='LiveStream.aspx?id=<%# Eval("StreamID") %>'>
                         <div class="card-avatar">
-                            <%# Eval("UserName").ToString().Substring(0, 1).ToUpper() %>
+                               <img src='<%# Eval("ProfilePicture") %>' 
+                                     onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"
+                                     class="avatar-img" />
+                                <%-- Fallback: show initial letter if image fails to load --%>
+                                <span class="avatar-initial" style="display:none;">
+                                    <%# Eval("UserName").ToString().Substring(0, 1).ToUpper() %>
+                                </span>
                         </div>
-                        <p class="card-name"><%# Eval("UserName") %></p>
+                        <p class="card-name"><%# Eval("Username") %></p>
                         <p class="card-stream-title"><%# Eval("StreamTitle") %></p>
                         <p class="card-viewers">
                             <%# (bool)Eval("IsLive")

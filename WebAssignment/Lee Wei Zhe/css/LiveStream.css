@@ -1,41 +1,88 @@
-﻿/* Side-by-side layout: video left, chat right */
+﻿/* Page container */
+.page-wrapper {
+    background: #fff;
+    border-radius: 10px;
+    padding: 20px;
+    max-width: 1100px;
+    min-width: 600px;
+    width: 85%;
+    margin: 30px auto;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.12);
+}
+
+/* Side-by-side: video left, chat right */
 .stream-wrapper {
     display: flex;
     gap: 20px;
-    padding: 20px 0;
+    margin-top: 12px;
 }
 
-/* Video takes up more space than chat */
 .player-section {
     flex: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
 .chat-section {
     flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 }
 
-/* Video player */
-#videoPlayer {
+/* ===== YOUTUBE VIDEO IFRAME ===== */
+#youtubePlayer {
     width: 100%;
-    min-height: 350px;
-    background: #000;
+    aspect-ratio: 16 / 9; /* Keeps 16:9 ratio automatically */
     border-radius: 8px;
+    border: none;
+    background: #000;
     display: block;
 }
 
-/* LIVE badge */
+/* Placeholder shown when no YouTube ID is set */
+.no-video-box {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background: #1a1a1a;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #888;
+    font-size: 15px;
+}
+
+/* Stream title + viewer count */
+.stream-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.stream-title {
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.viewer-count {
+    color: #888;
+    font-size: 13px;
+}
+
+/* LIVE / OFFLINE badge */
 .status-badge {
     display: inline-block;
     padding: 4px 12px;
     border-radius: 20px;
-    font-size: 13px;
+    font-size: 12px;
     font-weight: bold;
     background: #aaa;
     color: white;
     margin-bottom: 8px;
 }
 
-    /* Pulsing red when stream is live */
     .status-badge.live {
         background: #e03131;
         animation: pulse 1.5s infinite;
@@ -51,38 +98,20 @@
     }
 }
 
-/* Title + viewer count below video */
-.stream-info {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 8px;
-}
-
-.stream-title {
-    font-weight: bold;
-    font-size: 16px;
-}
-
-.viewer-count {
-    color: #888;
-    font-size: 13px;
-}
-
-/* Chat box */
-.chat-section {
-    border: 1px solid #ddd;
+/* ===== YOUTUBE CHAT IFRAME ===== */
+.youtube-chat {
+    width: 100%;
+    height: 460px;
+    border: 1px solid #eee;
     border-radius: 8px;
-    padding: 14px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
 }
 
-    .chat-section h3 {
-        margin-bottom: 4px;
-    }
+/* ===== OWN CHAT (fallback) ===== */
+.chat-section h3 {
+    font-size: 16px;
+    margin-bottom: 4px;
+}
 
-/* Scrollable message area */
 .chat-box {
     height: 280px;
     overflow-y: auto;
@@ -94,7 +123,6 @@
     gap: 6px;
 }
 
-/* Single message bubble */
 .chat-message {
     background: #f5f5f5;
     padding: 7px 10px;
@@ -117,9 +145,10 @@
     color: #aaa;
     text-align: center;
     margin-top: 30px;
+    font-size: 13px;
 }
 
-/* Text inputs */
+/* Shared input style */
 .input-field {
     width: 100%;
     padding: 8px 10px;
@@ -132,7 +161,7 @@
 /* Send button */
 .btn-send {
     padding: 8px;
-    background-color: #e03131;
+    background: #e03131;
     color: white;
     border: none;
     border-radius: 6px;
@@ -143,13 +172,14 @@
 }
 
     .btn-send:hover {
-        background-color: #c92a2a;
+        background: #c92a2a;
     }
 
 /* Feedback messages */
 .chat-feedback {
     font-size: 12px;
     text-align: center;
+    min-height: 16px;
 }
 
     .chat-feedback.success {
@@ -160,24 +190,36 @@
         color: red;
     }
 
-/* Stack on small screens */
-@media (max-width: 700px) {
-    .stream-wrapper {
-        flex-direction: column;
-    }
-}
-
 /* ===== INSTRUCTOR PANEL ===== */
 .instructor-panel {
-    margin-top: 16px;
     background: #f9f9f9;
     border: 1px solid #ddd;
-    border-left: 4px solid #e03131; /* Red accent */
+    border-left: 4px solid #e03131;
     border-radius: 8px;
     padding: 16px;
     display: flex;
     flex-direction: column;
     gap: 12px;
+}
+
+.panel-content {
+    max-height: 1000px; /* Large enough to hold content */
+    overflow: hidden;
+    transition: max-height 0.4s ease-out, opacity 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 10px;
+}
+
+.panel-collapsed {
+    max-height: 0;
+    opacity: 0;
+    margin-top: 0;
+}
+
+.panel-header:hover .panel-title {
+    color: #e03131; /* Subtle highlight on hover */
 }
 
 .panel-title {
@@ -186,7 +228,7 @@
     margin: 0;
 }
 
-/* Viewer count stat box */
+/* Viewer count box */
 .stat-box {
     display: flex;
     justify-content: space-between;
@@ -204,11 +246,11 @@
 
 .stat-value {
     font-weight: bold;
-    font-size: 20px;
+    font-size: 22px;
     color: #e03131;
 }
 
-/* Control groups (label + input + button) */
+/* Control groups */
 .control-group {
     display: flex;
     flex-direction: column;
@@ -219,6 +261,29 @@
         font-size: 13px;
         font-weight: bold;
         color: #555;
+    }
+
+/* Hint text under label */
+.input-hint {
+    font-size: 11px;
+    color: #888;
+    line-height: 1.5;
+}
+
+/* Save button (blue) */
+.btn-secondary {
+    padding: 8px;
+    background: #1971c2;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 13px;
+    cursor: pointer;
+    width: 100%;
+}
+
+    .btn-secondary:hover {
+        background: #1864ab;
     }
 
 /* Go Live button (green) */
@@ -255,18 +320,13 @@
         background: #343a40;
     }
 
-/* Save title button */
-.btn-secondary {
-    padding: 8px;
-    background: #1971c2;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    font-size: 13px;
-    cursor: pointer;
-    width: 100%;
-}
-
-    .btn-secondary:hover {
-        background: #1864ab;
+/* Stack on small screens */
+@media (max-width: 768px) {
+    .stream-wrapper {
+        flex-direction: column;
     }
+
+    .youtube-chat {
+        height: 350px;
+    }
+}
