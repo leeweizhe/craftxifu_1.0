@@ -8,11 +8,8 @@
         .label-text { color: #68ff00; font-size: 1.2rem; text-transform: uppercase; display: block; margin-bottom: 10px; }
         .pixel-input { width: 100%; background: #000; color: #fff; border: 1px solid #444; padding: 10px; font-size: 1.5rem; box-sizing: border-box; }
         .pixel-input:focus { border-color: #68ff00; outline: none; }
-        
-        /* button design */
         .btn-update { background: #68ff00; color: #000; font-weight: bold; padding: 15px 40px; border: none; cursor: pointer; font-size: 1.2rem; }
         .btn-cancel { background: #ff4444; color: #fff; font-weight: bold; padding: 15px 40px; border: none; cursor: pointer; font-size: 1.2rem; margin-right: 10px; }
-        .btn-cancel:hover { background: #cc0000; }
     </style>
 </asp:Content>
 
@@ -41,16 +38,39 @@
                 <span class="label-text">Country</span>
                 <asp:TextBox ID="txtCountry" runat="server" CssClass="pixel-input" />
             </div>
+
+            <div class="data-item">
+                <span class="label-text">Equip NameTag (Purchased)</span>
+                <asp:DropDownList ID="ddlNameTag" runat="server" CssClass="pixel-input">
+                    <asp:ListItem Value="">None / Default</asp:ListItem>
+                </asp:DropDownList>
+            </div>
+            <div class="data-item">
+                <span class="label-text">Equip Avatar Frame (Purchased)</span>
+                <asp:DropDownList ID="ddlAvatarFrame" runat="server" CssClass="pixel-input">
+                    <asp:ListItem Value="">None / Default</asp:ListItem>
+                </asp:DropDownList>
+            </div>
+
             <div class="data-item" style="grid-column: span 2;">
                 <span class="label-text">Biography</span>
                 <asp:TextBox ID="txtBio" runat="server" TextMode="MultiLine" Rows="3" CssClass="pixel-input" />
             </div>
+            
+            <div class="data-item" style="grid-column: span 2;">
+                <span class="label-text">Upload Character Avatar</span>
+                <div style="display: flex; align-items: center; gap: 20px;">
+                    <asp:FileUpload ID="fuProfilePic" runat="server" CssClass="pixel-input" style="width: 70%;" />
+                    <span style="color: #999; font-size: 0.9rem;">(PNG/JPG, Max 2MB)</span>
+                </div>
+            </div>
+
             <div class="data-item">
                 <span class="label-text">New Password</span>
                 <asp:TextBox ID="txtPassword" runat="server" TextMode="Password" placeholder="Blank to skip" CssClass="pixel-input" />
             </div>
             <div class="data-item">
-                <span class="label-text">Confirm New Password</span>
+                <span class="label-text">Confirm Password</span>
                 <asp:TextBox ID="txtConfirmPassword" runat="server" TextMode="Password" placeholder="Repeat password" CssClass="pixel-input" />
             </div>
         </div>
