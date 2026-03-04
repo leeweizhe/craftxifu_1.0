@@ -185,6 +185,7 @@
     <Content Include="Tong Yu Hong\aspx\SupportChat.aspx" />
     <Content Include="Tong Yu Hong\aspx\ViewStatistic.aspx" />
     <Content Include="Tong Yu Hong\Image\creeper_logo.png" />
+    <Content Include="Tong Yu Hong\Image\Minecraft_Background.png" />
     <Content Include="Tong Yu Hong\mobImage\allay.png" />
     <Content Include="Tong Yu Hong\mobImage\axolotl.png" />
     <Content Include="Tong Yu Hong\mobImage\bee.png" />
