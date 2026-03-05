@@ -99,32 +99,46 @@ namespace WebAssignment.Tong_Yu_Hong.aspx
             string lName = txtLname.Text.Trim();
             string email = txtEmail.Text.Trim();
             string username = txtUsername.Text.Trim();
-            string password = txtPassword.Text;
-            string confirmPass = txtConfirmPassword.Text;
             string gender = rblGender.SelectedValue;
             string country = ddlCountry.SelectedValue;
             string role = ddlRole.SelectedValue;
 
-            // 1. Basic Validation
-            if (password != confirmPass) { ShowError("Passwords do not match!"); return; }
             if (!Regex.IsMatch(email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$")) { ShowError("Invalid email format."); return; }
 
             try
             {
+                string avatarPath = "";
+
+                // 1. Process the File Upload
+                if (fuAvatar.HasFile)
+                {
+                    string ext = System.IO.Path.GetExtension(fuAvatar.FileName).ToLower();
+                    if (ext == ".jpg" || ext == ".jpeg" || ext == ".png")
+                    {
+                        string fileName = "avatar_" + userId + ext;
+                        string folderPath = Server.MapPath("~/images/avatars/");
+
+                        if (!System.IO.Directory.Exists(folderPath))
+                            System.IO.Directory.CreateDirectory(folderPath);
+
+                        fuAvatar.SaveAs(folderPath + fileName);
+                        avatarPath = "~/images/avatars/" + fileName;
+                    }
+                }
+
                 using (SqlConnection conn = new SqlConnection(connString))
                 {
                     conn.Open();
 
-                    // 2. Build the Update Query
+                    // 2. Updated Query to use 'ProfilePicture'
                     string updateQuery = @"UPDATE userTable SET 
-                                        FName = @FName, LName = @LName, 
-                                        Email = @Email, Username = @Username, 
-                                        Gender = @Gender, Country = @Country, Role = @Role";
+                                FName = @FName, LName = @LName, 
+                                Email = @Email, Username = @Username, 
+                                Gender = @Gender, Country = @Country, Role = @Role";
 
-                    // 3. Only add Password to query if the Admin typed something
-                    if (!string.IsNullOrEmpty(password))
+                    if (!string.IsNullOrEmpty(avatarPath))
                     {
-                        updateQuery += ", Password = @Password";
+                        updateQuery += ", ProfilePicture = @Avatar"; // Corrected column name
                     }
 
                     updateQuery += " WHERE UserId = @UserId";
@@ -140,17 +154,14 @@ namespace WebAssignment.Tong_Yu_Hong.aspx
                         cmd.Parameters.AddWithValue("@Role", role);
                         cmd.Parameters.AddWithValue("@UserId", userId);
 
-                        if (!string.IsNullOrEmpty(password))
+                        if (!string.IsNullOrEmpty(avatarPath))
                         {
-                            // Hash the new password before saving
-                            string hashedPassword = BCrypt.Net.BCrypt.HashPassword(password);
-                            cmd.Parameters.AddWithValue("@Password", hashedPassword);
+                            cmd.Parameters.AddWithValue("@Avatar", avatarPath);
                         }
 
                         cmd.ExecuteNonQuery();
                     }
                 }
-                // Redirect back to the main list after success
                 Response.Redirect("ManageUser.aspx");
             }
             catch (Exception ex)
@@ -168,6 +179,53 @@ namespace WebAssignment.Tong_Yu_Hong.aspx
         {
             errorMsg.Text = message;
             errorMsg.Visible = true;
+        }
+
+        // Method to handle the file upload logic
+        private string ProcessAvatarUpload()
+        {
+            // Check if a file was even selected
+            if (fuAvatar.HasFile)
+            {
+                try
+                {
+                    // 1. Get the file extension and validate it
+                    string fileExtension = System.IO.Path.GetExtension(fuAvatar.FileName).ToLower();
+                    string[] allowedExtensions = { ".jpg", ".jpeg", ".png" };
+
+                    if (Array.IndexOf(allowedExtensions, fileExtension) < 0)
+                    {
+                        // Extension is not allowed
+                        return null;
+                    }
+
+                    // 2. Validate the file size (2MB max)
+                    int fileSizeInBytes = fuAvatar.PostedFile.ContentLength;
+                    if (fileSizeInBytes > (2 * 1024 * 1024))
+                    {
+                        // File too large
+                        return null;
+                    }
+
+                    // 3. Save the file and return the virtual path for the database
+                    string username = txtUsername.Text; // Use the username to make the filename unique
+                    string fileName = username + "_avatar" + fileExtension;
+                    string virtualPath = "~/images/avatars/" + fileName;
+                    string physicalPath = Server.MapPath(virtualPath);
+
+                    // Ensure the directory exists before saving
+                    System.IO.Directory.CreateDirectory(Server.MapPath("~/images/avatars/"));
+                    fuAvatar.SaveAs(physicalPath);
+
+                    return virtualPath; // Success: return path to save in the database
+                }
+                catch
+                {
+                    // Something went wrong
+                    return null;
+                }
+            }
+            return null; // No file uploaded
         }
     }
 }

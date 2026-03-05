@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
@@ -9,11 +12,16 @@ namespace WebAssignment
 {
     public partial class Site : System.Web.UI.MasterPage
     {
+        private string connString = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
             {
                 CheckLoginStatus();
+            }
+            if (Session["UserId"] != null)
+            {
+                LoadNotifications();
             }
         }
 
@@ -66,6 +74,32 @@ namespace WebAssignment
             Session.Clear();
             Session.Abandon();
             Response.Redirect("~/Lee Wei Zhe/aspx/Login.aspx");
+        }
+
+        private void LoadNotifications()
+        {
+            using (SqlConnection conn = new SqlConnection(connString))
+            {
+                // We select the message, the date, and the 'bad text' we saved earlier
+                string sql = @"SELECT WarningMessage, ReportedCommentText, WarningDate 
+                       FROM warningTable 
+                       WHERE UserId = @uid 
+                       ORDER BY WarningDate DESC";
+
+                SqlCommand cmd = new SqlCommand(sql, conn);
+                cmd.Parameters.AddWithValue("@uid", Session["UserId"]);
+
+                SqlDataAdapter sda = new SqlDataAdapter(cmd);
+                DataTable dt = new DataTable();
+                sda.Fill(dt);
+
+                // Bind the data to your repeater
+                rptMiniMailbox.DataSource = dt;
+                rptMiniMailbox.DataBind();
+
+                // Show the red dot only if there are warnings
+                pnlNewWarning.Visible = (dt.Rows.Count > 0);
+            }
         }
     }
 }

@@ -29,6 +29,7 @@
                             <li><a href="/Tong Yu Hong/aspx/ManageUser.aspx" class="sub-link">Manage Users</a></li>
                             <li><a href="/Tong Yu Hong/aspx/ViewStatistic.aspx" class="sub-link">View Statistic</a></li>
                             <li><a href="/Tong Yu Hong/aspx/SupportChat.aspx" class="sub-link">Ticket Support</a></li>
+                            <li><a href="/Tong Yu Hong/aspx/ManageComments.aspx" class="sub-link">Manage Comments</a></li>
                         </ul>
                     </li>
                 </asp:PlaceHolder>
@@ -40,13 +41,46 @@
                 </asp:PlaceHolder>
 
                 <asp:PlaceHolder ID="phMember" runat="server" Visible="false">
-                    <li class="move-right dropdown-parent">
+                    <li class="move-right mailbox-container">
+                        <div class="mailbox-trigger" onclick="toggleMailbox(event)">
+                            <span class="mail-icon">✉</span>
+                            <asp:Panel ID="pnlNewWarning" runat="server" CssClass="notif-dot" Visible="false"></asp:Panel>
+                        </div>
+
+                        <div id="mailboxDropdown" class="mailbox-dropdown">
+                            <div class="mailbox-header">
+                                <strong>Notifications</strong>
+                                <span class="settings-gear">⚙</span>
+                            </div>
+                            <div class="mailbox-list">
+                                <asp:Repeater ID="rptMiniMailbox" runat="server">
+                                    <ItemTemplate>
+                                        <div class="mailbox-item">
+                                            <span class="warn-icon">✎</span>
+                                            <div class="warn-content">
+                                                <div class="warn-msg" style="font-weight: normal;">
+                                                    <span style="color: #fff;">REASON:</span> <%# Eval("WarningMessage") %>
+                                                </div>
+                                                <div style="color: #888; font-size: 0.8rem; margin: 5px 0; font-weight: normal;">
+                                                    "<%# Eval("ReportedCommentText") %>"
+                                                </div>
+                                                <div class="warn-date" style="font-weight: normal;"><%# Eval("WarningDate", "{0:yyyy-MM-dd}") %></div>
+                
+                                                </div>
+                                        </div>
+                                    </ItemTemplate>
+                                </asp:Repeater>
+                                <asp:Literal ID="litNoNotif" runat="server" Text="<div style='padding:20px; color:#555;'>No new notifications</div>" Visible="false"></asp:Literal>
+                            </div>
+                        </div>
+                    </li>
+
+                    <li class="dropdown-parent">
                         <a class="main-link">
                             <div class="avatar-wrapper">
                                 <asp:Image ID="imgProfile" runat="server" CssClass="profile-pic" />
                                 <asp:Image ID="imgFrame" runat="server" CssClass="avatar-frame" Visible="false" />
                             </div>
-
                             <asp:Label ID="lblUsername" runat="server"></asp:Label>
                         </a>
                         <ul class="dropdown-menu">
@@ -71,15 +105,33 @@
         
     </form>
     <script type="text/javascript">
+        function toggleMailbox(e) {
+            e.stopPropagation();
+            var dropdown = document.getElementById('mailboxDropdown');
+            var isVisible = dropdown.style.display === 'block';
+
+            // Close all other dropdowns first
+            document.querySelectorAll('.dropdown-parent').forEach(p => p.classList.remove('open'));
+
+            // Toggle the mailbox
+            dropdown.style.display = isVisible ? 'none' : 'block';
+        }
+
         document.addEventListener('DOMContentLoaded', function () {
             var parents = document.querySelectorAll('.dropdown-parent');
+            var mailbox = document.getElementById('mailboxDropdown');
             
             parents.forEach(function (item) {
                 item.addEventListener('click', function (e) {
                     e.stopPropagation();
-                    // Close other menus if one is clicked
+
+                    // Close the mailbox if it's open
+                    if (mailbox) mailbox.style.display = 'none';
+
+                    // Close other profile/admin menus
                     parents.forEach(p => { if (p !== item) p.classList.remove('open'); });
-                    // Toggle the 'open' class for the clicked menu
+
+                    // Toggle the clicked menu
                     item.classList.toggle('open');
                 });
             });
@@ -87,6 +139,7 @@
             // Close all dropdowns if you click anywhere else on the screen
             document.addEventListener('click', function () {
                 parents.forEach(p => p.classList.remove('open'));
+                if (mailbox) mailbox.style.display = 'none';
             });
         });
     </script>
