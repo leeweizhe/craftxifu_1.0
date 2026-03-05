@@ -23,6 +23,8 @@ namespace WebAssignment.Lee_Wei_Zhe.aspx
                 LoadGuideParts();
                 LoadPartPositionDropdown(); // fill the "Insert Position" dropdown in Add Part form
                 LoadCraftingRecipes();      // fill the crafting recipes section
+                LoadComments("1");
+                CheckCommentPermission();
 
                 bool instructor = IsInstructor();
 
@@ -741,6 +743,103 @@ namespace WebAssignment.Lee_Wei_Zhe.aspx
 
             using (SqlCommand cmd = new SqlCommand(query, conn))
                 cmd.ExecuteNonQuery();
+        }
+
+        private void CheckCommentPermission()
+        {
+            if (Session["userId"] != null)
+            {
+                pnlAddComment.Visible = true;
+                litVisitorMsg.Text = "";
+            }
+            else
+            {
+                pnlAddComment.Visible = false;
+                litVisitorMsg.Text = "<p style='color: #fbbf24; text-align: center;'>[ <a href='Login.aspx' style='color: #68ff00;'>Login</a> to join the discussion ]</p>";
+            }
+        }
+        private void LoadComments(string farmId)
+        {
+            using (SqlConnection conn = new SqlConnection(connString))
+            {
+                string sql = @"SELECT c.*, u.Username FROM BGCommentTable c 
+                               JOIN userTable u ON c.UserId = u.UserId 
+                               WHERE c.FarmId = @fid ORDER BY c.CommentDate DESC";
+                SqlCommand cmd = new SqlCommand(sql, conn);
+                cmd.Parameters.AddWithValue("@fid", farmId);
+
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+                rptComments.DataSource = dt;
+                rptComments.DataBind();
+            }
+        }
+
+        protected void btnSubmitComment_Click(object sender, EventArgs e)
+        {
+            string farmId = "1";
+            string commentText = txtComment.Text.Trim();
+
+            if (!string.IsNullOrEmpty(commentText) && Session["userId"] != null)
+            {
+                using (SqlConnection conn = new SqlConnection(connString))
+                {
+                    string sql = "INSERT INTO BGCommentTable (FarmId, UserId, CommentText) VALUES (@fid, @uid, @text)";
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@fid", farmId);
+                    cmd.Parameters.AddWithValue("@uid", Session["userId"]);
+                    cmd.Parameters.AddWithValue("@text", commentText);
+
+                    conn.Open();
+                    cmd.ExecuteNonQuery();
+                    conn.Close();
+                }
+                txtComment.Text = "";
+                LoadComments(farmId);
+            }
+        }
+
+        protected void lnkReport_Command(object sender, CommandEventArgs e)
+        {
+            if (Session["userId"] == null)
+            {
+                Response.Redirect("Login.aspx");
+                return;
+            }
+
+            // Split the combined argument (CommentId|FarmID)
+            string[] args = e.CommandArgument.ToString().Split('|');
+
+            if (args.Length < 2) return; // Safety check
+
+            string commentId = args[0];
+            string farmId = args[1];
+            string reporterId = Session["userId"].ToString();
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connString))
+                {
+                    // Make sure your table has a FarmID column!
+                    string sql = "INSERT INTO reportTable (CommentId, ReporterId, FarmID) VALUES (@cid, @rid, @fid)";
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@cid", commentId);
+                    cmd.Parameters.AddWithValue("@rid", reporterId);
+                    cmd.Parameters.AddWithValue("@fid", farmId);
+
+                    conn.Open();
+                    cmd.ExecuteNonQuery();
+                    conn.Close();
+                }
+
+                ScriptManager.RegisterStartupScript(this, GetType(), "showalert", "alert('Report submitted successfully.');", true);
+            }
+            catch (Exception ex)
+            {
+                // Optional: Log error
+            }
+
         }
     }
 }

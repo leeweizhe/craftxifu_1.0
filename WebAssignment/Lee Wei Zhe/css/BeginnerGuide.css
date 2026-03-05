@@ -32,10 +32,11 @@
     font-size: 30px;
     text-decoration: none;
     font-family: 'Minecraft', sans-serif;
-    transition: background 0.2s;
+    transition: all 0.3s ease-out;
 }
 
     .btn-back:hover {
+        padding-left: 30px;
         background: #e9ecef;
         color: #333;
     }
@@ -49,7 +50,6 @@
     padding: 20px;
     position: sticky;
     top: 130px;
-    left: 40px;
 }
 
     .toc-sidebar h3 {
@@ -344,6 +344,10 @@
     letter-spacing: 0.5px;
 }
 
+.label-white {
+    color: white;
+}
+
 .edit-hint {
     color: #808080;
     font-size: 0.8rem;
@@ -382,6 +386,23 @@
     gap: 10px;
     flex-wrap: wrap;
     align-items: center;
+}
+
+.step-instructor-overlay {
+    position: absolute;
+    display: flex;
+    gap: 8px;
+    top: 4px;
+    right: 4px;
+    z-index: 10;
+    opacity:0 ;
+    transition: opacity 0.3s ease; /* Smooth fade-in */
+    pointer-events: none; /* Mouse "ignores" it when hidden */
+}
+
+.step-card:hover .step-instructor-overlay {
+    opacity: 1;
+    pointer-events: auto;
 }
 
 /* --- Instructor controls stacked on right of step card ------------ */
@@ -691,7 +712,7 @@
 .recipe-instructor-overlay {
     position: absolute;
     top: 4px;
-    left: 4px;
+    right: 4px;
     display: flex;
     gap: 3px;
     z-index: 10;
@@ -834,4 +855,113 @@
     border: 2px dashed #808080;
     border-radius: 6px;
     margin-bottom: 6px;
+}
+
+.discussion-section {
+    width: 100%;
+    margin-top: 40px;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.5); /* Slightly darker than main bg */
+    border-radius: 8px;
+}
+
+/* Individual Comment Block */
+.comment-item {
+    border-bottom: 1px dashed #444; /* Dark dashed separator */
+    padding: 15px 0;
+    margin-bottom: 10px;
+}
+
+/* Header row (Flexbox makes this easy) */
+.comment-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.comment-user {
+    color: #68ff00; /* Neon Minecraft Green */
+    font-family: 'Minecraft', sans-serif;
+    font-weight: normal !important;
+}
+
+.comment-date {
+    color: #888;
+    font-size: 0.8rem;
+    margin-left: 8px;
+}
+
+/* Report LinkButton */
+.btn-report {
+    color: #ff4444; /* Red for alerts */
+    font-size: 0.75rem;
+    text-decoration: none;
+    text-transform: uppercase;
+}
+
+    .btn-report:hover {
+        text-decoration: underline;
+        color: #ff8888;
+    }
+
+.btn-submit-comment {
+    margin-top: 10px;
+    padding: 15px;
+    background: #555;
+    color: #fff;
+    border: 1px solid #808080;
+    transition: all 0.18s ease-out;
+}
+
+    .btn-submit-comment:hover {
+        background: #e9ecef;
+        color: #333;
+    }
+
+/* Comment Text */
+.comment-text {
+    font-family: 'PT Serif', serif;
+    color: #ddd;
+    font-size: 1.5rem;
+    line-height: 1.4;
+    margin: 5px 0 0 0;
+}
+
+/* The "Add Comment" Form */
+.add-comment-panel {
+    margin-top: 30px;
+    border-top: 2px solid #333;
+    padding-top: 20px;
+    font-weight: normal !important;
+}
+
+.add-comment-panel h4 {
+    margin-bottom: 15px;
+    color: white;
+    font-weight: normal !important;
+}
+
+
+.comment-input {
+    font-family: 'PT Serif', serif;
+    width: 100%;
+    background: #111;
+    color: #fff;
+    border: 1px solid #68ff00; /* Green border box */
+    padding: 12px;
+    font-family: sans-serif;
+    box-sizing: border-box; /* Ensures padding doesn't break width */
+}
+
+.section-label {
+    display: block;
+    border-left: 4px solid #68ff00; /* The green accent line */
+    padding-left: 10px;
+    color: #fff;
+    font-family: 'Minecraft', sans-serif;
+    text-transform: uppercase;
+    margin-bottom: 15px;
+    letter-spacing: 1px;
+    font-size: 3rem;
 }

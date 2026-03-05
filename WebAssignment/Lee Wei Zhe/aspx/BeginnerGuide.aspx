@@ -25,7 +25,7 @@
             <div class="add-part-form-inner">
                 <h3 class="add-part-form-title">＋ Add New Section</h3>
 
-                <label class="edit-label">Section Title</label>
+                <label class="edit-label label-white">Section Title</label>
                 <asp:TextBox ID="txtNewPartTitle" runat="server" CssClass="edit-input"
                     placeholder="e.g. Advanced Techniques" MaxLength="100"
                     ValidationGroup="AddPart" />
@@ -33,7 +33,7 @@
                     ErrorMessage="Please enter a title." CssClass="form-error"
                     Display="Dynamic" ValidationGroup="AddPart" />
 
-                <label class="edit-label" style="margin-top:14px">Insert Position</label>
+                <label class="edit-label label-white" style="margin-top:14px">Insert Position</label>
                 <%-- This dropdown is populated in Page_Load via LoadPartPositionDropdown() --%>
                 <asp:DropDownList ID="ddlPartPosition" runat="server" CssClass="edit-input edit-select" />
 
@@ -71,16 +71,16 @@
 
                     <%-- LEFT: text fields --%>
                     <div class="recipe-form-col">
-                        <label class="edit-label">Category</label>
+                        <label class="edit-label label-white">Category</label>
                         <asp:DropDownList ID="ddlRecipeCategory" runat="server"
                             CssClass="edit-input edit-select" ClientIDMode="Static" />
 
-                        <label class="edit-label" style="margin-top:10px">Recipe Name</label>
+                        <label class="edit-label label-white" style="margin-top:10px">Recipe Name</label>
                         <asp:TextBox ID="txtRecipeName" runat="server"
                             CssClass="edit-input" MaxLength="100"
                             placeholder="e.g. Wooden Sword" ClientIDMode="Static" />
 
-                        <label class="edit-label" style="margin-top:10px">Description</label>
+                        <label class="edit-label label-white" style="margin-top:10px">Description</label>
                         <asp:TextBox ID="txtRecipeDescription" runat="server"
                             CssClass="edit-input edit-textarea" TextMode="MultiLine" Rows="3"
                             placeholder="Short tooltip description..." ClientIDMode="Static" />
@@ -88,7 +88,7 @@
 
                     <%-- RIGHT: image uploads with live preview --%>
                     <div class="recipe-form-col">
-                        <label class="edit-label">
+                        <label class="edit-label label-white">
                             Thumbnail <span class="edit-hint">(card icon)</span>
                         </label>
                         <img id="imgThumbPreview" src="" alt="Thumbnail preview"
@@ -96,7 +96,7 @@
                         <asp:FileUpload ID="fileUploadThumb" runat="server"
                             CssClass="recipe-file-input" ClientIDMode="Static" />
 
-                        <label class="edit-label" style="margin-top:14px">
+                        <label class="edit-label label-white" style="margin-top:14px">
                             Recipe Image <span class="edit-hint">(tooltip grid)</span>
                         </label>
                         <img id="imgRecipePreview" src="" alt="Recipe image preview"
@@ -125,7 +125,7 @@
     </asp:Panel>
 
     <div class="top-bar">
-        <a href="javascript:history.back()" class="btn-back">Back</a>
+        <a href="/Wong Zhang Zhe/Guide.aspx" class="btn-back">Back</a>
     </div>
     <div class="page-layout">
 
@@ -145,8 +145,11 @@
                     </ItemTemplate>
                 </asp:Repeater>
 
-                <li>
-                    <a href="#crafting-recipes">▶ Crafting Recipes</a>
+                <li style="border-top: 2px solid #555; margin-top: 10px; padding-top: 10px;">
+                    <a href="#crafting-recipes">Crafting Recipes</a>
+                </li>
+                <li style="margin-top=10px;">
+                    <a href="#discussion-section">Comment Section</a>
                 </li>
             </ul>
 
@@ -157,6 +160,7 @@
                     <button class="btn-instructor btn-add" style="width:100%"
                         onclick="showAddPartForm(); return false;">＋ Add New Section</button>
                 </div>
+
             </asp:Panel>
         </aside>
 
@@ -275,13 +279,13 @@
 
                                         <%-- Only visible to instructors (set in rptSteps_ItemDataBound) --%>
                                         <asp:Panel ID="pnlEditControls" runat="server" Visible="false"
-                                            CssClass="step-instructor-controls">
-                                            <button class="btn-instructor btn-edit"
+                                            CssClass="step-instructor-overlay">
+                                            <button class="recipe-edit-btn"
                                                 onclick="toggleStepEdit(this); return false;">✏️ Edit</button>
 
                                         <asp:Button CommandName="DeleteStep"
                                             CommandArgument='<%# Eval("StepId") %>'
-                                            CssClass="btn-instructor btn-delete"
+                                            CssClass="recipe-delete-btn"
                                             CausesValidation="false"
                                             Text="🗑️ Delete"
                                             OnClientClick="return confirm('Delete this step?');"
@@ -502,6 +506,47 @@
                 </asp:Repeater>
 
             </div><%-- end .crafting-section --%>
+
+            <section class="discussion-section" id="discussion-section">
+                <span class="section-label">Player Discussions</span>
+                <div class="content-box">
+            
+                    <%-- Comment list --%>
+                    <asp:Repeater ID="rptComments" runat="server">
+                        <ItemTemplate>
+                            <div class="comment-item">
+                                <div class="comment-header">
+                                    <div class="comment-meta">
+                                        <strong class="comment-user"><%# Eval("Username") %></strong> 
+                                        <span class="comment-date">- <%# Eval("CommentDate", "{0:yyyy-MM-dd HH:mm}") %></span>
+                                    </div>
+                            
+                                    <asp:LinkButton ID="lnkReport" runat="server" 
+                                        CssClass="btn-report"
+                                        Text="[ REPORT ]" 
+                                        CommandArgument='<%# String.Format("{0}|{1}", Eval("CommentId"), Request.QueryString["id"]) %>' 
+                                        OnCommand="lnkReport_Command"
+                                        OnClientClick="return confirm('Are you sure you want to report this comment?');"
+                                        Visible='<%# Session["userId"] != null %>' />
+                                </div>
+                                <p class="comment-text"><%# Eval("CommentText") %></p>
+                            </div>
+                        </ItemTemplate>
+                    </asp:Repeater>
+
+                    <%-- Post a comment --%>
+                    <asp:Panel ID="pnlAddComment" runat="server" Visible="false" CssClass="add-comment-panel">
+                        <h4>ADD YOUR THOUGHTS</h4>
+                        <asp:TextBox ID="txtComment" runat="server" TextMode="MultiLine" Rows="4" 
+                            CssClass="comment-input" placeholder="Type your comment here..." />
+                
+                        <asp:Button ID="btnSubmitComment" runat="server" Text="POST COMMENT" 
+                            OnClick="btnSubmitComment_Click" CssClass="btn-submit-comment" />
+                    </asp:Panel>
+
+                    <asp:Literal ID="litVisitorMsg" runat="server" />
+                </div>
+            </section>
 
         </div><%-- end .all-guides-wrapper --%>
     </div><%-- end .page-layout --%>

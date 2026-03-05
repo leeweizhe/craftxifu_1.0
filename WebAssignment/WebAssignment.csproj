@@ -171,9 +171,6 @@
     <Content Include="obj\Debug\WebAssignment.csproj.FileListAbsolute.txt" />
     <Content Include="obj\Debug\WebAssignment.dll" />
     <Content Include="obj\Debug\WebAssignment.pdb" />
-    <Content Include="test.js" />
-    <Content Include="test1.aspx" />
-    <Content Include="test1.css" />
     <Content Include="SiteMaster.css" />
     <Content Include="Tong Yu Hong\aspx\ManageComments.aspx" />
     <Content Include="Tong Yu Hong\aspx\ManageUser.aspx" />
@@ -480,13 +477,6 @@
     <Compile Include="Site.Master.designer.cs">
       <DependentUpon>Site.Master</DependentUpon>
     </Compile>
-    <Compile Include="test1.aspx.cs">
-      <DependentUpon>test1.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="test1.aspx.designer.cs">
-      <DependentUpon>test1.aspx</DependentUpon>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tong Yu Hong\aspx\ManageComments.aspx.cs">
       <DependentUpon>ManageComments.aspx</DependentUpon>
@@ -614,7 +604,6 @@
     <Content Include="obj\Release\WebAssignment.csproj.AssemblyReference.cache" />
     <None Include="packages.config" />
     <Content Include="Site.Master" />
-    <Content Include="WAPPdb.dacpac" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -623,6 +612,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Lee Wei Zhe\images\guide\" />
+    <Folder Include="Lee Wei Zhe\images\recipes\full\" />
+    <Folder Include="Lee Wei Zhe\images\recipes\thumb\" />
     <Folder Include="obj\Debug\TempPE\" />
   </ItemGroup>
   <PropertyGroup>
