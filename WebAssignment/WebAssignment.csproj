@@ -175,6 +175,7 @@
     <Content Include="test1.aspx" />
     <Content Include="test1.css" />
     <Content Include="SiteMaster.css" />
+    <Content Include="Tong Yu Hong\aspx\ManageComments.aspx" />
     <Content Include="Tong Yu Hong\aspx\ManageUser.aspx" />
     <Content Include="Tong Yu Hong\aspx\ManageUserDetail.aspx" />
     <Content Include="Tong Yu Hong\aspx\Mob.aspx" />
@@ -182,6 +183,7 @@
     <Content Include="Tong Yu Hong\aspx\SupportChat.aspx" />
     <Content Include="Tong Yu Hong\aspx\ViewStatistic.aspx" />
     <Content Include="Tong Yu Hong\Image\creeper_logo.png" />
+    <Content Include="Tong Yu Hong\Image\Minecraft_Background.png" />
     <Content Include="Tong Yu Hong\mobImage\allay.png" />
     <Content Include="Tong Yu Hong\mobImage\axolotl.png" />
     <Content Include="Tong Yu Hong\mobImage\bee.png" />
@@ -486,6 +488,13 @@
       <DependentUpon>test1.aspx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Tong Yu Hong\aspx\ManageComments.aspx.cs">
+      <DependentUpon>ManageComments.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Tong Yu Hong\aspx\ManageComments.aspx.designer.cs">
+      <DependentUpon>ManageComments.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Tong Yu Hong\aspx\ManageUser.aspx.cs">
       <DependentUpon>ManageUser.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

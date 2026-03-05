@@ -85,6 +85,16 @@
                             <div style="border-bottom: 1px dashed #444; padding: 15px 0; margin-bottom: 10px;">
                                 <strong style="color: #68ff00;"><%# Eval("Username") %></strong> 
                                 <span style="color: #888; font-size: 0.8rem;">- <%# Eval("CommentDate", "{0:yyyy-MM-dd HH:mm}") %></span>
+
+                                <%-- THE REPORT BUTTON --%>
+                                <asp:LinkButton ID="lnkReport" runat="server" 
+                                    Text="[ REPORT ]" 
+                                    CommandArgument='<%# String.Format("{0}|{1}", Eval("CommentId"), Request.QueryString["MobID"]) %>' 
+                                    OnCommand="lnkReport_Command"
+                                    OnClientClick="return confirm('Are you sure you want to report this comment?');"
+                                    Visible='<%# Session["userId"] != null %>'
+                                    style="color: #ff4444; font-size: 0.7rem; text-decoration: none; float: right;" />
+
                                 <p style="margin-top: 8px; color: #ddd; line-height: 1.4;"><%# Eval("CommentText") %></p>
                             </div>
                         </ItemTemplate>

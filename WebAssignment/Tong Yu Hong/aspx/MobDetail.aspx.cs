@@ -16,7 +16,7 @@ namespace WebAssignment.Tong_Yu_Hong.aspx
         protected void Page_Load(object sender, EventArgs e)
         {
             // Get the ID from the URL (e.g., MobDetail.aspx?ID=5)
-            string mobId = Request.QueryString["ID"];
+            string mobId = Request.QueryString["MobID"];
 
             if (!string.IsNullOrEmpty(mobId))
             {
@@ -45,6 +45,10 @@ namespace WebAssignment.Tong_Yu_Hong.aspx
         }
         private void LoadComments(string mobId)
         {
+            if (string.IsNullOrEmpty(mobId))
+            {
+                return;
+            }
             using (SqlConnection conn = new SqlConnection(connString))
             {
                 // 使用 JOIN 获取用户名
@@ -64,7 +68,7 @@ namespace WebAssignment.Tong_Yu_Hong.aspx
 
         protected void btnSubmitComment_Click(object sender, EventArgs e)
         {
-            string mobId = Request.QueryString["id"];
+            string mobId = Request.QueryString["MobID"];
             string commentText = txtComment.Text.Trim();
 
             if (!string.IsNullOrEmpty(commentText) && Session["userId"] != null)
@@ -145,6 +149,48 @@ namespace WebAssignment.Tong_Yu_Hong.aspx
                         litHowToDefeat.Text = guideData;
                     }
                 }
+            }
+        }
+
+        protected void lnkReport_Command(object sender, CommandEventArgs e)
+        {
+            if (Session["userId"] == null)
+            {
+                Response.Redirect("Login.aspx");
+                return;
+            }
+
+            // Split the combined argument (CommentId|MobID)
+            string[] args = e.CommandArgument.ToString().Split('|');
+
+            if (args.Length < 2) return; // Safety check
+
+            string commentId = args[0];
+            string mobId = args[1]; // Changed from farmId to mobId
+            string reporterId = Session["userId"].ToString();
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connString))
+                {
+                    // Updated SQL to use MobID instead of FarmID
+                    // Note: Ensure your database table has the MobID column!
+                    string sql = "INSERT INTO reportTable (CommentId, ReporterId, MobID) VALUES (@cid, @rid, @mid)";
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@cid", commentId);
+                    cmd.Parameters.AddWithValue("@rid", reporterId);
+                    cmd.Parameters.AddWithValue("@mid", mobId);
+
+                    conn.Open();
+                    cmd.ExecuteNonQuery();
+                    conn.Close();
+                }
+
+                ScriptManager.RegisterStartupScript(this, GetType(), "showalert", "alert('Report submitted successfully.');", true);
+            }
+            catch (Exception ex)
+            {
+                // Helpful tip: If this fails, check if the MobID column actually exists in your reportTable
             }
         }
     }
