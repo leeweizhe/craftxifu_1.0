@@ -44,6 +44,8 @@ function toggleStepEdit(btn) {
     }
 }
 
+
+
 // ── Toggle PART TITLE edit mode ───────────────────────────────────────────
 // Called by "✏️ Edit Title" and "✖ Cancel" buttons in the part header.
 // Walks up to .guide-container, swaps .part-title-view / .part-title-edit
@@ -105,4 +107,21 @@ function showAddPartForm() {
 function hideAddPartForm() {
     var overlay = document.getElementById('addPartFormOverlay');
     if (overlay) overlay.style.display = 'none';
+}
+
+function previewStepImage(input, previewId) {
+    var preview = document.getElementById(previewId);
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+
+        reader.onload = function (e) {
+            preview.src = e.target.result;
+            preview.style.display = 'block';
+        };
+
+        reader.readAsDataURL(input.files[0]);
+    } else {
+        preview.src = "";
+        preview.style.display = 'none';
+    }
 }

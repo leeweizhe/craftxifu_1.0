@@ -2,6 +2,7 @@
 using System.Data;
 using System.Data.SqlClient;
 using System.Configuration;
+using System.IO;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
@@ -29,6 +30,8 @@ namespace WebAssignment.Lee_Wei_Zhe.aspx
                 pnlAddPartOverlay.Visible = instructor;
                 pnlSidebarAddPart.Visible = instructor;
                 pnlEndAddPart.Visible = instructor;
+                pnlRecipeFormOverlay.Visible = instructor;   // recipe add/edit overlay
+                pnlAddRecipeBtn.Visible = instructor;   // ＋ Add Recipe button
 
                 // Inject a JS variable so the client-side script knows the user is an instructor.
                 // RegisterStartupScript adds a <script> block that runs after the page loads.
@@ -36,6 +39,7 @@ namespace WebAssignment.Lee_Wei_Zhe.aspx
                 {
                     ClientScript.RegisterStartupScript(
                         GetType(), "instructorMode", "window.isInstructor = true;", true);
+                    LoadRecipeCategoryDropdown(); // populate the <select> in the recipe overlay
                 }
             }
         }
@@ -211,7 +215,12 @@ namespace WebAssignment.Lee_Wei_Zhe.aspx
                     // Inline "Add Step" form was submitted — add step at bottom of this part
                     TextBox txtTitle = (TextBox)e.Item.FindControl("txtNewStepTitle");
                     TextBox txtDesc = (TextBox)e.Item.FindControl("txtNewStepDesc");
-                    TextBox txtImg = (TextBox)e.Item.FindControl("txtNewStepImage");
+                    FileUpload fuNewImg = (FileUpload)e.Item.FindControl("fuNewStepImg");
+
+                    // Upload image if one was chosen; otherwise leave path null
+                    string newImgPath = null;
+                    if (fuNewImg != null && fuNewImg.HasFile)
+                        newImgPath = SaveStepImage(fuNewImg);
 
                     if (txtTitle != null && !string.IsNullOrWhiteSpace(txtTitle.Text))
                     {
@@ -219,7 +228,7 @@ namespace WebAssignment.Lee_Wei_Zhe.aspx
                             partId,
                             txtTitle.Text.Trim(),
                             txtDesc?.Text.Trim() ?? "",
-                            txtImg?.Text.Trim()
+                            newImgPath
                         );
                     }
                     Response.Redirect("BeginnerGuide.aspx#part-" + partId);
@@ -241,15 +250,21 @@ namespace WebAssignment.Lee_Wei_Zhe.aspx
             switch (e.CommandName)
             {
                 case "SaveStep":
-                    // Find the 3 textboxes inside this specific step card
+                    // Find the textboxes and new controls inside this specific step card
                     TextBox txtTitle = (TextBox)e.Item.FindControl("txtEditTitle");
                     TextBox txtDesc = (TextBox)e.Item.FindControl("txtEditDescription");
-                    TextBox txtImg = (TextBox)e.Item.FindControl("txtEditImagePath");
+                    HiddenField hfCurrentImg = (HiddenField)e.Item.FindControl("hfCurrentStepImg");
+                    FileUpload fuEditImg = (FileUpload)e.Item.FindControl("fuEditStepImg");
+
+                    // Keep the existing image path unless a new file was uploaded
+                    string editImgPath = hfCurrentImg?.Value;
+                    if (fuEditImg != null && fuEditImg.HasFile)
+                        editImgPath = SaveStepImage(fuEditImg);
 
                     if (txtTitle != null && !string.IsNullOrWhiteSpace(txtTitle.Text))
                     {
                         int partId = GetPartIdByStepId(stepId);
-                        UpdateStep(stepId, txtTitle.Text.Trim(), txtDesc?.Text.Trim() ?? "", txtImg?.Text.Trim());
+                        UpdateStep(stepId, txtTitle.Text.Trim(), txtDesc?.Text.Trim() ?? "", editImgPath);
                         Response.Redirect("BeginnerGuide.aspx#part-" + partId);
                     }
                     break;
@@ -305,6 +320,33 @@ namespace WebAssignment.Lee_Wei_Zhe.aspx
         // ══════════════════════════════════════════════════════════════════
         // DB HELPERS
         // ══════════════════════════════════════════════════════════════════
+
+        // ══════════════════════════════════════════════════════════════════
+        // HELPER: Save an uploaded step image to disk, return the URL path
+        // Saves to /Lee Wei Zhe/images/guide/ so the src works directly
+        // in an <img> tag without needing ResolveUrl.
+        // Returns null on bad extension (caller can treat null as no change).
+        // ══════════════════════════════════════════════════════════════════
+        private string SaveStepImage(FileUpload fu)
+        {
+            string ext = Path.GetExtension(fu.FileName).ToLower();
+            string[] allowed = { ".png", ".jpg", ".jpeg", ".gif", ".webp" };
+            bool ok = false;
+            foreach (string a in allowed) if (ext == a) { ok = true; break; }
+            if (!ok) return null;
+
+            // Build the physical folder path; create it if it doesn't exist yet
+            string virtualFolder = "/Lee Wei Zhe/images/guide/";
+            string physicalFolder = Server.MapPath("~" + virtualFolder);
+            if (!Directory.Exists(physicalFolder))
+                Directory.CreateDirectory(physicalFolder);
+
+            // GUID filename avoids collisions and keeps filenames safe
+            string fileName = Guid.NewGuid().ToString("N") + ext;
+            fu.SaveAs(Path.Combine(physicalFolder, fileName));
+
+            return virtualFolder + fileName; // root-relative URL, usable directly as img src
+        }
 
         private void UpdateStep(int stepId, string title, string desc, string imagePath)
         {
@@ -473,7 +515,9 @@ namespace WebAssignment.Lee_Wei_Zhe.aspx
 
             using (SqlConnection conn = new SqlConnection(connString))
             {
-                string query = @"SELECT RecipeId, RecipeName, ThumbnailPath, RecipeImagePath, Description
+                // CategoryId is included so the edit button's data-* attrs can carry it
+                string query = @"SELECT RecipeId, CategoryId, RecipeName,
+                                        ThumbnailPath, RecipeImagePath, Description
                                  FROM CraftingRecipe
                                  WHERE CategoryId = @CategoryId
                                  ORDER BY RecipeOrder ASC";
@@ -488,6 +532,198 @@ namespace WebAssignment.Lee_Wei_Zhe.aspx
                         rptRecipes.DataBind();
                     }
                 }
+            }
+        }
+
+        // ══════════════════════════════════════════════════════════════════
+        // ITEMDATABOUND (inner recipe repeater)
+        // Toggles the pencil/delete overlay per card for instructors.
+        // ══════════════════════════════════════════════════════════════════
+        protected void rptRecipes_ItemDataBound(object sender, RepeaterItemEventArgs e)
+        {
+            if (e.Item.ItemType != ListItemType.Item &&
+                e.Item.ItemType != ListItemType.AlternatingItem) return;
+
+            Panel pnlRecipeControls = (Panel)e.Item.FindControl("pnlRecipeControls");
+            if (pnlRecipeControls != null)
+                pnlRecipeControls.Visible = IsInstructor();
+        }
+
+        // ══════════════════════════════════════════════════════════════════
+        // ITEMCOMMAND (inner recipe repeater) — handles DeleteRecipe
+        // ══════════════════════════════════════════════════════════════════
+        protected void rptRecipes_ItemCommand(object sender, RepeaterCommandEventArgs e)
+        {
+            if (!IsInstructor()) return;
+
+            if (e.CommandName == "DeleteRecipe")
+            {
+                int recipeId = Convert.ToInt32(e.CommandArgument);
+                using (SqlConnection conn = new SqlConnection(connString))
+                using (SqlCommand cmd = new SqlCommand(
+                    "DELETE FROM CraftingRecipe WHERE RecipeId = @Id", conn))
+                {
+                    cmd.Parameters.AddWithValue("@Id", recipeId);
+                    conn.Open();
+                    cmd.ExecuteNonQuery();
+                }
+                Response.Redirect("BeginnerGuide.aspx#crafting-recipes");
+            }
+        }
+
+        // ══════════════════════════════════════════════════════════════════
+        // BUTTON CLICK: Save recipe (Add OR Edit)
+        // Mode is carried by hfRecipeFormMode hidden field set by JS.
+        // ══════════════════════════════════════════════════════════════════
+        protected void btnSaveRecipe_Click(object sender, EventArgs e)
+        {
+            if (!IsInstructor()) return;
+
+            string mode = hfRecipeFormMode.Value.Trim();
+            int recipeId = Convert.ToInt32(hfEditRecipeId.Value);
+            string name = txtRecipeName.Text.Trim();
+            string desc = txtRecipeDescription.Text.Trim();
+            int catId = Convert.ToInt32(ddlRecipeCategory.SelectedValue);
+
+            if (string.IsNullOrEmpty(name))
+            {
+                ShowRecipeError("Recipe name is required."); return;
+            }
+
+            // ── Thumbnail ─────────────────────────────────────────────────
+            // Keep existing path unless a new file was uploaded
+            string thumbPath = hfCurrentThumbPath.Value;
+            if (fileUploadThumb.HasFile)
+            {
+                string saved = SaveRecipeImage(fileUploadThumb, "thumb");
+                if (saved == null) { ShowRecipeError("Thumbnail must be .png, .jpg, .jpeg, .gif or .webp."); return; }
+                thumbPath = saved;
+            }
+
+            // ── Recipe image ──────────────────────────────────────────────
+            string recipePath = hfCurrentRecipePath.Value;
+            if (fileUploadRecipeImg.HasFile)
+            {
+                string saved = SaveRecipeImage(fileUploadRecipeImg, "full");
+                if (saved == null) { ShowRecipeError("Recipe image must be .png, .jpg, .jpeg, .gif or .webp."); return; }
+                recipePath = saved;
+            }
+
+            // Both images required on new insert
+            if (mode == "add" && (string.IsNullOrEmpty(thumbPath) || string.IsNullOrEmpty(recipePath)))
+            {
+                ShowRecipeError("Please upload both the thumbnail and the recipe image."); return;
+            }
+
+            if (mode == "add")
+                InsertRecipeDB(catId, name, thumbPath, recipePath, desc);
+            else
+                UpdateRecipeDB(recipeId, catId, name, thumbPath, recipePath, desc);
+
+            // Reload and close the overlay
+            LoadCraftingRecipes();
+            LoadRecipeCategoryDropdown();
+            ClientScript.RegisterStartupScript(GetType(), "closeRecipeForm", "hideRecipeForm();", true);
+        }
+
+        // ── Recipe helpers ────────────────────────────────────────────────
+
+        private void ShowRecipeError(string msg)
+        {
+            lblRecipeError.Text = msg;
+            lblRecipeError.Visible = true;
+            // Re-open the overlay after postback so the user can fix the error
+            ClientScript.RegisterStartupScript(GetType(), "reopenRecipeForm",
+                "document.getElementById('recipeFormOverlay').style.display='flex';", true);
+            LoadCraftingRecipes();
+            LoadRecipeCategoryDropdown();
+        }
+
+        /// <summary>
+        /// Saves an uploaded recipe image to ~/Lee Wei Zhe/images/recipes/{subfolder}/
+        /// Returns the tilde-path stored in the DB, or null on a bad extension.
+        /// </summary>
+        private string SaveRecipeImage(FileUpload fu, string subfolder)
+        {
+            string ext = Path.GetExtension(fu.FileName).ToLower();
+            string[] allowed = { ".png", ".jpg", ".jpeg", ".gif", ".webp" };
+            bool ok = false;
+            foreach (string a in allowed) if (ext == a) { ok = true; break; }
+            if (!ok) return null;
+
+            string virtualFolder = "~/Lee Wei Zhe/images/recipes/" + subfolder + "/";
+            string physicalFolder = Server.MapPath(virtualFolder);
+            if (!Directory.Exists(physicalFolder))
+                Directory.CreateDirectory(physicalFolder);
+
+            string fileName = Guid.NewGuid().ToString("N") + ext;
+            fu.SaveAs(Path.Combine(physicalFolder, fileName));
+            return virtualFolder + fileName;
+        }
+
+        private void InsertRecipeDB(int catId, string name, string thumb, string recipe, string desc)
+        {
+            using (SqlConnection conn = new SqlConnection(connString))
+            {
+                conn.Open();
+                int maxOrder = 0;
+                using (SqlCommand cmd = new SqlCommand(
+                    "SELECT ISNULL(MAX(RecipeOrder), 0) FROM CraftingRecipe WHERE CategoryId = @CatId", conn))
+                {
+                    cmd.Parameters.AddWithValue("@CatId", catId);
+                    maxOrder = Convert.ToInt32(cmd.ExecuteScalar());
+                }
+                using (SqlCommand cmd = new SqlCommand(@"
+                    INSERT INTO CraftingRecipe
+                        (CategoryId, RecipeName, ThumbnailPath, RecipeImagePath, Description, RecipeOrder)
+                    VALUES (@CatId, @Name, @Thumb, @Recipe, @Desc, @Order)", conn))
+                {
+                    cmd.Parameters.AddWithValue("@CatId", catId);
+                    cmd.Parameters.AddWithValue("@Name", name);
+                    cmd.Parameters.AddWithValue("@Thumb", thumb);
+                    cmd.Parameters.AddWithValue("@Recipe", recipe);
+                    cmd.Parameters.AddWithValue("@Desc", desc);
+                    cmd.Parameters.AddWithValue("@Order", maxOrder + 1);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+        private void UpdateRecipeDB(int id, int catId, string name, string thumb, string recipe, string desc)
+        {
+            using (SqlConnection conn = new SqlConnection(connString))
+            using (SqlCommand cmd = new SqlCommand(@"
+                UPDATE CraftingRecipe
+                SET CategoryId = @CatId, RecipeName = @Name,
+                    ThumbnailPath = @Thumb, RecipeImagePath = @Recipe, Description = @Desc
+                WHERE RecipeId = @Id", conn))
+            {
+                cmd.Parameters.AddWithValue("@CatId", catId);
+                cmd.Parameters.AddWithValue("@Name", name);
+                cmd.Parameters.AddWithValue("@Thumb", thumb);
+                cmd.Parameters.AddWithValue("@Recipe", recipe);
+                cmd.Parameters.AddWithValue("@Desc", desc);
+                cmd.Parameters.AddWithValue("@Id", id);
+                conn.Open();
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        /// <summary>
+        /// Populates ddlRecipeCategory inside the recipe add/edit overlay.
+        /// </summary>
+        private void LoadRecipeCategoryDropdown()
+        {
+            ddlRecipeCategory.Items.Clear();
+            using (SqlConnection conn = new SqlConnection(connString))
+            using (SqlCommand cmd = new SqlCommand(
+                "SELECT CategoryId, CategoryName FROM CraftingCategory ORDER BY CategoryOrder ASC", conn))
+            {
+                conn.Open();
+                using (SqlDataReader r = cmd.ExecuteReader())
+                    while (r.Read())
+                        ddlRecipeCategory.Items.Add(
+                            new ListItem(r["CategoryName"].ToString(), r["CategoryId"].ToString()));
             }
         }
 

@@ -3,7 +3,6 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <link href="/Lee Wei Zhe/css/BeginnerGuide.css" rel="stylesheet"/>
-    <link href="/Lee Wei Zhe/css/InstructorForm.css" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <%-- defer means the JS loads AFTER the HTML is ready --%>
@@ -51,6 +50,80 @@
             </div>
         </div>
     </asp:Panel>
+    <%-- ═══════════════════════════════════════════════════════════════════
+         RECIPE ADD / EDIT OVERLAY  (instructor-only, Visible set in Page_Load)
+         ClientIDMode="Static" on every input so JS can find them by their
+         declared ID regardless of the MasterPage naming container.
+    ═══════════════════════════════════════════════════════════════════ --%>
+    <asp:Panel ID="pnlRecipeFormOverlay" runat="server" Visible="false">
+        <div id="recipeFormOverlay" class="add-part-overlay" style="display:none">
+            <div class="add-part-form-inner recipe-form-inner">
+
+                <h3 class="add-part-form-title" id="recipeFormTitle">➕ Add Recipe</h3>
+
+                <%-- Hidden fields: track add/edit mode + current image paths --%>
+                <asp:HiddenField ID="hfRecipeFormMode"    runat="server" Value="add" ClientIDMode="Static" />
+                <asp:HiddenField ID="hfEditRecipeId"      runat="server" Value="0"   ClientIDMode="Static" />
+                <asp:HiddenField ID="hfCurrentThumbPath"  runat="server" Value=""    ClientIDMode="Static" />
+                <asp:HiddenField ID="hfCurrentRecipePath" runat="server" Value=""    ClientIDMode="Static" />
+
+                <div class="recipe-form-cols">
+
+                    <%-- LEFT: text fields --%>
+                    <div class="recipe-form-col">
+                        <label class="edit-label">Category</label>
+                        <asp:DropDownList ID="ddlRecipeCategory" runat="server"
+                            CssClass="edit-input edit-select" ClientIDMode="Static" />
+
+                        <label class="edit-label" style="margin-top:10px">Recipe Name</label>
+                        <asp:TextBox ID="txtRecipeName" runat="server"
+                            CssClass="edit-input" MaxLength="100"
+                            placeholder="e.g. Wooden Sword" ClientIDMode="Static" />
+
+                        <label class="edit-label" style="margin-top:10px">Description</label>
+                        <asp:TextBox ID="txtRecipeDescription" runat="server"
+                            CssClass="edit-input edit-textarea" TextMode="MultiLine" Rows="3"
+                            placeholder="Short tooltip description..." ClientIDMode="Static" />
+                    </div>
+
+                    <%-- RIGHT: image uploads with live preview --%>
+                    <div class="recipe-form-col">
+                        <label class="edit-label">
+                            Thumbnail <span class="edit-hint">(card icon)</span>
+                        </label>
+                        <img id="imgThumbPreview" src="" alt="Thumbnail preview"
+                             class="recipe-upload-preview" style="display:none" />
+                        <asp:FileUpload ID="fileUploadThumb" runat="server"
+                            CssClass="recipe-file-input" ClientIDMode="Static" />
+
+                        <label class="edit-label" style="margin-top:14px">
+                            Recipe Image <span class="edit-hint">(tooltip grid)</span>
+                        </label>
+                        <img id="imgRecipePreview" src="" alt="Recipe image preview"
+                             class="recipe-upload-preview" style="display:none" />
+                        <asp:FileUpload ID="fileUploadRecipeImg" runat="server"
+                            CssClass="recipe-file-input" ClientIDMode="Static" />
+                    </div>
+
+                </div><%-- end .recipe-form-cols --%>
+
+                <asp:Label ID="lblRecipeError" runat="server"
+                    CssClass="form-error" Visible="false" EnableViewState="false" />
+
+                <div class="inline-form-actions" style="margin-top:18px">
+                    <asp:Button ID="btnSaveRecipe" runat="server"
+                        CssClass="btn-instructor btn-save"
+                        Text="💾 Save Recipe"
+                        OnClick="btnSaveRecipe_Click"
+                        CausesValidation="false" />
+                    <button class="btn-instructor btn-cancel"
+                        onclick="hideRecipeForm(); return false;">✖ Cancel</button>
+                </div>
+
+            </div>
+        </div>
+    </asp:Panel>
+
     <div class="top-bar">
         <a href="javascript:history.back()" class="btn-back">Back</a>
     </div>
@@ -243,11 +316,9 @@
                                             <label class="edit-label">
                                                 Image Path <span class="edit-hint">(optional)</span>
                                             </label>
-                                            <asp:TextBox ID="txtEditImagePath" runat="server"
-                                                CssClass="edit-input"
-                                                Text='<%# Eval("ImagePath") %>'
-                                                MaxLength="255"
-                                                placeholder="~/images/guide/step.jpg" />
+                                            <img id="imgStepEditPreview" src="" class="step-img-upload-preview" style="display:none;" />
+                                            <asp:FileUpload ID="fuEditStepImg" runat="server" CssClass="edit-input" onchange="previewStepImage(this, 'imgStepEditPreview')" />
+                                            <asp:HiddenField ID="hfCurrentStepImg" runat="server" Value='<%# Eval("ImagePath") %>' />
                                         </div>
 
                                         <div class="inline-form-actions">
@@ -297,18 +368,17 @@
                                 <label class="edit-label">
                                     Image Path <span class="edit-hint">(optional)</span>
                                 </label>
-                                <asp:TextBox ID="txtNewStepImage" runat="server"
-                                    CssClass="edit-input" MaxLength="255"
-                                    placeholder="~/images/guide/step.jpg" />
+                                <img id="imgStepAddPreview" src="" class="step-img-upload-preview" style="display:none;" />
 
+                                <asp:FileUpload ID="fuNewStepImg" runat="server" CssClass="edit-input" onchange="previewStepImage(this, 'imgStepAddPreview')" />
                                 <div class="inline-form-actions" style="margin-top:12px">
                                     <%-- CommandArgument = PartId so the server knows which part to add to --%>
-                                    <asp:Button ID="btnSaveNewPart" runat="server"
+                                    <asp:Button ID="btnSaveNewStep" runat="server"
+                                        CommandName="SaveNewStep"
+                                        CommandArgument='<%# Eval("PartId") %>'
                                         CssClass="btn-instructor btn-save"
-                                        Text="💾 Save Section"
-                                        OnClick="btnSaveNewPart_Click"
-                                        ValidationGroup="AddPart"
-                                        CausesValidation="true" />
+                                        CausesValidation="false"
+                                        Text="💾 Save Step" />
                                     <button class="btn-instructor btn-cancel"
                                         onclick="toggleAddStepForm(this); return false;">✖ Cancel</button>
                                 </div>
@@ -327,54 +397,60 @@
             </asp:Panel>
 
             <%-- ═══════════════════════════════════════════════════════════════════
-                 CRAFTING RECIPES SECTION
-                 All data comes from CraftingCategory + CraftingRecipe DB tables.
-                 Hovering a recipe card shows a mouse-following tooltip with
-                 the full recipe image and a short description.
+                 CRAFTING RECIPES SECTION  (data-driven, instructor-editable)
             ═══════════════════════════════════════════════════════════════════ --%>
-            <div class="crafting-section" id="crafting-recipes">
+            <div class="guide-container crafting-section" id="crafting-recipes">
 
-                <%-- Header row: title on the left, search box on the right --%>
+                <%-- Header row: title | search box | [instructor ＋ button] --%>
                 <div class="crafting-header-row">
-                    <h2 class="section-title" style="border-bottom:none; padding-bottom:0; margin:0;">
+                    <h2 class="section-title" style="border-bottom:none;padding-bottom:0;margin:0;font-size:2rem;">
                         Essential Crafting Recipes
                     </h2>
-                    <div class="crafting-search-wrap">
-                        <span class="search-icon">🔍</span>
-                        <input type="text" id="craftingSearch"
-                               class="crafting-search-input"
-                               placeholder="Search recipes..."
-                               oninput="filterRecipes(this.value)" />
+
+                    <div class="crafting-header-controls">
+                        <div class="crafting-search-wrap">
+                            <span class="search-icon">🔍</span>
+                            <input type="text" id="craftingSearch"
+                                   class="crafting-search-input"
+                                   placeholder="Search recipes..."
+                                   oninput="filterRecipes(this.value)" />
+                        </div>
+
+                        <%-- ＋ Add Recipe button — instructors only --%>
+                        <asp:Panel ID="pnlAddRecipeBtn" runat="server" Visible="false">
+                            <button class="btn-instructor btn-add"
+                                onclick="showAddRecipeForm(); return false;">＋ Add Recipe</button>
+                        </asp:Panel>
                     </div>
                 </div>
 
-                <%-- Mouse-following tooltip (shared, repositioned by JS) --%>
+                <%-- Mouse-following tooltip (one shared div, repositioned by JS) --%>
                 <div id="recipeTooltip" class="recipe-tooltip" style="display:none;">
                     <img id="tooltipImg" src="" alt="" class="tooltip-big-img" />
                     <p id="tooltipName" class="tooltip-name"></p>
                     <p id="tooltipDesc" class="tooltip-desc"></p>
                 </div>
 
-                <%-- No-results message (hidden by default, shown by JS) --%>
                 <p id="noRecipesMsg" class="no-recipes-msg" style="display:none;">
                     No recipes found matching your search.
                 </p>
 
-                <%-- Outer repeater: one block per category --%>
+                <%-- Outer repeater — one block per category --%>
                 <asp:Repeater ID="rptCraftingCategories" runat="server"
                     OnItemDataBound="rptCraftingCategories_ItemDataBound">
                     <ItemTemplate>
                         <div class="crafting-category"
                              data-category='<%# Eval("CategoryName") %>'>
 
-                            <h3 class="crafting-category-title">
-                                <%# Eval("CategoryName") %>
-                            </h3>
+                            <h3 class="crafting-category-title"><%# Eval("CategoryName") %></h3>
 
                             <div class="recipe-grid">
-                                <%-- Inner repeater: one card per recipe in this category --%>
-                                <asp:Repeater ID="rptRecipes" runat="server">
+                                <%-- Inner repeater — one card per recipe --%>
+                                <asp:Repeater ID="rptRecipes" runat="server"
+                                    OnItemDataBound="rptRecipes_ItemDataBound"
+                                    OnItemCommand="rptRecipes_ItemCommand">
                                     <ItemTemplate>
+
                                         <div class="recipe-card"
                                              data-name='<%# Eval("RecipeName") %>'
                                              data-img='<%# ResolveUrl(Eval("RecipeImagePath").ToString()) %>'
@@ -382,22 +458,50 @@
                                              onmouseenter="showRecipeTooltip(event, this)"
                                              onmousemove="moveRecipeTooltip(event)"
                                              onmouseleave="hideRecipeTooltip()">
+
+                                            <%-- Pencil + delete overlay — instructors only,
+                                                 fades in on card hover via CSS.
+                                                 data-* attrs carry all info JS needs to
+                                                 pre-fill the edit form. --%>
+                                            <asp:Panel ID="pnlRecipeControls" runat="server"
+                                                Visible="false" CssClass="recipe-instructor-overlay">
+                                                <button class="recipe-edit-btn"
+                                                    data-recipeid='<%# Eval("RecipeId") %>'
+                                                    data-categoryid='<%# Eval("CategoryId") %>'
+                                                    data-name='<%# Eval("RecipeName") %>'
+                                                    data-desc='<%# Eval("Description") %>'
+                                                    data-thumbpath='<%# Eval("ThumbnailPath") %>'
+                                                    data-recipepath='<%# Eval("RecipeImagePath") %>'
+                                                    data-thumburl='<%# ResolveUrl(Eval("ThumbnailPath").ToString()) %>'
+                                                    data-recipeurl='<%# ResolveUrl(Eval("RecipeImagePath").ToString()) %>'
+                                                    onclick="showEditRecipeForm(this); return false;"
+                                                    title="Edit recipe">✏️</button>
+                                                <asp:Button CommandName="DeleteRecipe"
+                                                    CommandArgument='<%# Eval("RecipeId") %>'
+                                                    CssClass="recipe-delete-btn"
+                                                    CausesValidation="false" Text="🗑️"
+                                                    OnClientClick="return confirm('Delete this recipe?');"
+                                                    runat="server" />
+                                            </asp:Panel>
+
                                             <div class="recipe-thumb-wrap">
                                                 <img src='<%# ResolveUrl(Eval("ThumbnailPath").ToString()) %>'
                                                      alt='<%# Eval("RecipeName") %>'
                                                      class="recipe-thumb" />
                                             </div>
                                             <span class="recipe-name"><%# Eval("RecipeName") %></span>
-                                        </div>
+
+                                        </div><%-- end .recipe-card --%>
+
                                     </ItemTemplate>
                                 </asp:Repeater>
                             </div>
 
-                        </div>
+                        </div><%-- end .crafting-category --%>
                     </ItemTemplate>
                 </asp:Repeater>
 
-            </div>
+            </div><%-- end .crafting-section --%>
 
         </div><%-- end .all-guides-wrapper --%>
     </div><%-- end .page-layout --%>
