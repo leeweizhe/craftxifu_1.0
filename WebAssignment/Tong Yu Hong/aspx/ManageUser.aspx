@@ -91,7 +91,9 @@
                             <ItemTemplate>
                                 <div class="user-card">
                                     <div class="profile-pic-area">
-                                        <img src='<%# ResolveUrl("~/" + (Eval("ProfilePicture") ?? "images/default-pfp.png").ToString()) %>' alt='PFP' class="profile-img" />
+                                        <img src='<%# ResolveUrl(string.IsNullOrEmpty(Eval("ProfilePicture")?.ToString()) ? "~/images/default-pfp.png" : Eval("ProfilePicture").ToString()) %>' 
+                                             alt='PFP' 
+                                             class="profile-img" />
                                     </div>
                                     <div class="user-info-area">
                                         <h2 class="user-name"><%# Eval("Username") %></h2>
