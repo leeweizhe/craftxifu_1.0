@@ -14,11 +14,15 @@
         .input-section label { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); font-size: 1rem; pointer-events: none; transition: all 0.3s ease; color: #666; }
         .input-section input, .country-dropdown { background-color: #d5d5d5; height: 100%; width: 100%; padding: 20px 10px 5px 10px; border-radius: 8px; border: 1px solid #808080; font-size: 1rem; transition: all 0.3s ease; box-sizing: border-box; cursor: pointer;}
         
+        /* --- Locked Email Style --- */
+        .readonly-input { background-color: #ebebeb !important; border-color: #b5b5b5 !important; color: #777 !important; cursor: not-allowed !important; pointer-events: none; }
+        .readonly-input ~ label { color: #888 !important; }
+
         /* Label float effects */
         .input-section input:focus ~ label, 
         .input-section input:not(:placeholder-shown) ~ label { top: 5px; transform: translateY(0); font-size: 0.75rem; color: #00b63b; }
 
-        /* THE FIX: Highlights Country/Role when they have a selection */
+        /* Highlights Country/Role when they have a selection */
         .input-section input:focus, 
         .country-dropdown:focus,
         .country-dropdown:not([value=""]) { border-color: #00b63b; background-color: white; outline: none; }
@@ -28,30 +32,33 @@
         .input-section:focus-within .static-label,
         .country-dropdown:not([value=""]) ~ .static-label { color: #00b63b !important; }
         
-        /* GENDER BOX FIX: Restored from your register page logic */
+        /* GENDER BOX STYLE */
         .gender-box { background-color: #d5d5d5; border-radius: 8px; border: 1px solid #808080; height: 55px !important; transition: all 0.3s ease; }
-        
-        /* Lights up Gender box when a radio is clicked */
         .gender-box:has(input:checked) { background-color: white; border-color: #00b63b; }
         .gender-box:has(input:checked) .static-label { color: #00b63b !important; }
 
         .radio-options { position: absolute; bottom: 5px; left: 10px; display: flex; align-items: center; }
         .radio-options label { position: static !important; transform: none !important; font-size: 1rem !important; pointer-events: auto !important; margin-left: 5px; margin-right: 30px; color: black !important; font-weight: bold; transition: color 0.3s ease; }
-        
-        /* Radio circle restoration */
         .radio-options input[type="radio"] { height: auto !important; width: auto !important; appearance: radio !important; -webkit-appearance: radio !important; cursor: pointer; margin: 0 !important; }
-
-        /* Green only when clicked */
         .radio-options input:checked + label { color: #00b63b !important; }
-        .input-section.gender-box:focus-within .static-label { color: #00b63b !important; }
+
+        /* --- UPDATED: Avatar Upload matches Gender/Country boxes --- */
+        .avatar-section { background-color: #d5d5d5; border-radius: 8px; border: 1px solid #808080; height: 55px !important; transition: all 0.3s ease; padding: 0 10px; display: flex; align-items: center; }
+        .avatar-section:focus-within { background-color: white; border-color: #00b63b; }
+        .avatar-section:focus-within .static-label { color: #00b63b !important; }
+
+        /* Styles for the inner file input wrapper */
+        .file-input-wrapper { display: flex; width: 100%; align-items: center; margin-top: 15px; }
+        .avatar-upload-control { font-family: 'Segoe UI', sans-serif; font-size: 0.85rem; color: #333; cursor: pointer; background: transparent; border: none; }
+        .file-info-text { color: #666; font-size: 0.7rem; margin-left: auto; font-family: 'PF Tempesta Seven', sans-serif; }
 
         /* Pixel font for errors */
         .error-pixel-font { font-family: 'PF Tempesta Seven', sans-serif; font-size: 12px; text-transform: uppercase; color: red; margin: 10px 0; display: block; }
         
         .login-container input[type="submit"] { background-color: #009731; color: white; width: 100%; padding: 0.75rem; margin: 20px 0; font-size: 1.3rem; border-radius: 8px; border: none; cursor: pointer; transition: all 0.3s ease; }
         .login-container input[type="submit"]:hover { background-color: #00b63b; transform: scale(1.05); }
-        .normal-link { text-decoration: none; color: #555; font-size: 1.1rem; /* Increased size for visibility */font-weight: bold; /* Made bold to be more obvious */margin-top: 20px; transition: all 0.3s ease; display: inline-block;}
-        .normal-link:hover { color: #007bff; /* Brighter blue on hover */transform: scale(1.1); /* Subtle grow effect */text-decoration: underline;}
+        .normal-link { text-decoration: none; color: #555; font-size: 1.1rem; font-weight: bold; margin-top: 20px; transition: all 0.3s ease; display: inline-block;}
+        .normal-link:hover { color: #007bff; transform: scale(1.1); text-decoration: underline;}
     </style>
 </asp:Content>
 
@@ -61,7 +68,11 @@
         
         <div class="input-section"><asp:TextBox ID="txtFname" runat="server" placeholder=" "/><label>First Name</label></div>
         <div class="input-section"><asp:TextBox ID="txtLname" runat="server" placeholder=" "/><label>Last Name</label></div>
-        <div class="input-section"><asp:TextBox ID="txtEmail" runat="server" placeholder=" "/><label>Email</label></div>
+        
+        <div class="input-section">
+            <asp:TextBox ID="txtEmail" runat="server" placeholder=" " ReadOnly="true" CssClass="readonly-input" />
+            <label>Email</label>
+        </div>
         
         <div class="input-section gender-box">
             <label class="static-label">GENDER</label>
@@ -79,8 +90,13 @@
 
         <div class="input-section"><asp:TextBox ID="txtUsername" runat="server" placeholder=" "/><label>Username</label></div>
         
-        <div class="input-section"><asp:TextBox TextMode="password" id="txtPassword" runat="server" placeholder=" "/><label>New Password (Leave blank to keep current)</label></div>
-        <div class="input-section"><asp:TextBox TextMode="password" id="txtConfirmPassword" runat="server" placeholder=" "/><label>Confirm New Password</label></div>
+        <div class="input-section avatar-box">
+            <label class="static-label">UPLOAD CHARACTER AVATAR</label>
+            <div class="file-input-container">
+                <asp:FileUpload ID="fuAvatar" runat="server" CssClass="avatar-upload-control" />
+                <span class="file-specs">(PNG/JPG, MAX 2MB)</span>
+            </div>
+        </div>
         
         <div class="input-section">
             <label class="static-label">Account Role</label>

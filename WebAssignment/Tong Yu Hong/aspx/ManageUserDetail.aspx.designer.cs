@@ -69,22 +69,13 @@ namespace WebAssignment.Tong_Yu_Hong.aspx
         protected global::System.Web.UI.WebControls.TextBox txtUsername;
 
         /// <summary>
-        /// txtPassword control.
+        /// fuAvatar control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtPassword;
-
-        /// <summary>
-        /// txtConfirmPassword control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtConfirmPassword;
+        protected global::System.Web.UI.WebControls.FileUpload fuAvatar;
 
         /// <summary>
         /// ddlRole control.

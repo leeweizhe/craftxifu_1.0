@@ -60,6 +60,33 @@ namespace WebAssignment
         protected global::System.Web.UI.WebControls.PlaceHolder phMember;
 
         /// <summary>
+        /// pnlNewWarning control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel pnlNewWarning;
+
+        /// <summary>
+        /// rptMiniMailbox control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Repeater rptMiniMailbox;
+
+        /// <summary>
+        /// litNoNotif control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal litNoNotif;
+
+        /// <summary>
         /// imgProfile control.
         /// </summary>
         /// <remarks>

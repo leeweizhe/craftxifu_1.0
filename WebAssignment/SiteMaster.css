@@ -82,6 +82,8 @@ nav {
 
 .move-right {
     margin-left: auto;
+    display: flex; /* Add this line */
+    align-items: center; /* Add this line */
 }
 
 .avatar-wrapper {
@@ -204,4 +206,116 @@ footer {
     color: white;
     font-size: 1.6rem;
     user-select: none;
+}
+
+/* --- NEW MAILBOX STYLES --- */
+.mailbox-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    list-style: none;
+}
+
+.mailbox-trigger {
+    cursor: pointer;
+    padding: 0 20px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    height: 100%;
+}
+
+.mail-icon {
+    color: #fbbf24;
+    font-size: 2rem;
+    transition: transform 0.2s ease;
+}
+
+.notif-dot {
+    position: absolute;
+    top: 30px;
+    right: 15px;
+    width: 12px;
+    height: 12px;
+    background: #ff4444;
+    border-radius: 50%;
+    border: 2px solid #000;
+    z-index: 11;
+}
+
+.mailbox-dropdown {
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    width: 400px;
+    background-color: rgba(26, 26, 26, 0.98);
+    border: 2px solid #333;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+    z-index: 10000;
+    cursor: default;
+}
+
+.mailbox-header {
+    padding: 15px 20px;
+    border-bottom: 2px solid #333;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #000;
+}
+
+    .mailbox-header strong {
+        color: #fff;
+        font-size: 1.1rem;
+        text-transform: uppercase;
+        font-weight: normal;
+    }
+
+.mailbox-list {
+    max-height: 450px;
+    overflow-y: auto;
+}
+
+.mailbox-item {
+    padding: 20px;
+    border-bottom: 1px solid #222;
+    display: flex;
+    gap: 15px;
+    transition: background 0.2s;
+}
+
+    .mailbox-item:hover {
+        background-color: #222;
+    }
+
+.warn-icon {
+    color: #ff4444;
+    font-size: 1.4rem;
+}
+
+.warn-content {
+    flex-grow: 1;
+}
+
+.warn-msg {
+    color: #ffffff;
+    font-size: 0.95rem;
+    line-height: 1.4;
+    margin-bottom: 8px;
+    font-family: Arial, sans-serif; /* For better readability */
+}
+
+.warn-date {
+    color: #666;
+    font-size: 0.8rem;
+}
+
+.view-link {
+    color: #3b82f6;
+    font-size: 0.85rem;
+    text-decoration: none;
+    display: block;
+    margin-top: 10px;
+    text-align: right;
 }
