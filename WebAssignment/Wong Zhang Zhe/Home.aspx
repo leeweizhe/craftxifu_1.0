@@ -2,11 +2,11 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <style type="text/css">
-        /* 视觉升级：深灰渐变背景 */
+        /* Dark gray gradient background */
         body { background-color: #0d0d0d; }
         .home-wrapper { width: 100%; color: #fff; font-family: 'Minecraft', sans-serif; background: linear-gradient(180deg, #1a1a1a 0%, #0d0d0d 100%); }
         
-        /* 英雄横幅 */
+        /* hero-banner */
         .hero-banner { 
             background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.7)), url('/Wong Zhang Zhe/pic/autofarm_cover.png');
             background-size: cover; background-position: center; padding: 120px 10%; text-align: center; border-bottom: 4px solid #68ff00;
@@ -14,12 +14,12 @@
         .hero-title { font-size: 4.5rem; color: #68ff00; text-shadow: 4px 4px #000; margin-bottom: 20px; }
         .hero-subtitle { font-size: 1.3rem; color: #ddd; max-width: 800px; margin: 0 auto; line-height: 1.6; }
 
-        /* 状态栏：半透明玻璃效果 */
+        /* status */
         .status-bar { background: rgba(30, 30, 30, 0.8); backdrop-filter: blur(10px); padding: 25px 10%; display: flex; justify-content: space-around; border-bottom: 1px solid #333; }
         .status-item { font-size: 1.1rem; text-transform: uppercase; }
         .status-item span { color: #fbbf24; font-weight: bold; margin-left: 8px; }
 
-        /* Quick Access 卡片布局 */
+        /* Quick Access */
         .quick-access-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-top: 30px; }
         .qa-card { 
             background: #1a1a1a; border: 2px solid #333; padding: 30px 20px; text-align: center; 
@@ -46,7 +46,6 @@
         <div class="hero-banner">
             <asp:Panel ID="memberSection" runat="server">
                 <h1 class="hero-title">COMMAND CENTER</h1>
-                <%-- 确保 litRole 在这里定义 --%>
                 <p class="hero-subtitle">Welcome back, <asp:Literal ID="litUsername" runat="server" />. Rank: <b><asp:Literal ID="litRole" runat="server" /></b>.</p>
             </asp:Panel>
             <asp:Panel ID="visitorSection" runat="server">
