@@ -159,13 +159,22 @@ namespace WebAssignment.Lee_Wei_Zhe.aspx
         protected global::System.Web.UI.WebControls.Panel pnlOwnChat;
 
         /// <summary>
-        /// litChatMessages control.
+        /// rptChat control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Literal litChatMessages;
+        protected global::System.Web.UI.WebControls.Repeater rptChat;
+
+        /// <summary>
+        /// lblNoMessages control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblNoMessages;
 
         /// <summary>
         /// txtMessage control.

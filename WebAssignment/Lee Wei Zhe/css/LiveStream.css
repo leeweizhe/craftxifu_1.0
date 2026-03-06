@@ -1,4 +1,32 @@
 ﻿/* Page container */
+.top-bar {
+    display: flex !important;
+    justify-content: flex-end;
+    margin-bottom: 12px;
+}
+
+.btn-back {
+    position: fixed; /* Sticks to the screen even when scrolling */
+    top: 130px; /* Adjust this to sit below your navbar */
+    left: 0px;
+    z-index: 999; /* Stays on top of other elements */
+    padding: 10px 20px;
+    background: #555;
+    color: #fff;
+    border: 1px solid #808080;
+    border-radius: 0 6px 6px 0;
+    font-size: 30px;
+    text-decoration: none;
+    font-family: 'Minecraft', sans-serif;
+    transition: all 0.3s ease-out;
+}
+
+    .btn-back:hover {
+        padding-left: 30px;
+        background: #e9ecef;
+        color: #333;
+    }
+
 .page-wrapper {
     background: #fff;
     border-radius: 10px;
@@ -34,7 +62,7 @@
 /* ===== YOUTUBE VIDEO IFRAME ===== */
 #youtubePlayer {
     width: 100%;
-    aspect-ratio: 16 / 9; /* Keeps 16:9 ratio automatically */
+    aspect-ratio: 16 / 9;
     border-radius: 8px;
     border: none;
     background: #000;
@@ -62,7 +90,6 @@
 }
 
 .stream-title {
-    font-weight: bold;
     font-size: 16px;
 }
 
@@ -77,7 +104,6 @@
     padding: 4px 12px;
     border-radius: 20px;
     font-size: 12px;
-    font-weight: bold;
     background: #aaa;
     color: white;
     margin-bottom: 8px;
@@ -123,6 +149,7 @@
     gap: 6px;
 }
 
+/* ===== CHAT MESSAGE BUBBLE ===== */
 .chat-message {
     background: #f5f5f5;
     padding: 7px 10px;
@@ -131,8 +158,29 @@
     word-wrap: break-word;
 }
 
+/* Top row: username + timestamp */
+.chat-message-header {
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+    margin-bottom: 3px;
+}
+
+/* Bottom row: message text + report button side by side */
+.chat-message-body {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 6px;
+}
+
+.chat-text {
+    font-family: 'PT Serif', serif;
+    flex: 1;
+    line-height: 1.4;
+}
+
 .chat-user {
-    font-weight: bold;
     color: #e03131;
 }
 
@@ -147,6 +195,25 @@
     margin-top: 30px;
     font-size: 13px;
 }
+
+/* ===== REPORT BUTTON ===== */
+.btn-report {
+    flex-shrink: 0;
+    background: none;
+    border: none;
+    color: #ccc;
+    font-size: 13px;
+    cursor: pointer;
+    padding: 0 2px;
+    line-height: 1;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+    .btn-report:hover {
+        color: #e03131;
+        text-decoration: none;
+    }
 
 /* Shared input style */
 .input-field {
@@ -166,7 +233,6 @@
     border: none;
     border-radius: 6px;
     font-size: 14px;
-    font-weight: bold;
     cursor: pointer;
     width: 100%;
 }
@@ -203,7 +269,7 @@
 }
 
 .panel-content {
-    max-height: 1000px; /* Large enough to hold content */
+    max-height: 1000px;
     overflow: hidden;
     transition: max-height 0.4s ease-out, opacity 0.3s ease;
     display: flex;
@@ -219,12 +285,11 @@
 }
 
 .panel-header:hover .panel-title {
-    color: #e03131; /* Subtle highlight on hover */
+    color: #e03131;
 }
 
 .panel-title {
     font-size: 15px;
-    font-weight: bold;
     margin: 0;
 }
 
@@ -245,7 +310,6 @@
 }
 
 .stat-value {
-    font-weight: bold;
     font-size: 22px;
     color: #e03131;
 }
@@ -259,7 +323,6 @@
 
     .control-group label {
         font-size: 13px;
-        font-weight: bold;
         color: #555;
     }
 
@@ -294,7 +357,6 @@
     border: none;
     border-radius: 6px;
     font-size: 14px;
-    font-weight: bold;
     cursor: pointer;
     width: 100%;
 }
@@ -311,7 +373,6 @@
     border: none;
     border-radius: 6px;
     font-size: 14px;
-    font-weight: bold;
     cursor: pointer;
     width: 100%;
 }

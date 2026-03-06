@@ -144,6 +144,7 @@
     <Content Include="Brayden\Minigame.aspx" />
     <Content Include="Brayden\Potion.aspx" />
     <Content Include="Brayden\SQLQuery2.sql" />
+    <Content Include="images\backgrounds\StreamHero.png" />
     <Content Include="images\frames\diamondFrame.jpg" />
     <Content Include="images\frames\diamondFrame.png" />
     <Content Include="images\profiles\DPick.jpg" />

@@ -21,7 +21,6 @@ namespace WebAssignment.Lee_Wei_Zhe.aspx
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            // Read StreamID from URL: LiveStream.aspx?id=3
             if (!int.TryParse(Request.QueryString["id"], out streamId))
             {
                 Response.Redirect("StreamList.aspx");
@@ -32,23 +31,16 @@ namespace WebAssignment.Lee_Wei_Zhe.aspx
             {
                 LoadStream();
                 LoadChat();
-                CountViewer(increment: true); // Add 1 to viewer count when page loads
+                CountViewer(increment: true);
             }
         }
 
-        // -------------------------------------------------------
-        // Subtract viewer count when user leaves the page
-        // -------------------------------------------------------
         protected void Page_Unload(object sender, EventArgs e)
         {
-            // Only decrement on first load (not on every postback)
             if (!IsPostBack && streamId > 0)
                 CountViewer(increment: false);
         }
 
-        // -------------------------------------------------------
-        // Load stream data and set up the page
-        // -------------------------------------------------------
         private void LoadStream()
         {
             string sql = @"
@@ -68,34 +60,29 @@ namespace WebAssignment.Lee_Wei_Zhe.aspx
             int ownerUserId = Convert.ToInt32(row["UserId"]);
             string ytID = row["YouTubeVideoID"] == DBNull.Value ? "" : row["YouTubeVideoID"].ToString().Trim();
 
-            // Pass YouTube ID to JavaScript
             YouTubeVideoID = ytID;
 
-            // LIVE / OFFLINE badge
             lblStatus.Text = isLive ? "LIVE" : "OFFLINE";
             lblStatus.CssClass = isLive ? "status-badge live" : "status-badge";
 
-            // Stream title + viewer count below video
             lblStreamTitle.Text = row["UserName"] + " — " + row["StreamTitle"];
             lblViewerCount.Text = row["ViewerCount"] + " viewers";
 
-            // Show YouTube video if ID exists, else show placeholder
             if (!string.IsNullOrEmpty(ytID))
             {
                 pnlVideo.Visible = true;
                 pnlNoVideo.Visible = false;
-                pnlYouTubeChat.Visible = true;  // Show YouTube chat
-                pnlOwnChat.Visible = false;      // Hide our fallback chat
+                pnlYouTubeChat.Visible = true;
+                pnlOwnChat.Visible = false;
             }
             else
             {
                 pnlVideo.Visible = false;
-                pnlNoVideo.Visible = true;       // Show placeholder
+                pnlNoVideo.Visible = true;
                 pnlYouTubeChat.Visible = false;
-                pnlOwnChat.Visible = true;       // Show fallback chat
+                pnlOwnChat.Visible = true;
             }
 
-            // Check if logged-in user owns this stream
             bool isOwner = Session["userId"] != null &&
                            Convert.ToInt32(Session["userId"]) == ownerUserId;
 
@@ -110,9 +97,6 @@ namespace WebAssignment.Lee_Wei_Zhe.aspx
             }
         }
 
-        // -------------------------------------------------------
-        // Increment or decrement ViewerCount in database
-        // -------------------------------------------------------
         private void CountViewer(bool increment)
         {
             string sql = increment
@@ -122,26 +106,16 @@ namespace WebAssignment.Lee_Wei_Zhe.aspx
             ExecuteSQL(sql, new SqlParameter("@id", streamId));
         }
 
-        // -------------------------------------------------------
-        // Save new stream title
-        // -------------------------------------------------------
         protected void btnSaveTitle_Click(object sender, EventArgs e)
         {
             string newTitle = txtStreamTitle.Text.Trim();
-            if (string.IsNullOrEmpty(newTitle))
-            {
-                ShowFeedback("Title cannot be empty.", false);
-                return;
-            }
+            if (string.IsNullOrEmpty(newTitle)) { ShowFeedback("Title cannot be empty.", false); return; }
             ExecuteSQL("UPDATE LiveStreams SET StreamTitle = @title WHERE StreamID = @id",
                 new SqlParameter("@title", newTitle),
                 new SqlParameter("@id", streamId));
             ShowFeedback("Title updated!", true);
         }
 
-        // -------------------------------------------------------
-        // Save YouTube Video ID
-        // -------------------------------------------------------
         protected void btnSaveYouTubeID_Click(object sender, EventArgs e)
         {
             string ytID = txtYouTubeID.Text.Trim();
@@ -151,9 +125,6 @@ namespace WebAssignment.Lee_Wei_Zhe.aspx
             ShowFeedback("YouTube ID saved! Reload to see the stream.", true);
         }
 
-        // -------------------------------------------------------
-        // Go Live: set IsLive = 1
-        // -------------------------------------------------------
         protected void btnStartStream_Click(object sender, EventArgs e)
         {
             ExecuteSQL("UPDATE LiveStreams SET IsLive = 1 WHERE StreamID = @id",
@@ -161,9 +132,6 @@ namespace WebAssignment.Lee_Wei_Zhe.aspx
             ShowFeedback("You are now LIVE!", true);
         }
 
-        // -------------------------------------------------------
-        // End Stream: set IsLive = 0 and reset viewer count
-        // -------------------------------------------------------
         protected void btnEndStream_Click(object sender, EventArgs e)
         {
             ExecuteSQL("UPDATE LiveStreams SET IsLive = 0, ViewerCount = 0 WHERE StreamID = @id",
@@ -171,12 +139,8 @@ namespace WebAssignment.Lee_Wei_Zhe.aspx
             ShowFeedback("Stream ended.", false);
         }
 
-        // -------------------------------------------------------
-        // Chat: send a message — persisted to LSCommentTable
-        // -------------------------------------------------------
         protected void btnSend_Click(object sender, EventArgs e)
         {
-            // Guard: user must be logged in
             if (Session["userId"] == null || Session["username"] == null)
             {
                 lblFeedback.Text = "You must be logged in to chat.";
@@ -196,8 +160,6 @@ namespace WebAssignment.Lee_Wei_Zhe.aspx
                 return;
             }
 
-            // Insert comment into LSCommentTable
-            // FarmId column is used to store the StreamID so the schema is reused as-is
             string sql = @"INSERT INTO LSCommentTable (FarmId, UserId, CommentText, CommentDate)
                            VALUES (@streamId, @userId, @commentText, GETDATE())";
 
@@ -213,13 +175,55 @@ namespace WebAssignment.Lee_Wei_Zhe.aspx
         }
 
         // -------------------------------------------------------
-        // Chat: load messages from LSCommentTable into Literal
+        // Chat: report a message
+        // -------------------------------------------------------
+        protected void lnkReport_Command(object sender, CommandEventArgs e)
+        {
+            if (Session["userId"] == null)
+            {
+                Response.Redirect("Login.aspx");
+                return;
+            }
+
+            string[] args = e.CommandArgument.ToString().Split('|');
+            if (args.Length < 2) return;
+
+            string commentId = args[0];
+            string reportStreamId = args[1];
+            string reporterId = Session["userId"].ToString();
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connStr))
+                {
+                    string sql = "INSERT INTO reportTable (CommentId, ReporterId, StreamId) VALUES (@cid, @rid, @sid)";
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@cid", commentId);
+                    cmd.Parameters.AddWithValue("@rid", reporterId);
+                    cmd.Parameters.AddWithValue("@sid", reportStreamId);
+                    conn.Open();
+                    cmd.ExecuteNonQuery();
+                    conn.Close();
+                }
+                ScriptManager.RegisterStartupScript(this, GetType(), "showalert", "alert('Report submitted successfully.');", true);
+            }
+            catch (Exception ex)
+            {
+                // Optional: log error
+            }
+
+            LoadStream(); LoadChat();
+        }
+
+        // -------------------------------------------------------
+        // Chat: bind messages from LSCommentTable to Repeater
         // -------------------------------------------------------
         private void LoadChat()
         {
-            // Fetch the latest 50 messages for this stream, oldest first so they read top-to-bottom
             string sql = @"
                 SELECT TOP 50
+                       c.CommentId,
+                       c.FarmId,
                        c.CommentText,
                        c.CommentDate,
                        u.Username
@@ -230,29 +234,13 @@ namespace WebAssignment.Lee_Wei_Zhe.aspx
 
             DataTable dt = GetData(sql, new SqlParameter("@streamId", streamId));
 
-            string html = "";
-            foreach (DataRow row in dt.Rows)
-            {
-                string name = row["Username"].ToString();
-                string text = row["CommentText"].ToString();  // already HTML-encoded on insert
-                string time = Convert.ToDateTime(row["CommentDate"]).ToString("hh:mm tt");
+            rptChat.DataSource = dt;
+            rptChat.DataBind();
 
-                html += "<div class='chat-message'>"
-                      + "<span class='chat-user'>" + HttpUtility.HtmlEncode(name) + "</span> "
-                      + "<span class='chat-time'>[" + time + "]</span>: "
-                      + text
-                      + "</div>";
-            }
-
-            if (string.IsNullOrEmpty(html))
-                html = "<p class='no-messages'>No messages yet. Say hello!</p>";
-
-            litChatMessages.Text = html;
+            // Show "no messages" label only when there are no rows
+            lblNoMessages.Visible = (dt.Rows.Count == 0);
         }
 
-        // -------------------------------------------------------
-        // Helper: show feedback in instructor panel
-        // -------------------------------------------------------
         private void ShowFeedback(string msg, bool success)
         {
             lblPanelFeedback.Text = msg;
@@ -260,7 +248,6 @@ namespace WebAssignment.Lee_Wei_Zhe.aspx
             LoadStream(); LoadChat();
         }
 
-        // Helper: run SELECT → DataTable
         private DataTable GetData(string sql, params SqlParameter[] parameters)
         {
             DataTable dt = new DataTable();
@@ -274,7 +261,6 @@ namespace WebAssignment.Lee_Wei_Zhe.aspx
             return dt;
         }
 
-        // Helper: run INSERT / UPDATE / DELETE
         private void ExecuteSQL(string sql, params SqlParameter[] parameters)
         {
             using (SqlConnection conn = new SqlConnection(connStr))

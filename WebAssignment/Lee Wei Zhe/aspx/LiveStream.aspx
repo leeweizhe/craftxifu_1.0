@@ -3,6 +3,10 @@
     <link href="/Lee Wei Zhe/css/LiveStream.css" rel="stylesheet" />
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
+    <div class="top-bar">
+        <a href="/Lee Wei Zhe/aspx/StreamList.aspx" class="btn-back">Back</a>
+    </div>
+
     <div class="page-wrapper">
 
         <%-- LIVE / OFFLINE badge --%>
@@ -52,7 +56,6 @@
                                 <asp:Literal ID="litViewerCount" runat="server"></asp:Literal>
                             </span>
                         </div>
-
 
                         <%-- Edit stream title --%>
                         <div class="control-group">
@@ -118,8 +121,37 @@
 
                 <%-- Fallback: our own simple chat (shown when no YouTube ID is set) --%>
                 <asp:Panel ID="pnlOwnChat" runat="server">
+
+                    <%-- Chat messages rendered via Repeater so each row can hold a server-side report button --%>
                     <div class="chat-box">
-                        <asp:Literal ID="litChatMessages" runat="server"></asp:Literal>
+                        <asp:Repeater ID="rptChat" runat="server">
+                            <ItemTemplate>
+                                <div class="chat-message">
+                                    <div class="chat-message-header">
+                                        <span class="chat-user"><%# HttpUtility.HtmlEncode(Eval("Username").ToString()) %></span>
+                                        <span class="chat-time">[<%# Convert.ToDateTime(Eval("CommentDate")).ToString("hh:mm tt") %>]</span>
+                                    </div>
+                                    <div class="chat-message-body">
+                                        <span class="chat-text"><%# Eval("CommentText") %></span>
+                                        <asp:LinkButton ID="lnkReport" runat="server"
+                                            CssClass="btn-report"
+                                            CommandName="Report"
+                                            CommandArgument='<%# Eval("CommentId") + "|" + Eval("FarmId") %>'
+                                            OnCommand="lnkReport_Command"
+                                            ToolTip="Report this message"
+                                            OnClientClick="return confirm('Report this message?');">
+                                            &#9873;
+                                        </asp:LinkButton>
+                                    </div>
+                                </div>
+                            </ItemTemplate>
+                        </asp:Repeater>
+
+                        <%-- Shown only when there are no messages --%>
+                        <asp:Label ID="lblNoMessages" runat="server"
+                            CssClass="no-messages"
+                            Text="No messages yet. Say hello!">
+                        </asp:Label>
                     </div>
 
                     <asp:TextBox ID="txtMessage" runat="server"
