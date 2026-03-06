@@ -94,79 +94,28 @@ namespace WebAssignment.Tong_Yu_Hong.aspx
 
         protected void btnUpdate_Click(object sender, EventArgs e)
         {
-            string userId = Request.QueryString["id"];
-            string fName = txtFname.Text.Trim();
-            string lName = txtLname.Text.Trim();
-            string email = txtEmail.Text.Trim();
-            string username = txtUsername.Text.Trim();
-            string gender = rblGender.SelectedValue;
-            string country = ddlCountry.SelectedValue;
-            string role = ddlRole.SelectedValue;
+            // Make sure the Key matches exactly what is in your URL (is it 'id' or 'UserId'?)
+            string targetUserId = Request.QueryString["id"];
 
-            if (!Regex.IsMatch(email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$")) { ShowError("Invalid email format."); return; }
-
-            try
+            if (!string.IsNullOrEmpty(targetUserId))
             {
-                string avatarPath = "";
-
-                // 1. Process the File Upload
-                if (fuAvatar.HasFile)
-                {
-                    string ext = System.IO.Path.GetExtension(fuAvatar.FileName).ToLower();
-                    if (ext == ".jpg" || ext == ".jpeg" || ext == ".png")
-                    {
-                        string fileName = "avatar_" + userId + ext;
-                        string folderPath = Server.MapPath("~/images/avatars/");
-
-                        if (!System.IO.Directory.Exists(folderPath))
-                            System.IO.Directory.CreateDirectory(folderPath);
-
-                        fuAvatar.SaveAs(folderPath + fileName);
-                        avatarPath = "~/images/avatars/" + fileName;
-                    }
-                }
-
                 using (SqlConnection conn = new SqlConnection(connString))
                 {
+                    string query = "UPDATE userTable SET Role = @Role WHERE UserId = @ID";
+                    SqlCommand cmd = new SqlCommand(query, conn);
+
+                    cmd.Parameters.AddWithValue("@Role", ddlRole.SelectedValue);
+                    cmd.Parameters.AddWithValue("@ID", targetUserId);
+
                     conn.Open();
-
-                    // 2. Updated Query to use 'ProfilePicture'
-                    string updateQuery = @"UPDATE userTable SET 
-                                FName = @FName, LName = @LName, 
-                                Email = @Email, Username = @Username, 
-                                Gender = @Gender, Country = @Country, Role = @Role";
-
-                    if (!string.IsNullOrEmpty(avatarPath))
-                    {
-                        updateQuery += ", ProfilePicture = @Avatar"; // Corrected column name
-                    }
-
-                    updateQuery += " WHERE UserId = @UserId";
-
-                    using (SqlCommand cmd = new SqlCommand(updateQuery, conn))
-                    {
-                        cmd.Parameters.AddWithValue("@FName", fName);
-                        cmd.Parameters.AddWithValue("@LName", lName);
-                        cmd.Parameters.AddWithValue("@Email", email);
-                        cmd.Parameters.AddWithValue("@Username", username);
-                        cmd.Parameters.AddWithValue("@Gender", gender);
-                        cmd.Parameters.AddWithValue("@Country", country);
-                        cmd.Parameters.AddWithValue("@Role", role);
-                        cmd.Parameters.AddWithValue("@UserId", userId);
-
-                        if (!string.IsNullOrEmpty(avatarPath))
-                        {
-                            cmd.Parameters.AddWithValue("@Avatar", avatarPath);
-                        }
-
-                        cmd.ExecuteNonQuery();
-                    }
+                    cmd.ExecuteNonQuery();
                 }
-                Response.Redirect("ManageUser.aspx");
+                Response.Redirect("/Tong Yu Hong/aspx/ManageUser.aspx");
             }
-            catch (Exception ex)
+            else
             {
-                ShowError("Update failed: " + ex.Message);
+                errorMsg.Text = "ERROR: USER ID MISSING FROM URL";
+                errorMsg.Visible = true;
             }
         }
 
@@ -179,53 +128,6 @@ namespace WebAssignment.Tong_Yu_Hong.aspx
         {
             errorMsg.Text = message;
             errorMsg.Visible = true;
-        }
-
-        // Method to handle the file upload logic
-        private string ProcessAvatarUpload()
-        {
-            // Check if a file was even selected
-            if (fuAvatar.HasFile)
-            {
-                try
-                {
-                    // 1. Get the file extension and validate it
-                    string fileExtension = System.IO.Path.GetExtension(fuAvatar.FileName).ToLower();
-                    string[] allowedExtensions = { ".jpg", ".jpeg", ".png" };
-
-                    if (Array.IndexOf(allowedExtensions, fileExtension) < 0)
-                    {
-                        // Extension is not allowed
-                        return null;
-                    }
-
-                    // 2. Validate the file size (2MB max)
-                    int fileSizeInBytes = fuAvatar.PostedFile.ContentLength;
-                    if (fileSizeInBytes > (2 * 1024 * 1024))
-                    {
-                        // File too large
-                        return null;
-                    }
-
-                    // 3. Save the file and return the virtual path for the database
-                    string username = txtUsername.Text; // Use the username to make the filename unique
-                    string fileName = username + "_avatar" + fileExtension;
-                    string virtualPath = "~/images/avatars/" + fileName;
-                    string physicalPath = Server.MapPath(virtualPath);
-
-                    // Ensure the directory exists before saving
-                    System.IO.Directory.CreateDirectory(Server.MapPath("~/images/avatars/"));
-                    fuAvatar.SaveAs(physicalPath);
-
-                    return virtualPath; // Success: return path to save in the database
-                }
-                catch
-                {
-                    // Something went wrong
-                    return null;
-                }
-            }
-            return null; // No file uploaded
         }
     }
 }

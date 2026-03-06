@@ -15,19 +15,70 @@ namespace WebAssignment.Tong_Yu_Hong.aspx
         private string connString = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
         protected void Page_Load(object sender, EventArgs e)
         {
-            // Get the ID from the URL (e.g., MobDetail.aspx?ID=5)
             string mobId = Request.QueryString["MobID"];
 
             if (!string.IsNullOrEmpty(mobId))
             {
+                // Always load details so view mode works
                 LoadMobDetails(mobId);
-            }
 
-            if (!IsPostBack)
-            {
-                LoadComments(mobId);
-                CheckCommentPermission();
+                if (!IsPostBack)
+                {
+                    LoadComments(mobId);
+                    CheckCommentPermission();
+
+                    // Check if the user is logged in and has the role "Instructor"
+                    // Note: This must match exactly what you store in Session during login
+                    string userRole = Session["UserRole"] as string;
+
+                    if (!string.IsNullOrEmpty(userRole) && userRole == "Instructor")
+                    {
+                        btnEdit.Visible = true;
+                    }
+                    else
+                    {
+                        btnEdit.Visible = false;
+                    }
+                }
             }
+        }
+
+        protected void btnSave_Click(object sender, EventArgs e)
+        {
+            string mobId = Request.QueryString["MobID"];
+
+            using (SqlConnection conn = new SqlConnection(connString))
+            {
+                string query = @"UPDATE mobTable SET 
+                        MobName = @Name, 
+                        Description = @Desc, 
+                        FullContent = @Content,
+                        Health = @Health,
+                        Category = @Cat,
+                        SpawnCondition = @Spawn,
+                        ItemDrops = @Drops,
+                        HowToDefeat = @Guide
+                        WHERE MobID = @ID";
+
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@Name", txtEditName.Text);
+                cmd.Parameters.AddWithValue("@Desc", txtEditDesc.Text);
+                cmd.Parameters.AddWithValue("@Content", txtEditFullContent.Text);
+                cmd.Parameters.AddWithValue("@Health", txtEditHealth.Text);
+                cmd.Parameters.AddWithValue("@Cat", ddlEditCategory.SelectedValue);
+                cmd.Parameters.AddWithValue("@Spawn", txtEditSpawn.Text);
+                cmd.Parameters.AddWithValue("@Drops", txtEditDrops.Text);
+
+                // Logic to pick which guide textbox to save
+                string finalGuide = (ddlEditCategory.SelectedValue == "Passive") ? txtEditPassiveGuide.Text : txtEditHowToDefeat.Text;
+                cmd.Parameters.AddWithValue("@Guide", finalGuide);
+
+                cmd.Parameters.AddWithValue("@ID", mobId);
+
+                conn.Open();
+                cmd.ExecuteNonQuery();
+            }
+            Response.Redirect("MobDetail.aspx?MobID=" + mobId);
         }
 
         private void CheckCommentPermission()
@@ -94,7 +145,6 @@ namespace WebAssignment.Tong_Yu_Hong.aspx
         {
             using (SqlConnection conn = new SqlConnection(connString))
             {
-                // 1. Added 'HowToDefeat' to the SELECT query
                 string query = "SELECT MobName, Category, Description, FullContent, MobPicture, Health, SpawnCondition, ItemDrops, HowToDefeat FROM mobTable WHERE MobID = @ID";
                 SqlCommand cmd = new SqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("@ID", id);
@@ -103,47 +153,61 @@ namespace WebAssignment.Tong_Yu_Hong.aspx
                 SqlDataReader reader = cmd.ExecuteReader();
                 if (reader.Read())
                 {
-                    // 2. Map standard content
-                    lblMobName.Text = reader["MobName"].ToString();
-                    lblDescription.Text = reader["Description"].ToString();
-
-                    // Store category in a variable for logic check
+                    // --- 1. DATA EXTRACTION ---
+                    string name = reader["MobName"].ToString();
+                    string desc = reader["Description"].ToString();
+                    string fullContent = reader["FullContent"].ToString();
                     string category = reader["Category"].ToString();
-                    lblCategory.Text = category;
-
-                    litFullContent.Text = reader["FullContent"].ToString();
-
-                    // 3. Map picture content
+                    string rawHealth = reader["Health"].ToString();
+                    string spawn = reader["SpawnCondition"].ToString();
+                    string drops = reader["ItemDrops"].ToString();
+                    string guideData = reader["HowToDefeat"].ToString();
                     string picturePath = reader["MobPicture"].ToString();
+
+                    // --- 2. POPULATE VIEW MODE (Labels/Literals) ---
+                    lblMobName.Text = name;
+                    lblDescription.Text = desc;
+                    litFullContent.Text = fullContent;
+                    lblCategory.Text = category;
+                    lblHealth.Text = rawHealth;
+                    lblSpawn.Text = spawn;
+                    lblDrops.Text = drops;
                     imgMob.ImageUrl = ResolveUrl(picturePath);
 
-                    // 4. Map the new sectioned content
-                    string rawHealth = reader["Health"].ToString();
-                    lblHealth.Text = rawHealth;
-
-                    // 5. Dynamic Heart Calculation
+                    // Heart Calculation logic
                     if (double.TryParse(rawHealth, out double hpValue))
                     {
                         double heartCount = hpValue / 2;
                         litHeartMultiplier.Text = "x " + heartCount.ToString();
                     }
 
-                    lblSpawn.Text = reader["SpawnCondition"].ToString();
-                    lblDrops.Text = reader["ItemDrops"].ToString();
+                    // --- 3. POPULATE EDIT MODE (TextBoxes/DropDown) ---
+                    txtEditName.Text = name;
+                    txtEditDesc.Text = desc;
+                    txtEditFullContent.Text = fullContent;
+                    txtEditHealth.Text = rawHealth;
+                    txtEditSpawn.Text = spawn;
+                    txtEditDrops.Text = drops;
 
-                    // 6. Map the Combat Guide data to the literal (With Category Logic)
-                    string guideData = reader["HowToDefeat"].ToString();
+                    // Set the Category DropDown
+                    if (ddlEditCategory.Items.FindByValue(category) != null)
+                    {
+                        ddlEditCategory.SelectedValue = category;
+                    }
 
+                    // Fill both guide textboxes so they are ready regardless of toggle
+                    txtEditHowToDefeat.Text = guideData;
+                    txtEditPassiveGuide.Text = guideData;
+
+                    // --- 4. PANEL VISIBILITY LOGIC ---
                     if (category == "Passive")
                     {
-                        // Hide Combat, Show Utility for Passive mobs
                         pnlCombatGuide.Visible = false;
                         pnlPassiveGuide.Visible = true;
                         litPassiveGuide.Text = guideData;
                     }
                     else
                     {
-                        // Show Combat for Hostile/Neutral mobs
                         pnlCombatGuide.Visible = true;
                         pnlPassiveGuide.Visible = false;
                         litHowToDefeat.Text = guideData;

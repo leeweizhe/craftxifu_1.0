@@ -14,7 +14,13 @@ namespace WebAssignment.Tong_Yu_Hong.aspx
     {
         private string connString = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
         protected void Page_Load(object sender, EventArgs e)
-        {       
+        {
+            string currentRole = Session["UserRole"] as string;
+            if (string.IsNullOrEmpty(currentRole) || currentRole != "Admin")
+            {
+                Response.Redirect("~/Wong Zhang Zhe/Home.aspx");
+                return;
+            }
             if (!IsPostBack)
             {
                 LoadReports();

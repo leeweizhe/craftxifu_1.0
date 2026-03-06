@@ -69,15 +69,6 @@ namespace WebAssignment.Tong_Yu_Hong.aspx
         protected global::System.Web.UI.WebControls.TextBox txtUsername;
 
         /// <summary>
-        /// fuAvatar control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.FileUpload fuAvatar;
-
-        /// <summary>
         /// ddlRole control.
         /// </summary>
         /// <remarks>

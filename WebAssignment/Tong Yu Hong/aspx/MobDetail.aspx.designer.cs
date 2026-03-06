@@ -15,6 +15,15 @@ namespace WebAssignment.Tong_Yu_Hong.aspx
     {
 
         /// <summary>
+        /// btnEdit control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.LinkButton btnEdit;
+
+        /// <summary>
         /// lblMobName control.
         /// </summary>
         /// <remarks>
@@ -22,6 +31,15 @@ namespace WebAssignment.Tong_Yu_Hong.aspx
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblMobName;
+
+        /// <summary>
+        /// txtEditName control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtEditName;
 
         /// <summary>
         /// lblDescription control.
@@ -33,6 +51,15 @@ namespace WebAssignment.Tong_Yu_Hong.aspx
         protected global::System.Web.UI.WebControls.Label lblDescription;
 
         /// <summary>
+        /// txtEditDesc control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtEditDesc;
+
+        /// <summary>
         /// litFullContent control.
         /// </summary>
         /// <remarks>
@@ -40,6 +67,24 @@ namespace WebAssignment.Tong_Yu_Hong.aspx
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Literal litFullContent;
+
+        /// <summary>
+        /// txtEditFullContent control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtEditFullContent;
+
+        /// <summary>
+        /// btnSave control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnSave;
 
         /// <summary>
         /// pnlCombatGuide control.
@@ -60,6 +105,15 @@ namespace WebAssignment.Tong_Yu_Hong.aspx
         protected global::System.Web.UI.WebControls.Literal litHowToDefeat;
 
         /// <summary>
+        /// txtEditHowToDefeat control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtEditHowToDefeat;
+
+        /// <summary>
         /// pnlPassiveGuide control.
         /// </summary>
         /// <remarks>
@@ -76,6 +130,15 @@ namespace WebAssignment.Tong_Yu_Hong.aspx
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Literal litPassiveGuide;
+
+        /// <summary>
+        /// txtEditPassiveGuide control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtEditPassiveGuide;
 
         /// <summary>
         /// rptComments control.
@@ -150,6 +213,15 @@ namespace WebAssignment.Tong_Yu_Hong.aspx
         protected global::System.Web.UI.WebControls.Literal litHeartMultiplier;
 
         /// <summary>
+        /// txtEditHealth control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtEditHealth;
+
+        /// <summary>
         /// lblCategory control.
         /// </summary>
         /// <remarks>
@@ -157,6 +229,15 @@ namespace WebAssignment.Tong_Yu_Hong.aspx
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblCategory;
+
+        /// <summary>
+        /// ddlEditCategory control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlEditCategory;
 
         /// <summary>
         /// lblSpawn control.
@@ -168,6 +249,15 @@ namespace WebAssignment.Tong_Yu_Hong.aspx
         protected global::System.Web.UI.WebControls.Label lblSpawn;
 
         /// <summary>
+        /// txtEditSpawn control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtEditSpawn;
+
+        /// <summary>
         /// lblDrops control.
         /// </summary>
         /// <remarks>
@@ -175,5 +265,14 @@ namespace WebAssignment.Tong_Yu_Hong.aspx
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblDrops;
+
+        /// <summary>
+        /// txtEditDrops control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtEditDrops;
     }
 }

@@ -89,7 +89,9 @@
         <div class="chat-main">
             <div class="chat-main-header">
                 <div style="display: flex; align-items: center; gap: 10px;">
-                    <asp:Image ID="imgActiveUser" runat="server" ImageUrl="images/profiles/DPick.jpg" CssClass="header-profile-pic" />
+                    <asp:Image ID="imgActiveUser" runat="server" 
+                        ImageUrl="~/images/default-avatar.png" 
+                        CssClass="header-profile-pic" />
                     <span class="active-subject">[ <asp:Literal ID="litActiveSubject" runat="server" Text="Select a Ticket" /> ]</span>
                 </div>
                 <span class="status-badge">Active</span>
