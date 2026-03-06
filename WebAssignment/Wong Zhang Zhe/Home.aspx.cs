@@ -33,7 +33,7 @@ namespace WebAssignment
         {
             using (SqlConnection conn = new SqlConnection(connString))
             {
-                // 获取用户详情、物品数以及资产总值
+                // get user details, item count, and net worth
                 string sql = @"
                     SELECT u.Username, u.Role, u.Currency, u.ProfilePicture, u.AvatarFrame,
                     (SELECT COUNT(*) FROM userInventoryTable WHERE UserId = u.UserId) as ItemCount,
@@ -49,7 +49,6 @@ namespace WebAssignment
                     SqlDataReader reader = cmd.ExecuteReader();
                     if (reader.Read())
                     {
-                        // 这里 litRole 不再报错，因为它在前端已定义
                         litUsername.Text = reader["Username"].ToString().ToUpper();
                         litRole.Text = reader["Role"].ToString().ToUpper();
 
@@ -59,7 +58,7 @@ namespace WebAssignment
                         string worth = reader["NetWorth"] != DBNull.Value ? reader["NetWorth"].ToString() : "0";
                         lblInvValue.Text = worth;
 
-                        // 同步 Session 给 Site.Master
+                        // sync Session to Site.Master
                         Session["username"] = reader["Username"].ToString();
                         Session["profilePic"] = reader["ProfilePicture"].ToString();
                         if (reader["AvatarFrame"] != DBNull.Value)

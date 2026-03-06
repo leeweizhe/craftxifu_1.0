@@ -15,8 +15,13 @@
         .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; margin: 20px 0; border: 3px solid #333; background: #000; }
         .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
         
-        .content-box { line-height: 1.8; font-size: 1.1rem; color: #ddd; background: #1a1a1a; padding: 25px; border: 1px solid #333; }
+        .content-box { font-family: 'PT Serif', serif; line-height: 1.8; font-size: 1.1rem; color: #ddd; background: #1a1a1a; padding: 25px; border: 1px solid #333; }
         .section-label { color: #68ff00; text-transform: uppercase; margin-top: 40px; display: block; font-size: 1.4rem; border-left: 5px solid #68ff00; padding-left: 15px; margin-bottom: 15px; }
+
+        .admin-tools { float: right; margin-right: 20px; display: flex; gap: 10px; }
+        .btn-admin { padding: 5px 15px; font-weight: bold; cursor: pointer; border: none; font-family: 'Minecraft', sans-serif; text-decoration: none; font-size: 0.9rem; }
+        .btn-edit { background: #68ff00; color: #000; }
+        .btn-delete { background: #ff4444; color: #fff; }
     </style>
 </asp:Content>
 
@@ -26,6 +31,16 @@
         
         <div class="farm-header">
             <span class="efficiency-badge">RANK: <asp:Label ID="lblEfficiency" runat="server" /></span>
+
+            <asp:PlaceHolder ID="phAdminTools" runat="server" Visible="false">
+                <div class="admin-tools">
+                    <asp:LinkButton ID="btnEdit" runat="server" CssClass="btn-admin btn-edit" OnClick="btnEdit_Click">EDIT FARM</asp:LinkButton>
+                    <asp:LinkButton ID="btnDelete" runat="server" CssClass="btn-admin btn-delete" 
+                        OnClientClick="return confirm('WARNING: Are you sure you want to PERMANENTLY delete this farm guide?');" 
+                        OnClick="btnDelete_Click">DELETE</asp:LinkButton>
+                </div>
+            </asp:PlaceHolder>
+
             <h1 style="font-size: 2.8rem; color: #68ff00; margin: 0;"><asp:Label ID="lblTitle" runat="server" /></h1>
         </div>
 

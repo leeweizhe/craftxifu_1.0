@@ -234,6 +234,8 @@
     <Content Include="Wong Zhang Zhe\Guide.aspx" />
     <Content Include="Wong Zhang Zhe\Home.aspx" />
     <Content Include="Wong Zhang Zhe\pic\1_iron.png" />
+    <Content Include="Wong Zhang Zhe\pic\autofarm_cover.png" />
+    <Content Include="Wong Zhang Zhe\pic\beginner_cover.png" />
     <Content Include="Wong Zhang Zhe\pic\enchant\baneofarthropods_detail.png" />
     <Content Include="Wong Zhang Zhe\pic\enchant\baneofarthropods_thumb.png" />
     <Content Include="Wong Zhang Zhe\pic\enchant\channeling_detail.png" />
@@ -308,6 +310,7 @@
     <Content Include="Wong Zhang Zhe\pic\1_stone.png" />
     <Content Include="Wong Zhang Zhe\pic\3_stone.png" />
     <Content Include="Wong Zhang Zhe\pic\iron_icon.png" />
+    <Content Include="Wong Zhang Zhe\pic\mob_cover.png" />
     <Content Include="Wong Zhang Zhe\pic\potion\decay_ingredient.png" />
     <Content Include="Wong Zhang Zhe\pic\potion\decay_thumb.png" />
     <Content Include="Wong Zhang Zhe\pic\potion\fireresistance_ingredient.png" />
@@ -346,6 +349,7 @@
     <Content Include="Wong Zhang Zhe\pic\potion\weakness_thumb.png" />
     <Content Include="Wong Zhang Zhe\pic\potion\weaving_ingredient.png" />
     <Content Include="Wong Zhang Zhe\pic\potion\weaving_thumb.png" />
+    <Content Include="Wong Zhang Zhe\pic\potion_cover.png" />
     <Content Include="Wong Zhang Zhe\pic\shop\tag_diamond.png" />
     <Content Include="Wong Zhang Zhe\pic\shop\tag_dirt.png" />
     <Content Include="Wong Zhang Zhe\pic\shop\tag_ender.png" />
@@ -382,6 +386,7 @@
     <Content Include="Wong Zhang Zhe\Style.css" />
     <Content Include="Wong Zhang Zhe\UserProfile.aspx" />
     <Content Include="Wong Zhang Zhe\FarmDetails.aspx" />
+    <Content Include="Wong Zhang Zhe\EditFarm.aspx" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Brayden\Enchantment.aspx.cs">
@@ -583,6 +588,13 @@
     </Compile>
     <Compile Include="Wong Zhang Zhe\UserProfile.aspx.designer.cs">
       <DependentUpon>UserProfile.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Wong Zhang Zhe\EditFarm.aspx.cs">
+      <DependentUpon>EditFarm.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Wong Zhang Zhe\EditFarm.aspx.designer.cs">
+      <DependentUpon>EditFarm.aspx</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
