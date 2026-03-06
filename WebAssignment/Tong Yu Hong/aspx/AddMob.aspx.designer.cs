@@ -11,124 +11,106 @@ namespace WebAssignment.Tong_Yu_Hong.aspx
 {
 
 
-    public partial class Mob
+    public partial class AddMob
     {
 
         /// <summary>
-        /// lnkAddMob control.
+        /// lblMsg control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.HyperLink lnkAddMob;
+        protected global::System.Web.UI.WebControls.Label lblMsg;
 
         /// <summary>
-        /// btnBehavior control.
+        /// txtMobName control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnBehavior;
+        protected global::System.Web.UI.WebControls.TextBox txtMobName;
 
         /// <summary>
-        /// btnAlpha control.
+        /// ddlCategory control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnAlpha;
+        protected global::System.Web.UI.WebControls.DropDownList ddlCategory;
 
         /// <summary>
-        /// mvMobViews control.
+        /// txtHealth control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.MultiView mvMobViews;
+        protected global::System.Web.UI.WebControls.TextBox txtHealth;
 
         /// <summary>
-        /// vwStandard control.
+        /// txtDescription control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.View vwStandard;
+        protected global::System.Web.UI.WebControls.TextBox txtDescription;
 
         /// <summary>
-        /// MobRepeater control.
+        /// txtSpawn control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Repeater MobRepeater;
+        protected global::System.Web.UI.WebControls.TextBox txtSpawn;
 
         /// <summary>
-        /// vwBehavior control.
+        /// txtDrops control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.View vwBehavior;
+        protected global::System.Web.UI.WebControls.TextBox txtDrops;
 
         /// <summary>
-        /// litPassiveCount control.
+        /// fuMobPicture control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Literal litPassiveCount;
+        protected global::System.Web.UI.WebControls.FileUpload fuMobPicture;
 
         /// <summary>
-        /// rptPassive control.
+        /// txtHowToDefeat control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Repeater rptPassive;
+        protected global::System.Web.UI.WebControls.TextBox txtHowToDefeat;
 
         /// <summary>
-        /// litNeutralCount control.
+        /// txtFullContent control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Literal litNeutralCount;
+        protected global::System.Web.UI.WebControls.TextBox txtFullContent;
 
         /// <summary>
-        /// rptNeutral control.
+        /// btnSave control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Repeater rptNeutral;
-
-        /// <summary>
-        /// litHostileCount control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Literal litHostileCount;
-
-        /// <summary>
-        /// rptHostile control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Repeater rptHostile;
+        protected global::System.Web.UI.WebControls.Button btnSave;
     }
 }

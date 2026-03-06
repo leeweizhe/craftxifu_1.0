@@ -16,6 +16,11 @@ namespace WebAssignment.Tong_Yu_Hong.aspx
         {
             if (!IsPostBack)
             {
+                string userRole = Session["UserRole"] as string;
+                if (!string.IsNullOrEmpty(userRole) && userRole == "Instructor")
+                {
+                    lnkAddMob.Visible = true;
+                }
                 // Load "Behavior" view as the first page
                 BindMobData("Behavior");
             }

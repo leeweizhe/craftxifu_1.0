@@ -24,6 +24,16 @@
     .name-edit { font-size: 2.5rem; color: #00b63b; margin-bottom: 10px; }
     .desc-edit { font-size: 1.2rem; font-style: italic; color: #aaa; margin-bottom: 10px; }
 
+    /* Delete Button Styling */
+    .btn-delete-trigger { padding: 10px 25px; background: #ff4444; color: #fff; border: none; border-radius: 6px; font-family: 'Minecraft', sans-serif; font-size: 0.9rem; cursor: pointer; text-decoration: none; transition: 0.3s; }
+    .btn-delete-trigger:hover { background: #b91c1c; box-shadow: 0 0 12px rgba(255, 68, 68, 0.4); transform: scale(1.05); }
+
+    /* Ensure buttons hide correctly during edit mode */
+    .is-editing .admin-actions { display: none !important; }
+
+    /* Minor Polish: Section Headers */
+    .section-header { font-size: 1.4rem; color: #fbbf24; margin-bottom: 10px; display: block; text-transform: uppercase; }
+
     /* Content Sections */
     .content-section { display: flex; flex-direction: column; gap: 15px; }
     .detail-content { font-size: 1.15rem; line-height: 1.9; color: #eee; background: rgba(255,255,255,0.03); padding: 30px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1); }
@@ -38,11 +48,12 @@
     .btn-back:hover { background: #444; border-color: #00ff55; box-shadow: 0 0 10px rgba(0, 182, 59, 0.5); }
 
     /* Admin Edit Button */
-    .btn-edit-trigger { position: absolute; top: 0; left: 185px; padding: 10px 25px; background: #fbbf24; color: #000; border: none; border-radius: 6px; font-family: 'Minecraft', sans-serif; font-size: 0.9rem; cursor: pointer; font-weight: bold; }
+    /* Update this section in your <style> tag */
+    .btn-edit-trigger { position: absolute; top: 0; left: 185px; padding: 10px 25px; background: #fbbf24; color: #000; border: none; border-radius: 6px; font-family: 'Minecraft', sans-serif; font-size: 0.9rem; font-weight: normal;white-space: nowrap; display: inline-block; }    
     .btn-edit-trigger:hover { background: #ffd059; transform: scale(1.05); }
 
     /* Action Buttons */
-    .save-btn { background: #68ff00; color: #000; border: none; padding: 12px 30px; font-weight: bold; cursor: pointer; font-family: 'Minecraft', sans-serif; margin-right: 10px; border-radius: 4px; }
+    .save-btn { background: #68ff00; color: #000; border: none; padding: 12px 30px; font-weight: normal; cursor: pointer; font-family: 'Minecraft', sans-serif; margin-right: 10px; border-radius: 4px; }
     .cancel-btn { background: #ff4444; color: #fff; border: none; padding: 12px 30px; cursor: pointer; font-family: 'Minecraft', sans-serif; border-radius: 4px; }
 
     /* Right Column & Stats */
@@ -60,10 +71,19 @@
         <div class="detail-info">
             <div class="title-button-wrapper">
                 <a href="Mob.aspx" class="btn-back">← Back to Mobs</a>
-                
-                <asp:LinkButton ID="btnEdit" runat="server" CssClass="btn-edit-trigger" OnClientClick="toggleEdit(); return false;">
-                    [ EDIT INFO ]
-                </asp:LinkButton>
+    
+                <div class="admin-actions" style="position: absolute; top: 0; left: 185px; display: flex; gap: 12px;">
+                    <asp:LinkButton ID="btnEdit" runat="server" CssClass="btn-edit-trigger view-mode" OnClientClick="toggleEdit(); return false;">
+                        [ EDIT INFO ]
+                    </asp:LinkButton>
+
+                    <asp:LinkButton ID="btnDelete" runat="server" 
+                        CssClass="btn-delete-trigger view-mode" 
+                        OnClientClick="return confirm('⚠️ DELETE PERMANENTLY? This cannot be undone.');" 
+                        OnClick="btnDelete_Click">
+                        [ DELETE MOB ]
+                    </asp:LinkButton>
+                </div>
 
                 <asp:Label ID="lblMobName" runat="server" CssClass="detail-name view-mode" />
                 <asp:TextBox ID="txtEditName" runat="server" CssClass="edit-input name-edit edit-mode" />
@@ -120,7 +140,7 @@
                     <asp:Repeater ID="rptComments" runat="server">
                         <ItemTemplate>
                             <div style="border-bottom: 1px dashed #444; padding: 15px 0; margin-bottom: 10px;">
-                                <strong style="color: #68ff00;"><%# Eval("Username") %></strong> 
+                                <span style="color: #68ff00;"><%# Eval("Username") %></span> 
                                 <span style="color: #888; font-size: 0.8rem;">- <%# Eval("CommentDate", "{0:yyyy-MM-dd HH:mm}") %></span>
 
                                 <asp:LinkButton ID="lnkReport" runat="server" 
@@ -145,7 +165,7 @@
                         <br />
                         <asp:Button ID="btnSubmitComment" runat="server" Text="[ POST COMMENT ]" 
                             OnClick="btnSubmitComment_Click" 
-                            style="margin-top: 15px; background: #68ff00; color: #000; border: none; padding: 10px 25px; font-weight: bold; cursor: pointer; font-family: 'Minecraft', sans-serif;" />
+                            style="margin-top: 15px; background: #68ff00; color: #000; border: none; padding: 10px 25px; font-weight: ; cursor: pointer; font-family: 'Minecraft', sans-serif;" />
                     </asp:Panel>
 
                     <asp:Literal ID="litVisitorMsg" runat="server" />

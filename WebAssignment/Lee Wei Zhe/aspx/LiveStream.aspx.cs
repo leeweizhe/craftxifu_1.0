@@ -160,7 +160,7 @@ namespace WebAssignment.Lee_Wei_Zhe.aspx
                 return;
             }
 
-            string sql = @"INSERT INTO LSCommentTable (FarmId, UserId, CommentText, CommentDate)
+            string sql = @"INSERT INTO LSCommentTable (StreamId, UserId, CommentText, CommentDate)
                            VALUES (@streamId, @userId, @commentText, GETDATE())";
 
             ExecuteSQL(sql,
@@ -223,13 +223,14 @@ namespace WebAssignment.Lee_Wei_Zhe.aspx
             string sql = @"
                 SELECT TOP 50
                        c.CommentId,
-                       c.FarmId,
+                       c.StreamId,
                        c.CommentText,
                        c.CommentDate,
                        u.Username
                 FROM LSCommentTable c
                 INNER JOIN userTable u ON c.UserId = u.UserId
-                WHERE c.FarmId = @streamId
+                WHERE c.StreamId = @streamId 
+                AND c.Status = 'Visible'  -- Only load comments that aren't hidden
                 ORDER BY c.CommentDate ASC";
 
             DataTable dt = GetData(sql, new SqlParameter("@streamId", streamId));
@@ -237,7 +238,7 @@ namespace WebAssignment.Lee_Wei_Zhe.aspx
             rptChat.DataSource = dt;
             rptChat.DataBind();
 
-            // Show "no messages" label only when there are no rows
+            // Show "no messages" label only when there are no rows (or all are hidden)
             lblNoMessages.Visible = (dt.Rows.Count == 0);
         }
 

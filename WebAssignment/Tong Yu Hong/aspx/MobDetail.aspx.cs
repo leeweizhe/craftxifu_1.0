@@ -34,12 +34,42 @@ namespace WebAssignment.Tong_Yu_Hong.aspx
                     if (!string.IsNullOrEmpty(userRole) && userRole == "Instructor")
                     {
                         btnEdit.Visible = true;
+                        btnDelete.Visible = true;
                     }
                     else
                     {
                         btnEdit.Visible = false;
+                        btnDelete.Visible = false;
                     }
                 }
+            }
+        }
+
+        protected void btnDelete_Click(object sender, EventArgs e)
+        {
+            string mobId = Request.QueryString["MobID"];
+            if (string.IsNullOrEmpty(mobId)) return;
+
+            string connStr = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connStr))
+                {
+                    string sql = "DELETE FROM mobTable WHERE MobID = @id";
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@id", mobId);
+
+                    conn.Open();
+                    cmd.ExecuteNonQuery();
+                }
+                // Redirect back to the list after successful deletion
+                Response.Redirect("Mob.aspx");
+            }
+            catch (Exception ex)
+           {
+                // You could add a label to show errors if something goes wrong
+                System.Diagnostics.Debug.WriteLine(ex.Message);
             }
         }
 

@@ -173,6 +173,7 @@
     <Content Include="obj\Debug\WebAssignment.dll" />
     <Content Include="obj\Debug\WebAssignment.pdb" />
     <Content Include="SiteMaster.css" />
+    <Content Include="Tong Yu Hong\aspx\AddMob.aspx" />
     <Content Include="Tong Yu Hong\aspx\ManageComments.aspx" />
     <Content Include="Tong Yu Hong\aspx\ManageUser.aspx" />
     <Content Include="Tong Yu Hong\aspx\ManageUserDetail.aspx" />
@@ -484,6 +485,13 @@
       <DependentUpon>Site.Master</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Tong Yu Hong\aspx\AddMob.aspx.cs">
+      <DependentUpon>AddMob.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Tong Yu Hong\aspx\AddMob.aspx.designer.cs">
+      <DependentUpon>AddMob.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Tong Yu Hong\aspx\ManageComments.aspx.cs">
       <DependentUpon>ManageComments.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
