@@ -8,7 +8,7 @@
         
         /* hero-banner */
         .hero-banner { 
-            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.7)), url('/Wong Zhang Zhe/pic/autofarm_cover.png');
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.7)), url('/Wong Zhang Zhe/pic/home_cover.png');
             background-size: cover; background-position: center; padding: 120px 10%; text-align: center; border-bottom: 4px solid #68ff00;
         }
         .hero-title { font-size: 4.5rem; color: #68ff00; text-shadow: 4px 4px #000; margin-bottom: 20px; }
@@ -66,10 +66,10 @@
 
         <div class="section-padding">
             <div class="intro-card">
-                <h2 class="about-title" style="text-align:center;">About the Platform</h2>
+                <h2 class="about-title" style="text-align:center; font-weight: normal !important;">About the Platform</h2>
                 <p style="text-align:center; color:#ccc; line-height:2; font-size:1.2rem;">
-                    <b>Minecraft Server Hub</b> is a professional portal for technical survivalists. 
-                    We integrate an <b>Auto Farm Database</b> with a <b>Character Equipment System</b> to help you master the technical grid.
+                    Minecraft Server Hub is a professional portal for technical survivalists. 
+                    We integrate an Auto Farm Database with a Character Equipment System to help you master the technical grid.
                 </p>
             </div>
         </div>

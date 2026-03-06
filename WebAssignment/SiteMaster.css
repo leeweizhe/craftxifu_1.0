@@ -1,5 +1,7 @@
 ﻿* {
     box-sizing: border-box;
+    font-weight: normal;
+    letter-spacing: 1px;
     font-family: 'Minecraft', sans-serif;
     margin: 0;
     padding: 0;
