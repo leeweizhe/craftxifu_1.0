@@ -758,15 +758,17 @@ namespace WebAssignment.Lee_Wei_Zhe.aspx
                 litVisitorMsg.Text = "<p style='color: #fbbf24; text-align: center;'>[ <a href='Login.aspx' style='color: #68ff00;'>Login</a> to join the discussion ]</p>";
             }
         }
-        private void LoadComments(string farmId)
+        private void LoadComments(string BeginnerId)
         {
             using (SqlConnection conn = new SqlConnection(connString))
             {
                 string sql = @"SELECT c.*, u.Username FROM BGCommentTable c 
                                JOIN userTable u ON c.UserId = u.UserId 
-                               WHERE c.FarmId = @fid ORDER BY c.CommentDate DESC";
+                               WHERE c.BeginnerId = @bid 
+                               AND c.Status = 'Visible'
+                               ORDER BY c.CommentDate DESC";
                 SqlCommand cmd = new SqlCommand(sql, conn);
-                cmd.Parameters.AddWithValue("@fid", farmId);
+                cmd.Parameters.AddWithValue("@bid", BeginnerId);
 
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
                 DataTable dt = new DataTable();
@@ -778,16 +780,16 @@ namespace WebAssignment.Lee_Wei_Zhe.aspx
 
         protected void btnSubmitComment_Click(object sender, EventArgs e)
         {
-            string farmId = "1";
+            string BeginnerId = "1";
             string commentText = txtComment.Text.Trim();
 
             if (!string.IsNullOrEmpty(commentText) && Session["userId"] != null)
             {
                 using (SqlConnection conn = new SqlConnection(connString))
                 {
-                    string sql = "INSERT INTO BGCommentTable (FarmId, UserId, CommentText) VALUES (@fid, @uid, @text)";
+                    string sql = "INSERT INTO BGCommentTable (BeginnerId, UserId, CommentText) VALUES (@bid, @uid, @text)";
                     SqlCommand cmd = new SqlCommand(sql, conn);
-                    cmd.Parameters.AddWithValue("@fid", farmId);
+                    cmd.Parameters.AddWithValue("@bid", BeginnerId);
                     cmd.Parameters.AddWithValue("@uid", Session["userId"]);
                     cmd.Parameters.AddWithValue("@text", commentText);
 
@@ -796,7 +798,7 @@ namespace WebAssignment.Lee_Wei_Zhe.aspx
                     conn.Close();
                 }
                 txtComment.Text = "";
-                LoadComments(farmId);
+                LoadComments(BeginnerId);
             }
         }
 
@@ -808,25 +810,25 @@ namespace WebAssignment.Lee_Wei_Zhe.aspx
                 return;
             }
 
-            // Split the combined argument (CommentId|FarmID)
+            // Split the combined argument (CommentId|BeginnerId)
             string[] args = e.CommandArgument.ToString().Split('|');
 
             if (args.Length < 2) return; // Safety check
 
             string commentId = args[0];
-            string farmId = args[1];
+            string BeginnerId = args[1];
             string reporterId = Session["userId"].ToString();
 
             try
             {
                 using (SqlConnection conn = new SqlConnection(connString))
                 {
-                    // Make sure your table has a FarmID column!
-                    string sql = "INSERT INTO reportTable (CommentId, ReporterId, FarmID) VALUES (@cid, @rid, @fid)";
+                    // Make sure your table has a BeginnerId column!
+                    string sql = "INSERT INTO reportTable (CommentId, ReporterId, BeginnerId) VALUES (@cid, @rid, @bid)";
                     SqlCommand cmd = new SqlCommand(sql, conn);
                     cmd.Parameters.AddWithValue("@cid", commentId);
                     cmd.Parameters.AddWithValue("@rid", reporterId);
-                    cmd.Parameters.AddWithValue("@fid", farmId);
+                    cmd.Parameters.AddWithValue("@bid", BeginnerId);
 
                     conn.Open();
                     cmd.ExecuteNonQuery();

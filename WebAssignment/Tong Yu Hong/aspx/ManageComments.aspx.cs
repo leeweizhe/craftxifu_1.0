@@ -18,7 +18,7 @@ namespace WebAssignment.Tong_Yu_Hong.aspx
             string currentRole = Session["UserRole"] as string;
             if (string.IsNullOrEmpty(currentRole) || currentRole != "Admin")
             {
-                Response.Redirect("~/Wong Zhang Zhe/Home.aspx");
+                Response.Redirect("~/Wong Zhang Zhe//Home.aspx");
                 return;
             }
             if (!IsPostBack)
@@ -46,7 +46,7 @@ namespace WebAssignment.Tong_Yu_Hong.aspx
                 u.Username as CommentAuthor,
                 rep.Username as ReporterName
             FROM reportTable r
-            LEFT JOIN beginnerComment bc ON r.CommentId = bc.CommentId AND r.BeginnerId IS NOT NULL
+            LEFT JOIN BGCommentTable bc ON r.CommentId = bc.CommentId AND r.BeginnerId IS NOT NULL
             LEFT JOIN mobComment      mc ON r.CommentId = mc.CommentId AND r.MobId IS NOT NULL
             LEFT JOIN potionComment   pc ON r.CommentId = pc.CommentId AND r.PotionId IS NOT NULL
             LEFT JOIN commentTable     fc ON r.CommentId = fc.CommentId AND r.FarmId IS NOT NULL
@@ -72,26 +72,21 @@ namespace WebAssignment.Tong_Yu_Hong.aspx
         {
             string commentId = e.CommandArgument.ToString();
 
-            if (e.CommandName == "Delete")
+            if (e.CommandName == "Delete") // This acts as "Hide and Warn"
             {
                 using (SqlConnection conn = new SqlConnection(connString))
                 {
-                    // Updated query to use your specific table and column names
+                    // 1. Fetch data for the warning
                     string fetchSql = @"
-                    SELECT TOP 1 UserId, BadText, ReportId FROM (
-                        /* Each SELECT pulls from your specific guide comment tables */
-                        SELECT UserId, CommentText as BadText, (SELECT TOP 1 ReportId FROM reportTable WHERE CommentId = @cid) as ReportId 
-                        FROM beginnerComment WHERE CommentId = @cid
-                        UNION ALL
-                        SELECT UserId, CommentText as BadText, (SELECT TOP 1 ReportId FROM reportTable WHERE CommentId = @cid) 
-                        FROM mobComment WHERE CommentId = @cid
-                        UNION ALL
-                        SELECT UserId, CommentText as BadText, (SELECT TOP 1 ReportId FROM reportTable WHERE CommentId = @cid) 
-                        FROM potionComment WHERE CommentId = @cid
-                        UNION ALL
-                        SELECT UserId, CommentText as BadText, (SELECT TOP 1 ReportId FROM reportTable WHERE CommentId = @cid) 
-                        FROM commentTable WHERE CommentId = @cid
-                    ) as CombinedComments";
+                SELECT TOP 1 UserId, BadText, ReportId FROM (
+                    SELECT UserId, CommentText as BadText, (SELECT TOP 1 ReportId FROM reportTable WHERE CommentId = @cid) as ReportId FROM BGCommentTable WHERE CommentId = @cid
+                    UNION ALL
+                    SELECT UserId, CommentText as BadText, (SELECT TOP 1 ReportId FROM reportTable WHERE CommentId = @cid) FROM mobComment WHERE CommentId = @cid
+                    UNION ALL
+                    SELECT UserId, CommentText as BadText, (SELECT TOP 1 ReportId FROM reportTable WHERE CommentId = @cid) FROM potionComment WHERE CommentId = @cid
+                    UNION ALL
+                    SELECT UserId, CommentText as BadText, (SELECT TOP 1 ReportId FROM reportTable WHERE CommentId = @cid) FROM commentTable WHERE CommentId = @cid
+                ) as CombinedComments";
 
                     SqlCommand cmdFetch = new SqlCommand(fetchSql, conn);
                     cmdFetch.Parameters.AddWithValue("@cid", commentId);
@@ -105,42 +100,41 @@ namespace WebAssignment.Tong_Yu_Hong.aspx
                             string badText = reader["BadText"].ToString();
                             int reportId = Convert.ToInt32(reader["ReportId"]);
 
+                            // 2. Insert the Warning
                             InsertWarning(userId, badText, reportId);
                         }
                     }
                 }
-                DeleteComment(commentId);
+
+                // 3. Hide the comment and Clear the report
+                HideComment(commentId);
             }
+            else if (e.CommandName == "Clear")
+            {
+                // If you have a 'Clear' button that just ignores the report
+                // You would pass the ReportId here
+            }
+
             LoadReports();
         }
 
-        private void DeleteComment(string commentId)
+        private void HideComment(string commentId)
         {
             using (SqlConnection conn = new SqlConnection(connString))
             {
-                // Delete the reports first (foreign key), then the comment
-                string sql = "DELETE FROM reportTable WHERE CommentId = @cid; " +
-                             "DELETE FROM commentTable WHERE CommentId = @cid;";
+                // 1. Update Status to 'Hidden' in all potential tables
+                // 2. Delete the record from reportTable ONLY
+                string sql = @"
+            UPDATE BGCommentTable SET Status = 'Hidden' WHERE CommentId = @cid;
+            UPDATE mobComment      SET Status = 'Hidden' WHERE CommentId = @cid;
+            UPDATE potionComment   SET Status = 'Hidden' WHERE CommentId = @cid;
+            UPDATE commentTable    SET Status = 'Hidden' WHERE CommentId = @cid;
+            DELETE FROM reportTable WHERE CommentId = @cid;";
+
                 SqlCommand cmd = new SqlCommand(sql, conn);
                 cmd.Parameters.AddWithValue("@cid", commentId);
                 conn.Open();
                 cmd.ExecuteNonQuery();
-            }
-        }
-
-        private void ClearReport(string reportId)
-        {
-            using (SqlConnection conn = new SqlConnection(connString))
-            {
-                // This removes the report entry so it disappears from the admin list,
-                // but the actual comment stays safe in the commentTable.
-                string sql = "DELETE FROM reportTable WHERE ReportId = @rid";
-                SqlCommand cmd = new SqlCommand(sql, conn);
-                cmd.Parameters.AddWithValue("@rid", reportId);
-
-                conn.Open();
-                cmd.ExecuteNonQuery();
-                conn.Close();
             }
         }
 

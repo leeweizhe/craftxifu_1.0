@@ -53,7 +53,9 @@ namespace WebAssignment
             {
                 string sql = @"SELECT c.*, u.Username FROM commentTable c 
                                JOIN userTable u ON c.UserId = u.UserId 
-                               WHERE c.FarmId = @fid ORDER BY c.CommentDate DESC";
+                               WHERE c.FarmId = @fid 
+                               AND c.Status = 'Visible'
+                               ORDER BY c.CommentDate DESC";
                 SqlCommand cmd = new SqlCommand(sql, conn);
                 cmd.Parameters.AddWithValue("@fid", farmId);
 

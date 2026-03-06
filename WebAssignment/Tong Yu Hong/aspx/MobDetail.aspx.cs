@@ -105,7 +105,9 @@ namespace WebAssignment.Tong_Yu_Hong.aspx
                 // 使用 JOIN 获取用户名
                 string sql = @"SELECT c.*, u.Username FROM mobComment c 
                                JOIN userTable u ON c.UserId = u.UserId 
-                               WHERE c.mobId = @mid ORDER BY c.CommentDate DESC";
+                               WHERE c.mobId = @mid 
+                               AND c.Status = 'Visible'
+                               ORDER BY c.CommentDate DESC";
                 SqlCommand cmd = new SqlCommand(sql, conn);
                 cmd.Parameters.AddWithValue("@mid", mobId);
 
