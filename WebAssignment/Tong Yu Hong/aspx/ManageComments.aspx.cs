@@ -14,7 +14,13 @@ namespace WebAssignment.Tong_Yu_Hong.aspx
     {
         private string connString = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
         protected void Page_Load(object sender, EventArgs e)
-        {       
+        {
+            string currentRole = Session["UserRole"] as string;
+            if (string.IsNullOrEmpty(currentRole) || currentRole != "Admin")
+            {
+                Response.Redirect("~/Wong Zhang Zhe//Home.aspx");
+                return;
+            }
             if (!IsPostBack)
             {
                 LoadReports();
@@ -30,26 +36,29 @@ namespace WebAssignment.Tong_Yu_Hong.aspx
                 r.ReportId, 
                 r.CommentId, 
                 r.ReportDate,
-                COALESCE(bc.CommentDate, mc.CommentDate, pc.CommentDate, fc.CommentDate) as CommentDate,
+                COALESCE(bc.CommentDate, mc.CommentDate, pc.CommentDate, fc.CommentDate, lc.CommentDate) as CommentDate,
                 -- Hardcode 'Beginner Guide' if BeginnerId exists, else grab the other names
                 CASE 
                     WHEN r.BeginnerId IS NOT NULL THEN 'Beginner Guide'
-                    ELSE COALESCE(mt.MobName, pt.Name, ft.Title) 
+                    ELSE COALESCE(mt.MobName, pt.Name, ft.Title, ls.StreamTitle) 
                 END as SectionName,
-                COALESCE(bc.CommentText, mc.CommentText, pc.CommentText, fc.CommentText) as CommentText,
+                COALESCE(bc.CommentText, mc.CommentText, pc.CommentText, fc.CommentText, lc.CommentText) as CommentText,
                 u.Username as CommentAuthor,
                 rep.Username as ReporterName
             FROM reportTable r
-            LEFT JOIN beginnerComment bc ON r.CommentId = bc.CommentId AND r.BeginnerId IS NOT NULL
+            LEFT JOIN BGCommentTable bc ON r.CommentId = bc.CommentId AND r.BeginnerId IS NOT NULL
             LEFT JOIN mobComment      mc ON r.CommentId = mc.CommentId AND r.MobId IS NOT NULL
             LEFT JOIN potionComment   pc ON r.CommentId = pc.CommentId AND r.PotionId IS NOT NULL
             LEFT JOIN commentTable     fc ON r.CommentId = fc.CommentId AND r.FarmId IS NOT NULL
+            LEFT JOIN LSCommentTable   lc ON r.CommentId = lc.CommentId AND r.StreamId IS NOT NULL
             -- Joined tables for Mobs, Potions, and Farms
             LEFT JOIN mobTable        mt ON r.MobId = mt.MobId
             LEFT JOIN potionTable     pt ON r.PotionId = pt.PotionId
             LEFT JOIN farmTable       ft ON r.FarmId = ft.FarmId
-            INNER JOIN userTable      u   ON u.UserId = COALESCE(bc.UserId, mc.UserId, pc.UserId, fc.UserId)
+            LEFT JOIN LiveStreams     ls ON r.StreamId = lc.StreamID
+            INNER JOIN userTable      u   ON u.UserId = COALESCE(bc.UserId, mc.UserId, pc.UserId, fc.UserId, lc.UserId)
             LEFT JOIN userTable       rep ON r.ReporterId = rep.UserId
+            WHERE r.Status = 'Pending'
             ORDER BY r.ReportDate DESC";
 
                 SqlDataAdapter da = new SqlDataAdapter(sql, conn);
@@ -66,26 +75,47 @@ namespace WebAssignment.Tong_Yu_Hong.aspx
         {
             string commentId = e.CommandArgument.ToString();
 
-            if (e.CommandName == "Delete")
+            if (e.CommandName == "Delete") // This acts as "Hide and Warn"
             {
                 using (SqlConnection conn = new SqlConnection(connString))
                 {
-                    // Updated query to use your specific table and column names
+                    // 1. Fetch data for the warning
                     string fetchSql = @"
-                    SELECT TOP 1 UserId, BadText, ReportId FROM (
-                        /* Each SELECT pulls from your specific guide comment tables */
-                        SELECT UserId, CommentText as BadText, (SELECT TOP 1 ReportId FROM reportTable WHERE CommentId = @cid) as ReportId 
-                        FROM beginnerComment WHERE CommentId = @cid
-                        UNION ALL
-                        SELECT UserId, CommentText as BadText, (SELECT TOP 1 ReportId FROM reportTable WHERE CommentId = @cid) 
-                        FROM mobComment WHERE CommentId = @cid
-                        UNION ALL
-                        SELECT UserId, CommentText as BadText, (SELECT TOP 1 ReportId FROM reportTable WHERE CommentId = @cid) 
-                        FROM potionComment WHERE CommentId = @cid
-                        UNION ALL
-                        SELECT UserId, CommentText as BadText, (SELECT TOP 1 ReportId FROM reportTable WHERE CommentId = @cid) 
-                        FROM commentTable WHERE CommentId = @cid
-                    ) as CombinedComments";
+                        SELECT TOP 1 UserId, BadText, ReportId FROM (
+                            -- 1. Beginner Guide
+                            SELECT bc.UserId, bc.CommentText as BadText, r.ReportId 
+                            FROM BGCommentTable bc 
+                            INNER JOIN reportTable r ON bc.CommentId = r.CommentId 
+                            WHERE bc.CommentId = @cid AND r.BeginnerId IS NOT NULL
+
+                            UNION ALL
+                            -- 2. Mob Guide
+                            SELECT mc.UserId, mc.CommentText as BadText, r.ReportId 
+                            FROM mobComment mc 
+                            INNER JOIN reportTable r ON mc.CommentId = r.CommentId 
+                            WHERE mc.CommentId = @cid AND r.MobId IS NOT NULL
+
+                            UNION ALL
+                            -- 3. Potion Guide
+                            SELECT pc.UserId, pc.CommentText as BadText, r.ReportId 
+                            FROM potionComment pc 
+                            INNER JOIN reportTable r ON pc.CommentId = r.CommentId 
+                            WHERE pc.CommentId = @cid AND r.PotionId IS NOT NULL
+
+                            UNION ALL
+                            -- 4. Farm Guide
+                            SELECT fc.UserId, fc.CommentText as BadText, r.ReportId 
+                            FROM commentTable fc 
+                            INNER JOIN reportTable r ON fc.CommentId = r.CommentId 
+                            WHERE fc.CommentId = @cid AND r.FarmId IS NOT NULL
+
+                            UNION ALL
+                            -- 5. Livestream
+                            SELECT lc.UserId, lc.CommentText as BadText, r.ReportId 
+                            FROM LSCommentTable lc 
+                            INNER JOIN reportTable r ON lc.CommentId = r.CommentId 
+                            WHERE lc.CommentId = @cid AND r.StreamId IS NOT NULL
+                        ) as CombinedComments";
 
                     SqlCommand cmdFetch = new SqlCommand(fetchSql, conn);
                     cmdFetch.Parameters.AddWithValue("@cid", commentId);
@@ -99,22 +129,38 @@ namespace WebAssignment.Tong_Yu_Hong.aspx
                             string badText = reader["BadText"].ToString();
                             int reportId = Convert.ToInt32(reader["ReportId"]);
 
+                            // 2. Insert the Warning
                             InsertWarning(userId, badText, reportId);
                         }
                     }
                 }
-                DeleteComment(commentId);
+
+                // 3. Hide the comment and Clear the report
+                HideComment(commentId);
             }
+            else if (e.CommandName == "Clear")
+            {
+                // If you have a 'Clear' button that just ignores the report
+                // You would pass the ReportId here
+            }
+
             LoadReports();
         }
 
-        private void DeleteComment(string commentId)
+        private void HideComment(string commentId)
         {
             using (SqlConnection conn = new SqlConnection(connString))
             {
-                // Delete the reports first (foreign key), then the comment
-                string sql = "DELETE FROM reportTable WHERE CommentId = @cid; " +
-                             "DELETE FROM commentTable WHERE CommentId = @cid;";
+                // 1. Update Status to 'Hidden' in all potential tables
+                // 2. Delete the record from reportTable ONLY
+                string sql = @"
+            UPDATE BGCommentTable SET Status = 'Hidden' WHERE CommentId = @cid;
+            UPDATE mobComment      SET Status = 'Hidden' WHERE CommentId = @cid;
+            UPDATE potionComment   SET Status = 'Hidden' WHERE CommentId = @cid;
+            UPDATE commentTable    SET Status = 'Hidden' WHERE CommentId = @cid;
+            UPDATE LSCommentTable  SET Status = 'Hidden' WHERE CommentId = @cid;
+            UPDATE reportTable SET Status = 'Resolved' WHERE CommentId = @cid;";
+
                 SqlCommand cmd = new SqlCommand(sql, conn);
                 cmd.Parameters.AddWithValue("@cid", commentId);
                 conn.Open();
@@ -122,27 +168,10 @@ namespace WebAssignment.Tong_Yu_Hong.aspx
             }
         }
 
-        private void ClearReport(string reportId)
-        {
-            using (SqlConnection conn = new SqlConnection(connString))
-            {
-                // This removes the report entry so it disappears from the admin list,
-                // but the actual comment stays safe in the commentTable.
-                string sql = "DELETE FROM reportTable WHERE ReportId = @rid";
-                SqlCommand cmd = new SqlCommand(sql, conn);
-                cmd.Parameters.AddWithValue("@rid", reportId);
-
-                conn.Open();
-                cmd.ExecuteNonQuery();
-                conn.Close();
-            }
-        }
-
         private void InsertWarning(int userId, string text, int reportId)
         {
             using (SqlConnection conn = new SqlConnection(connString))
             {
-                // Notice I removed WarningId and @wid from the SQL string
                 string sql = @"INSERT INTO warningTable (ReportId, UserId, WarningMessage, ReportedCommentText, WarningDate) 
                        VALUES (@rid, @uid, @msg, @text, GETDATE())";
 

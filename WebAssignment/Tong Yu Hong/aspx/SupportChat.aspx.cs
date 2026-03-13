@@ -14,6 +14,12 @@ namespace WebAssignment.Tong_Yu_Hong.aspx
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            string currentRole = Session["UserRole"] as string;
+            if (string.IsNullOrEmpty(currentRole) || currentRole != "Admin")
+            {
+                Response.Redirect("~/Wong Zhang Zhe/Home.aspx");
+                return;
+            }
             if (!IsPostBack)
             {
                 LoadTicketSidebar();
@@ -65,11 +71,12 @@ namespace WebAssignment.Tong_Yu_Hong.aspx
             using (SqlConnection conn = new SqlConnection(connString))
             {
                 // Added the WHERE clause to filter by the selected status
-                string query = @"SELECT c.Id, c.Subject, c.Message, c.Date, u.Username 
-                         FROM contactTable c 
-                         JOIN userTable u ON c.Userid = u.UserId 
-                         WHERE c.Status = @Status
-                         ORDER BY c.Date DESC";
+                // Add u.ProfilePicture to the SELECT statement
+                string query = @"SELECT c.Id, c.Subject, c.Message, c.Date, u.Username, u.ProfilePicture 
+                 FROM contactTable c 
+                 JOIN userTable u ON c.Userid = u.UserId 
+                 WHERE c.Status = @Status
+                 ORDER BY c.Date DESC";
 
                 SqlCommand cmd = new SqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("@Status", selectedStatus);
@@ -88,14 +95,13 @@ namespace WebAssignment.Tong_Yu_Hong.aspx
         {
             if (e.CommandName == "Select")
             {
-                // 1. Get the Ticket ID from the clicked button
+                // 1. Get the Ticket ID
                 string ticketId = e.CommandArgument.ToString();
 
-                // 2. Save ID to Session so the Send button knows which ticket to reply to
+                // 2. Save ID to Session
                 Session["SelectedTicketId"] = ticketId;
 
-                // 3. Call your helper method which contains the "Bulletproof" date logic
-                // This replaces all the old SQL code that was causing the crash
+                // 3. This one method already handles the Subject, Message, AND Image!
                 RefreshChat(ticketId);
             }
         }
@@ -119,7 +125,26 @@ namespace WebAssignment.Tong_Yu_Hong.aspx
                 {
                     litActiveSubject.Text = dr["Username"].ToString();
                     litOriginalMessage.Text = dr["Message"].ToString();
-                    imgActiveUser.ImageUrl = ResolveUrl("~/" + dr["ProfilePicture"].ToString());
+
+                    // --- IMAGE FIX START ---
+                    string rawPicPath = dr["ProfilePicture"] != DBNull.Value ? dr["ProfilePicture"].ToString() : "";
+
+                    if (string.IsNullOrEmpty(rawPicPath))
+                    {
+                        // If no picture in DB, use default
+                        imgActiveUser.ImageUrl = ResolveUrl("~/images/default-avatar.png");
+                    }
+                    else if (rawPicPath.ToLower().StartsWith("images/") || rawPicPath.ToLower().StartsWith("~/images/"))
+                    {
+                        // If DB already has the folder path (e.g., "images/steve.png")
+                        imgActiveUser.ImageUrl = ResolveUrl("~/" + rawPicPath.Replace("~/", ""));
+                    }
+                    else
+                    {
+                        // If DB only has the filename (e.g., "steve.png")
+                        imgActiveUser.ImageUrl = ResolveUrl("~/images/" + rawPicPath);
+                    }
+                    // --- IMAGE FIX END ---
 
                     // 1. Safe format for User's message time
                     if (dr["Date"] != DBNull.Value)
@@ -135,9 +160,6 @@ namespace WebAssignment.Tong_Yu_Hong.aspx
                     {
                         pnlAdminReply.Visible = true;
                         litAdminMessage.Text = adminReply;
-
-                        // CHANGE THIS: Only show the message in the textbox if you want it there for editing.
-                        // To show the placeholder instead, we keep the textbox EMPTY while locked.
                         txtReply.Text = "";
 
                         DateTime tempAdminDate;
@@ -152,14 +174,12 @@ namespace WebAssignment.Tong_Yu_Hong.aspx
                         txtReply.Text = "";
                     }
 
-                    // 3. Lock/Unlock the Input Controls and the new Unlock Area
+                    // 3. Lock/Unlock controls
                     txtReply.Enabled = !hasReplied;
                     btnSend.Enabled = !hasReplied;
-
-                    // This is the line you asked about—keep it to show/hide the black bar
                     pnlUnlockArea.Visible = hasReplied;
 
-                    // 4. Update placeholder for visual feedback
+                    // 4. Update placeholder
                     if (hasReplied)
                     {
                         txtReply.Attributes["placeholder"] = "Ticket Completed - Chat Locked";

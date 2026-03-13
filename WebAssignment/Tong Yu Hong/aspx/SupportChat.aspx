@@ -7,7 +7,7 @@
         
         /* Sidebar: Ticket List */
         .chat-sidebar { width: 350px; border-right: 1px solid #333; display: flex; flex-direction: column; background: #1e1e1e; }
-        .sidebar-header { padding: 20px; font-size: 1.2rem; font-weight: bold; color: #00b63b; border-bottom: 1px solid #333; text-transform: uppercase; display: flex; justify-content: space-between; align-items: center; }
+        .sidebar-header { padding: 20px; font-size: 1.2rem; font-weight: normal; color: #00b63b; border-bottom: 1px solid #333; text-transform: uppercase; display: flex; justify-content: space-between; align-items: center; }
         
         /* New Sidebar Dropdown */
         .status-dropdown { background: #1e1e1e; color: #00b63b; border: 1px solid #333; font-family: 'Minecraft', sans-serif; font-size: 11px; padding: 2px; cursor: pointer; }
@@ -19,7 +19,7 @@
         .chat-item.active { background: #333; border-left: 4px solid #00b63b; }
 
         .chat-info { display: flex; flex-direction: column; gap: 3px; overflow: hidden; width: 100%; }
-        .chat-subject { color: #00b63b; font-size: 0.9rem; text-transform: uppercase; font-weight: bold; }
+        .chat-subject { color: #00b63b; font-size: 0.9rem; text-transform: uppercase; font-weight: normal; }
         .chat-preview { display: block; max-width: 280px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #aaa; font-size: 0.85rem; }
         .chat-details { color: #666; font-size: 0.75rem; margin-top: 2px; } 
 
@@ -41,14 +41,15 @@
         .msg-time { font-size: 0.7rem; color: #bbb; display: block; margin-top: 8px; text-align: right; text-transform: uppercase; letter-spacing: 1px; }
 
         /* New Unlock Bar */
-        .unlock-panel { padding: 10px 25px; background: #000; border-top: 1px solid #333; display: flex; align-items: center; justify-content: space-between; color: #aaa; font-size: 11px; }
-        .unlock-btn { background: #fff; color: #000; border: none; padding: 4px 12px; cursor: pointer; font-family: 'Minecraft', sans-serif; font-size: 11px; font-weight: bold; text-transform: uppercase; }
+        .unlock-panel { padding: 20px 30px; background: #000; border-top: 1px solid #333; display: flex; align-items: center; justify-content: space-between; color: #fff; font-size: 1.2rem; letter-spacing: 1px; }
+        .unlock-btn { background: #fff; color: #000; border: none; padding: 10px 25px; cursor: pointer; font-family: 'Minecraft', sans-serif; font-size: 1rem; font-weight: normal; text-transform: uppercase; transition: 0.2s ease; }
+        .unlock-btn:hover { background: #00b63b; color: #fff; transform: scale(1.1); }
 
         /* Input Area */
         .chat-input-box { padding: 20px 25px; background: #1e1e1e; border-top: 1px solid #333; display: flex; gap: 15px; align-items: center; }
         .reply-input { flex: 1; background: #2a2a2a; border: 1px solid #444; padding: 12px 15px; color: #fff; border-radius: 6px; font-family: sans-serif; resize: none; }
         .reply-input:focus { outline: none; border-color: #00b63b; }
-        .send-btn { background: #00b63b; color: #fff; border: none; padding: 12px 25px; cursor: pointer; border-radius: 6px; text-transform: uppercase; font-weight: bold; transition: 0.3s; }
+        .send-btn { background: #00b63b; color: #fff; border: none; padding: 12px 25px; cursor: pointer; border-radius: 6px; text-transform: uppercase; font-weight: normal; transition: 0.3s; }
         .send-btn:hover { background: #008f2e; transform: scale(1.05); }
     </style>
 </asp:Content>
@@ -89,7 +90,9 @@
         <div class="chat-main">
             <div class="chat-main-header">
                 <div style="display: flex; align-items: center; gap: 10px;">
-                    <asp:Image ID="imgActiveUser" runat="server" ImageUrl="images/profiles/DPick.jpg" CssClass="header-profile-pic" />
+                    <asp:Image ID="imgActiveUser" runat="server" 
+                        ImageUrl="~/images/default-avatar.png" 
+                        CssClass="header-profile-pic" />
                     <span class="active-subject">[ <asp:Literal ID="litActiveSubject" runat="server" Text="Select a Ticket" /> ]</span>
                 </div>
                 <span class="status-badge">Active</span>

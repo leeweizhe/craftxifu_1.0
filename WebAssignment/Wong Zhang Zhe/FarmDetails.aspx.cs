@@ -46,14 +46,49 @@ namespace WebAssignment
                 pnlAddComment.Visible = false;
                 litVisitorMsg.Text = "<p style='color: #fbbf24; text-align: center;'>[ <a href='Login.aspx' style='color: #68ff00;'>Login</a> to join the discussion ]</p>";
             }
+
+            if (Session["UserRole"] != null && Session["UserRole"].ToString() == "Instructor")
+            {
+                phAdminTools.Visible = true;
+            }
         }
+
+        protected void btnEdit_Click(object sender, EventArgs e)
+        {
+            string farmId = Request.QueryString["id"];
+            Response.Redirect("EditFarm.aspx?id=" + farmId);
+        }
+
+        protected void btnDelete_Click(object sender, EventArgs e)
+        {
+            string farmId = Request.QueryString["id"];
+
+            using (SqlConnection conn = new SqlConnection(connString))
+            {
+                string sqlDelComments = "DELETE FROM commentTable WHERE FarmId = @fid";
+                string sqlDelReports = "DELETE FROM reportTable WHERE FarmID = @fid";
+                string sqlDelFarm = "DELETE FROM farmTable WHERE FarmId = @fid";
+
+                SqlCommand cmd = new SqlCommand(sqlDelComments + ";" + sqlDelReports + ";" + sqlDelFarm, conn);
+                cmd.Parameters.AddWithValue("@fid", farmId);
+
+                conn.Open();
+                cmd.ExecuteNonQuery();
+                conn.Close();
+            }
+
+            Response.Redirect("AutoFarm.aspx");
+        }
+
         private void LoadComments(string farmId)
         {
             using (SqlConnection conn = new SqlConnection(connString))
             {
                 string sql = @"SELECT c.*, u.Username FROM commentTable c 
                                JOIN userTable u ON c.UserId = u.UserId 
-                               WHERE c.FarmId = @fid ORDER BY c.CommentDate DESC";
+                               WHERE c.FarmId = @fid 
+                               AND c.Status = 'Visible'
+                               ORDER BY c.CommentDate DESC";
                 SqlCommand cmd = new SqlCommand(sql, conn);
                 cmd.Parameters.AddWithValue("@fid", farmId);
 
