@@ -397,9 +397,9 @@ namespace WebAssignment.Brayden
                 equipCmd.Parameters.AddWithValue("@uid", userId);
                 equipCmd.ExecuteNonQuery();
 
-                // Update session with tag name and frame
+                // Update session based on variant type
                 SqlCommand tagCmd = new SqlCommand(
-                    @"SELECT si.Name, si.FrameImagePath
+                    @"SELECT ui.Variant, si.Name, si.ImagePath, si.FrameImagePath
                       FROM userInventoryTable ui
                       JOIN shopItemTable si ON ui.ItemId = si.ItemId
                       WHERE ui.InventoryId = @iid", conn);
@@ -408,13 +408,40 @@ namespace WebAssignment.Brayden
                 {
                     if (dr.Read())
                     {
-                        Session["nameTag"]     = dr["Name"].ToString();
-                        Session["avatarFrame"] = dr["FrameImagePath"].ToString();
+                        string variant = dr["Variant"] != DBNull.Value ? dr["Variant"].ToString() : "";
+
+                        // Update userTable with the appropriate field based on variant
+                        string nameTagValue = "";
+                        string avatarFrameValue = "";
+
+                        if (variant.ToLower() == "name")
+                        {
+                            nameTagValue = dr["ImagePath"] != DBNull.Value ? dr["ImagePath"].ToString() : "";
+                            Session["nameTag"] = dr["Name"].ToString();
+                        }
+                        else if (variant.ToLower() == "frame")
+                        {
+                            avatarFrameValue = dr["FrameImagePath"] != DBNull.Value ? dr["FrameImagePath"].ToString() : "";
+                            Session["avatarFrame"] = avatarFrameValue;
+                        }
                     }
                 }
+
+                // Update userTable to persist the equipped items
+                SqlCommand updateUserCmd = new SqlCommand(
+                    @"UPDATE userTable 
+                      SET NameTag = ISNULL((SELECT si.ImagePath FROM userInventoryTable ui 
+                                           JOIN shopItemTable si ON ui.ItemId = si.ItemId 
+                                           WHERE ui.UserId = @uid AND ui.IsEquipped = 1 AND ui.Variant = 'name'), ''),
+                          AvatarFrame = ISNULL((SELECT si.FrameImagePath FROM userInventoryTable ui 
+                                               JOIN shopItemTable si ON ui.ItemId = si.ItemId 
+                                               WHERE ui.UserId = @uid AND ui.IsEquipped = 1 AND ui.Variant = 'frame'), '')
+                      WHERE UserId = @uid", conn);
+                updateUserCmd.Parameters.AddWithValue("@uid", userId);
+                updateUserCmd.ExecuteNonQuery();
             }
 
-            lblInvMsg.Text      = "Title equipped! Your avatar frame has been updated.";
+            lblInvMsg.Text      = "Item equipped! Your profile has been updated.";
             lblInvMsg.ForeColor = System.Drawing.Color.FromArgb(104, 255, 0);
             LoadInventory();
             LoadUserPoints();
