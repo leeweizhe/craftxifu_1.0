@@ -211,6 +211,31 @@ namespace WebAssignment.Brayden
         protected global::System.Web.UI.WebControls.LinkButton btnDeleteEnchant;
 
         /// <summary>
+        /// rptComments control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.Repeater rptComments;
+
+        /// <summary>
+        /// pnlAddComment control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.Panel pnlAddComment;
+
+        /// <summary>
+        /// txtComment control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.TextBox txtComment;
+
+        /// <summary>
+        /// btnSubmitComment control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.Button btnSubmitComment;
+
+        /// <summary>
+        /// litVisitorMsg control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.Literal litVisitorMsg;
+
+        /// <summary>
         /// editPanel control.
         /// </summary>
         /// <remarks>

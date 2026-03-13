@@ -18,6 +18,12 @@ namespace WebAssignment.Brayden
             return Session["role"] != null && Session["role"].ToString().ToLower() == "admin";
         }
 
+        private bool IsInstructor()
+        {
+            string userRole = Session["UserRole"] as string;
+            return !string.IsNullOrEmpty(userRole) && userRole == "Instructor";
+        }
+
         // ─────────────────────────────────────────────
         // Helpers
         // ─────────────────────────────────────────────
@@ -168,12 +174,17 @@ namespace WebAssignment.Brayden
                             pnlImages.Visible = false;
                         }
 
-                        btnEditPotion.Visible           = IsAdmin();
-                        btnDeletePotion.Visible         = IsAdmin();
+                        // Show edit/delete for Admin or Instructor
+                        btnEditPotion.Visible           = IsAdmin() || IsInstructor();
+                        btnDeletePotion.Visible         = IsAdmin() || IsInstructor();
                         btnDeletePotion.CommandArgument = id.ToString();
                     }
                 }
             }
+
+            // Load comments after loading detail
+            LoadComments(id);
+            CheckCommentPermission();
         }
 
         // ─────────────────────────────────────────────
@@ -364,6 +375,103 @@ namespace WebAssignment.Brayden
             detailPanel.Visible   = false; editPanel.Visible  = false;
             addPanel.Visible      = false;
             btnAddNew.Visible     = IsAdmin();
+        }
+
+        // ─────────────────────────────────────────────
+        // COMMENT SECTION
+        // ─────────────────────────────────────────────
+        private void CheckCommentPermission()
+        {
+            if (Session["userId"] != null)
+            {
+                pnlAddComment.Visible = true;
+                litVisitorMsg.Text = "";
+            }
+            else
+            {
+                pnlAddComment.Visible = false;
+                litVisitorMsg.Text = "<p style='color:#fbbf24; text-align:center; margin-top:20px;'>[ <a href='/Lee Wei Zhe/aspx/Login.aspx' style='color:#2ecc71;'>Login</a> to join the discussion ]</p>";
+            }
+        }
+
+        private void LoadComments(int potionId)
+        {
+            using (SqlConnection conn = new SqlConnection(ConnStr))
+            {
+                string sql = @"SELECT c.*, u.Username FROM potionComment c
+                               JOIN userTable u ON c.UserId = u.UserId
+                               WHERE c.PotionId = @pid
+                               AND c.Status = 'Visible'
+                               ORDER BY c.CommentDate DESC";
+                SqlCommand cmd = new SqlCommand(sql, conn);
+                cmd.Parameters.AddWithValue("@pid", potionId);
+
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+                rptComments.DataSource = dt;
+                rptComments.DataBind();
+            }
+        }
+
+        protected void btnSubmitComment_Click(object sender, EventArgs e)
+        {
+            int potionId = Convert.ToInt32(ViewState["CurrentPotionId"]);
+            string commentText = txtComment.Text.Trim();
+
+            if (!string.IsNullOrEmpty(commentText) && Session["userId"] != null)
+            {
+                using (SqlConnection conn = new SqlConnection(ConnStr))
+                {
+                    string sql = "INSERT INTO potionComment (PotionId, UserId, CommentText) VALUES (@pid, @uid, @text)";
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@pid", potionId);
+                    cmd.Parameters.AddWithValue("@uid", Session["userId"]);
+                    cmd.Parameters.AddWithValue("@text", commentText);
+
+                    conn.Open();
+                    cmd.ExecuteNonQuery();
+                }
+                txtComment.Text = "";
+                LoadComments(potionId);
+            }
+        }
+
+        protected void lnkReport_Command(object sender, CommandEventArgs e)
+        {
+            if (Session["userId"] == null)
+            {
+                Response.Redirect("/Lee Wei Zhe/aspx/Login.aspx");
+                return;
+            }
+
+            string[] args = e.CommandArgument.ToString().Split('|');
+            if (args.Length < 2) return;
+
+            string commentId = args[0];
+            string potionId = args[1];
+            string reporterId = Session["userId"].ToString();
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(ConnStr))
+                {
+                    string sql = "INSERT INTO reportTable (CommentId, ReporterId, PotionID) VALUES (@cid, @rid, @pid)";
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@cid", commentId);
+                    cmd.Parameters.AddWithValue("@rid", reporterId);
+                    cmd.Parameters.AddWithValue("@pid", potionId);
+
+                    conn.Open();
+                    cmd.ExecuteNonQuery();
+                }
+
+                Response.Write("<script>alert('Comment reported successfully. Admins will review it.');</script>");
+            }
+            catch (Exception ex)
+            {
+                Response.Write("<script>alert('Error reporting comment: " + ex.Message.Replace("'", "\\'") + "');</script>");
+            }
         }
     }
 }
