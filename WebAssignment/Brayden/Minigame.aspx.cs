@@ -197,7 +197,28 @@ namespace WebAssignment.Brayden
             tabGame.CssClass = "tab-btn";
             tabShop.CssClass = "tab-btn active";
             tabInv.CssClass  = "tab-btn";
+            // default to name-tag shop sub-tab
+            if (IsLoggedIn()) { LoadUserPoints(); pnlNameTag.Visible = true; pnlFrame.Visible = false; tabNameTag.CssClass = "tab-btn active"; tabFrame.CssClass = "tab-btn"; LoadShopItems(); }
+        }
+
+        protected void ShowNameTagShop(object sender, EventArgs e)
+        {
+            // Show the name-tag subset of the shop
+            pnlNameTag.Visible = true;
+            pnlFrame.Visible = false;
+            tabNameTag.CssClass = "tab-btn active";
+            tabFrame.CssClass = "tab-btn";
             if (IsLoggedIn()) { LoadUserPoints(); LoadShopItems(); }
+        }
+
+        protected void ShowFrameShop(object sender, EventArgs e)
+        {
+            // Show the avatar-frame subset of the shop
+            pnlNameTag.Visible = false;
+            pnlFrame.Visible = true;
+            tabNameTag.CssClass = "tab-btn";
+            tabFrame.CssClass = "tab-btn active";
+            if (IsLoggedIn()) { LoadUserPoints(); LoadFrameItems(); }
         }
 
         protected void ShowInventory(object sender, EventArgs e)
@@ -218,12 +239,27 @@ namespace WebAssignment.Brayden
         {
             using (SqlConnection conn = new SqlConnection(ConnStr))
             {
-                string sql = "SELECT * FROM shopItemTable WHERE IsAvailable=1 ORDER BY Price";
+                // Load only name-tag items (those that have an ImagePath)
+                string sql = "SELECT * FROM shopItemTable WHERE IsAvailable=1 AND ImagePath IS NOT NULL AND ImagePath <> '' ORDER BY Price";
                 SqlDataAdapter da = new SqlDataAdapter(sql, conn);
                 DataTable dt = new DataTable();
                 da.Fill(dt);
                 shopRepeater.DataSource = dt;
                 shopRepeater.DataBind();
+            }
+        }
+
+        private void LoadFrameItems()
+        {
+            using (SqlConnection conn = new SqlConnection(ConnStr))
+            {
+                // Only load items that have a FrameImagePath set
+                string sql = "SELECT * FROM shopItemTable WHERE IsAvailable=1 AND FrameImagePath IS NOT NULL AND FrameImagePath <> '' ORDER BY Price";
+                SqlDataAdapter da = new SqlDataAdapter(sql, conn);
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+                frameRepeater.DataSource = dt;
+                frameRepeater.DataBind();
             }
         }
 
@@ -239,18 +275,23 @@ namespace WebAssignment.Brayden
                 return;
             }
 
-            int itemId = Convert.ToInt32(((LinkButton)sender).CommandArgument);
+            // CommandArgument format: "{itemId}|{variant}" where variant is 'name' or 'frame'
+            string arg = ((LinkButton)sender).CommandArgument;
+            string[] parts = arg.Split('|');
+            int itemId = Convert.ToInt32(parts[0]);
+            string variant = parts.Length > 1 ? parts[1] : "name";
             int userId = GetUserId();
 
             using (SqlConnection conn = new SqlConnection(ConnStr))
             {
                 conn.Open();
 
-                // Check already owned
+                // Check already owned for the same variant (allow buying same ItemId with different variant)
                 SqlCommand ownCmd = new SqlCommand(
-                    "SELECT COUNT(*) FROM userInventoryTable WHERE UserId=@uid AND ItemId=@iid", conn);
+                    "SELECT COUNT(*) FROM userInventoryTable WHERE UserId=@uid AND ItemId=@iid AND Variant = @variant", conn);
                 ownCmd.Parameters.AddWithValue("@uid", userId);
                 ownCmd.Parameters.AddWithValue("@iid", itemId);
+                ownCmd.Parameters.AddWithValue("@variant", variant);
                 if (Convert.ToInt32(ownCmd.ExecuteScalar()) > 0)
                 {
                     lblShopMsg.Text      = "You already own this item!";
@@ -277,9 +318,10 @@ namespace WebAssignment.Brayden
 
                 // Purchase
                 SqlCommand buyCmd = new SqlCommand(
-                    "INSERT INTO userInventoryTable (UserId, ItemId) VALUES (@uid, @iid)", conn);
+                    "INSERT INTO userInventoryTable (UserId, ItemId, Variant) VALUES (@uid, @iid, @variant)", conn);
                 buyCmd.Parameters.AddWithValue("@uid", userId);
                 buyCmd.Parameters.AddWithValue("@iid", itemId);
+                buyCmd.Parameters.AddWithValue("@variant", variant);
                 buyCmd.ExecuteNonQuery();
             }
 
@@ -297,6 +339,7 @@ namespace WebAssignment.Brayden
             using (SqlConnection conn = new SqlConnection(ConnStr))
             {
                 string sql = @"SELECT si.*, ui.InventoryId, ui.IsEquipped, ui.PurchaseDate
+                               , ui.Variant
                                FROM userInventoryTable ui
                                JOIN shopItemTable si ON ui.ItemId = si.ItemId
                                WHERE ui.UserId = @uid
@@ -306,6 +349,21 @@ namespace WebAssignment.Brayden
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
                 DataTable dt = new DataTable();
                 da.Fill(dt);
+                // Defensive: some DB instances may not have ui.Variant column (schema drift).
+                // Add a Variant column with a sensible default to avoid Eval("Variant") failing
+                // during databinding in the .aspx markup.
+                if (!dt.Columns.Contains("Variant"))
+                {
+                    dt.Columns.Add("Variant", typeof(string));
+                    foreach (DataRow r in dt.Rows)
+                    {
+                        // Default to 'name' variant. If no ImagePath but FrameImagePath exists, prefer 'frame'.
+                        string img = dt.Columns.Contains("ImagePath") && r["ImagePath"] != DBNull.Value ? r["ImagePath"].ToString() : string.Empty;
+                        string frame = dt.Columns.Contains("FrameImagePath") && r["FrameImagePath"] != DBNull.Value ? r["FrameImagePath"].ToString() : string.Empty;
+                        r["Variant"] = string.IsNullOrEmpty(img) && !string.IsNullOrEmpty(frame) ? "frame" : "name";
+                    }
+                }
+
                 inventoryRepeater.DataSource = dt;
                 inventoryRepeater.DataBind();
                 invEmptyMsg.Visible = (dt.Rows.Count == 0);

@@ -33,6 +33,15 @@ namespace WebAssignment
         protected global::System.Web.UI.WebControls.LinkButton btnMob;
 
         /// <summary>
+        /// panelLockPotion control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel panelLockPotion;
+
+        /// <summary>
         /// btnPotion control.
         /// </summary>
         /// <remarks>
@@ -42,13 +51,13 @@ namespace WebAssignment
         protected global::System.Web.UI.WebControls.LinkButton btnPotion;
 
         /// <summary>
-        /// panelLockPotion control.
+        /// btnEnchantment control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel panelLockPotion;
+        protected global::System.Web.UI.WebControls.LinkButton btnEnchantment;
 
         /// <summary>
         /// btnAutoFarm control.

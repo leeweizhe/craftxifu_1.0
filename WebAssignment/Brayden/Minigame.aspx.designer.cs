@@ -132,6 +132,33 @@ namespace WebAssignment.Brayden
         protected global::System.Web.UI.WebControls.Label lblShopMsg;
 
         /// <summary>
+        /// tabNameTag control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button tabNameTag;
+
+        /// <summary>
+        /// tabFrame control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button tabFrame;
+
+        /// <summary>
+        /// pnlNameTag control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel pnlNameTag;
+
+        /// <summary>
         /// shopRepeater control.
         /// </summary>
         /// <remarks>
@@ -139,6 +166,42 @@ namespace WebAssignment.Brayden
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Repeater shopRepeater;
+
+        /// <summary>
+        /// pnlFrame control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel pnlFrame;
+
+        /// <summary>
+        /// lblFrameShopMsg control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblFrameShopMsg;
+
+        /// <summary>
+        /// frameRepeater control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Repeater frameRepeater;
+
+        /// <summary>
+        /// pnlFrameGuest control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel pnlFrameGuest;
 
         /// <summary>
         /// pnlShopGuest control.

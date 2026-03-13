@@ -7,10 +7,8 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace WebAssignment.Wong_Zhang_Zhe
+namespace WebAssignment.Brayden
 {
-
-
     public partial class Enchantment
     {
 

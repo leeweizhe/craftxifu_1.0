@@ -77,7 +77,7 @@
                 <ItemTemplate>
                     <asp:LinkButton runat="server" CssClass="category-card"
                         CommandArgument='<%# Eval("Category") %>' OnClick="SelectCategory">
-                        <span class="cat-icon"><%# ((WebAssignment.Wong_Zhang_Zhe.Enchantment)Page).GetCategoryIcon(Eval("Category").ToString()) %></span>
+                        <span class="cat-icon"><%# ((WebAssignment.Brayden.Enchantment)Page).GetCategoryIcon(Eval("Category").ToString()) %></span>
                         <h2><%# Eval("Category") %></h2>
                         <p>Click to explore</p>
                     </asp:LinkButton>
