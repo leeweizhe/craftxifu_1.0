@@ -448,15 +448,21 @@ namespace WebAssignment.Brayden
             string[] args = e.CommandArgument.ToString().Split('|');
             if (args.Length < 2) return;
 
-            string commentId = args[0];
-            string potionId = args[1];
+            string commentId = e.CommandArgument.ToString().Split('|')[0];
+            string potionId = ViewState["CurrentPotionId"]?.ToString();
             string reporterId = Session["userId"].ToString();
+
+            if (string.IsNullOrEmpty(potionId))
+            {
+                Response.Write("<script>alert('Error: Potion ID not found in session.');</script>");
+                return;
+            }
 
             try
             {
                 using (SqlConnection conn = new SqlConnection(ConnStr))
                 {
-                    string sql = "INSERT INTO reportTable (CommentId, ReporterId, PotionID) VALUES (@cid, @rid, @pid)";
+                    string sql = "INSERT INTO reportTable (CommentId, ReporterId, PotionId) VALUES (@cid, @rid, @pid)";
                     SqlCommand cmd = new SqlCommand(sql, conn);
                     cmd.Parameters.AddWithValue("@cid", commentId);
                     cmd.Parameters.AddWithValue("@rid", reporterId);

@@ -211,7 +211,7 @@
                             <span style="color:#888; font-size:0.8rem;">- <%# Eval("CommentDate", "{0:yyyy-MM-dd HH:mm}") %></span>
                             <asp:LinkButton ID="lnkReport" runat="server"
                                 Text="[ REPORT ]"
-                                CommandArgument='<%# String.Format("{0}|{1}", Eval("CommentId"), Request.QueryString["id"]) %>'
+                                CommandArgument='<%# String.Format("{0}|{1}", Eval("CommentId"), Request.QueryString["PotionId"]) %>'
                                 OnCommand="lnkReport_Command"
                                 OnClientClick="return confirm('Are you sure you want to report this comment?');"
                                 Visible='<%# Session["userId"] != null %>'

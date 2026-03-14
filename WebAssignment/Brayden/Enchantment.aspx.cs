@@ -451,15 +451,15 @@ namespace WebAssignment.Brayden
             string[] args = e.CommandArgument.ToString().Split('|');
             if (args.Length < 2) return;
 
-            string commentId = args[0];
-            string enchantId = args[1];
+            string commentId = e.CommandArgument.ToString().Split('|')[0];
+            string enchantId = ViewState["CurrentEnchantId"]?.ToString();
             string reporterId = Session["userId"].ToString();
 
             try
             {
                 using (SqlConnection conn = new SqlConnection(ConnStr))
                 {
-                    string sql = "INSERT INTO reportTable (CommentId, ReporterId, EnchantmentID) VALUES (@cid, @rid, @eid)";
+                    string sql = "INSERT INTO reportTable (CommentId, ReporterId, EnchantmentId) VALUES (@cid, @rid, @eid)";
                     SqlCommand cmd = new SqlCommand(sql, conn);
                     cmd.Parameters.AddWithValue("@cid", commentId);
                     cmd.Parameters.AddWithValue("@rid", reporterId);
