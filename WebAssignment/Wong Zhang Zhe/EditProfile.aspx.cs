@@ -62,10 +62,11 @@ namespace WebAssignment
                 reader.Close();
 
                 //Load the user's previously purchased inventory items for selection.
-                string sqlInv = @"SELECT s.Name, s.ImagePath, s.FrameImagePath 
+                string sqlInv = @"SELECT i.Variant, s.Name, s.ImagePath, s.FrameImagePath 
                                 FROM userInventoryTable i 
                                 JOIN shopItemTable s ON i.ItemId = s.ItemId 
-                                WHERE i.UserId = @uid";
+                                WHERE i.UserId = @uid
+                                ORDER BY i.PurchaseDate DESC";
                 SqlCommand cmdInv = new SqlCommand(sqlInv, conn);
                 cmdInv.Parameters.AddWithValue("@uid", userId);
 
@@ -73,16 +74,23 @@ namespace WebAssignment
                 while (invReader.Read())
                 {
                     string itemName = invReader["Name"].ToString();
+                    string variant = invReader["Variant"] != DBNull.Value ? invReader["Variant"].ToString() : "";
                     string tagPath = invReader["ImagePath"] != DBNull.Value ? invReader["ImagePath"].ToString() : "";
                     string framePath = invReader["FrameImagePath"] != DBNull.Value ? invReader["FrameImagePath"].ToString() : "";
 
-                    // If the item has a title path, add it to the title dropdown menu.
-                    if (!string.IsNullOrEmpty(tagPath))
-                        ddlNameTag.Items.Add(new ListItem(itemName, tagPath));
+                    // Add to NameTag dropdown only if variant is 'name' and has ImagePath
+                    if (variant.ToLower() == "name" && !string.IsNullOrEmpty(tagPath))
+                    {
+                        if (ddlNameTag.Items.FindByValue(tagPath) == null) // Prevent duplicates
+                            ddlNameTag.Items.Add(new ListItem(itemName, tagPath));
+                    }
 
-                    // If the item has a border path, add an avatar frame dropdown.
-                    if (!string.IsNullOrEmpty(framePath))
-                        ddlAvatarFrame.Items.Add(new ListItem(itemName, framePath));
+                    // Add to AvatarFrame dropdown only if variant is 'frame' and has FrameImagePath
+                    if (variant.ToLower() == "frame" && !string.IsNullOrEmpty(framePath))
+                    {
+                        if (ddlAvatarFrame.Items.FindByValue(framePath) == null) // Prevent duplicates
+                            ddlAvatarFrame.Items.Add(new ListItem(itemName, framePath));
+                    }
                 }
                 invReader.Close();
 

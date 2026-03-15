@@ -39,6 +39,15 @@
         .card-intro { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 30px; box-sizing: border-box; color: #68ff00; font-size: 1.3rem; opacity: 0; transition: 0.5s; text-align: center; background: rgba(0,0,0,0.6); }
         .guide-card:hover .card-intro { opacity: 1; }
         .click-hint { font-size: 0.8rem; color: #fbbf24; margin-top: 20px; text-transform: uppercase; }
+
+        /* Sub-links inside the potion/enchantment card */
+        #potionEnchCard { position: relative; }
+        .guide-sub { position: absolute; top: 0; width: 50%; height: 100%; display: flex; align-items: center; justify-content: center; text-decoration: none; color: #fff; }
+        .guide-sub.left { left: 0; }
+        .guide-sub.right { right: 0; }
+        .guide-sub .sub-intro { background: rgba(0,0,0,0.55); padding: 12px; border-radius: 6px; opacity: 0; transition: 0.2s; }
+        #potionEnchCard:hover .guide-sub .sub-intro { opacity: 1; }
+        .guide-sub .sub-title { font-size:1.4rem; color:#68ff00; margin-bottom:6px; }
     </style>
 </asp:Content>
 
@@ -64,18 +73,31 @@
                 </div>
             </asp:LinkButton>
 
-            <asp:LinkButton ID="btnPotion" runat="server" CssClass="guide-card" OnClick="Guide_Click" CommandArgument="Potion">
+            <!-- Combined Potion & Enchantment card: split into two clickable halves -->
+            <div class="guide-card" id="potionEnchCard">
                 <img src="/Wong Zhang Zhe/pic/potion_cover.png?v=1.1" class="card-img" />
                 <asp:Panel ID="panelLockPotion" runat="server" CssClass="lock-overlay" Visible="false">
                     <div class="pixel-lock"></div>
                     <div class="lock-text">Member Only</div>
                 </asp:Panel>
                 <div class="card-title">Potion & Enchantment</div>
-                <div class="card-intro">
-                    <p>Consumable liquids from a Brewing Stand...</p>
-                    <div class="click-hint">[ Click to Enter ]</div>
-                </div>
-            </asp:LinkButton>
+
+                <!-- Left: Potion -->
+                <asp:LinkButton ID="btnPotion" runat="server" CssClass="guide-sub left" OnClick="Guide_Click" CommandArgument="Potion">
+                    <div class="sub-intro">
+                        <div class="sub-title">Potion</div>
+                        <div class="click-hint">Click to enter potion</div>
+                    </div>
+                </asp:LinkButton>
+
+                <!-- Right: Enchantment -->
+                <asp:LinkButton ID="btnEnchantment" runat="server" CssClass="guide-sub right" OnClick="Guide_Click" CommandArgument="Enchantment">
+                    <div class="sub-intro">
+                        <div class="sub-title">Enchantment</div>
+                        <div class="click-hint">Click to enter enchantment</div>
+                    </div>
+                </asp:LinkButton>
+            </div>
 
             <asp:LinkButton ID="btnAutoFarm" runat="server" CssClass="guide-card" OnClick="Guide_Click" CommandArgument="AutoFarm">
                 <img src="/Wong Zhang Zhe/pic/autofarm_cover.png?v=1.1" class="card-img" />
