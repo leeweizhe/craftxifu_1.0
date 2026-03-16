@@ -86,6 +86,12 @@ namespace WebAssignment.Lee_Wei_Zhe.aspx
             bool isOwner = Session["userId"] != null &&
                            Convert.ToInt32(Session["userId"]) == ownerUserId;
 
+            if (!isOwner && !IsPostBack)
+            {
+                ExecuteSQL("UPDATE LiveStreams SET ClickCount = ClickCount + 1 WHERE StreamID = @id",
+                    new SqlParameter("@id", streamId));
+            }
+
             if (isOwner)
             {
                 pnlInstructorControls.Visible = true;
@@ -160,7 +166,7 @@ namespace WebAssignment.Lee_Wei_Zhe.aspx
                 return;
             }
 
-            string sql = @"INSERT INTO LSCommentTable (FarmId, UserId, CommentText, CommentDate)
+            string sql = @"INSERT INTO LSCommentTable (StreamId, UserId, CommentText, CommentDate)
                            VALUES (@streamId, @userId, @commentText, GETDATE())";
 
             ExecuteSQL(sql,
@@ -223,13 +229,13 @@ namespace WebAssignment.Lee_Wei_Zhe.aspx
             string sql = @"
                 SELECT TOP 50
                        c.CommentId,
-                       c.FarmId,
+                       c.StreamId,
                        c.CommentText,
                        c.CommentDate,
                        u.Username
                 FROM LSCommentTable c
                 INNER JOIN userTable u ON c.UserId = u.UserId
-                WHERE c.FarmId = @streamId
+                WHERE c.StreamId = @streamId
                 ORDER BY c.CommentDate ASC";
 
             DataTable dt = GetData(sql, new SqlParameter("@streamId", streamId));

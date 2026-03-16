@@ -136,7 +136,7 @@
                                         <asp:LinkButton ID="lnkReport" runat="server"
                                             CssClass="btn-report"
                                             CommandName="Report"
-                                            CommandArgument='<%# Eval("CommentId") + "|" + Eval("FarmId") %>'
+                                            CommandArgument='<%# Eval("CommentId") + "|" + Eval("StreamId") %>'
                                             OnCommand="lnkReport_Command"
                                             ToolTip="Report this message"
                                             OnClientClick="return confirm('Report this message?');">

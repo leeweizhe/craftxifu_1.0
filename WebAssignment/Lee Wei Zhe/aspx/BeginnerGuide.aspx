@@ -541,7 +541,7 @@
                             CssClass="comment-input" placeholder="Type your comment here..." />
                 
                         <asp:Button ID="btnSubmitComment" runat="server" Text="POST COMMENT" 
-                            OnClick="btnSubmitComment_Click" CssClass="btn-submit-comment" />
+                            OnClick="btnSubmitComment_Click" CssClass="btn-submit-comment" href="#txtComment"/>
                     </asp:Panel>
 
                     <asp:Literal ID="litVisitorMsg" runat="server" />
