@@ -4,7 +4,7 @@ using System.Data.SqlClient;
 using System.Configuration;
 using System.Web.UI.WebControls;
 
-namespace WebAssignment.Wong_Zhang_Zhe
+namespace WebAssignment.Brayden
 {
     public partial class Enchantment : System.Web.UI.Page
     {
@@ -16,6 +16,12 @@ namespace WebAssignment.Wong_Zhang_Zhe
         private bool IsAdmin()
         {
             return Session["role"] != null && Session["role"].ToString().ToLower() == "admin";
+        }
+
+        private bool IsInstructor()
+        {
+            string userRole = Session["UserRole"] as string;
+            return !string.IsNullOrEmpty(userRole) && userRole == "Instructor";
         }
 
         public string GetCategoryIcon(string cat)
@@ -165,12 +171,17 @@ namespace WebAssignment.Wong_Zhang_Zhe
                             pips += "<span class='level-pip'>" + roman[i] + "</span>";
                         litLevelPips.Text = pips;
 
-                        btnEditEnchant.Visible           = IsAdmin();
-                        btnDeleteEnchant.Visible         = IsAdmin();
+                        // Show edit/delete for Admin or Instructor
+                        btnEditEnchant.Visible           = IsAdmin() || IsInstructor();
+                        btnDeleteEnchant.Visible         = IsAdmin() || IsInstructor();
                         btnDeleteEnchant.CommandArgument = id.ToString();
                     }
                 }
             }
+
+            // Load comments after loading detail
+            LoadComments(id);
+            CheckCommentPermission();
         }
 
         // ─────────────────────────────────────────────
@@ -367,6 +378,103 @@ namespace WebAssignment.Wong_Zhang_Zhe
             detailPanel.Visible   = false; editPanel.Visible  = false;
             addPanel.Visible      = false;
             btnAddNew.Visible     = IsAdmin();
+        }
+
+        // ─────────────────────────────────────────────
+        // COMMENT SECTION
+        // ─────────────────────────────────────────────
+        private void CheckCommentPermission()
+        {
+            if (Session["userId"] != null)
+            {
+                pnlAddComment.Visible = true;
+                litVisitorMsg.Text = "";
+            }
+            else
+            {
+                pnlAddComment.Visible = false;
+                litVisitorMsg.Text = "<p style='color:#fbbf24; text-align:center; margin-top:20px;'>[ <a href='/Lee Wei Zhe/aspx/Login.aspx' style='color:#9b59b6;'>Login</a> to join the discussion ]</p>";
+            }
+        }
+
+        private void LoadComments(int enchantId)
+        {
+            using (SqlConnection conn = new SqlConnection(ConnStr))
+            {
+                string sql = @"SELECT c.*, u.Username FROM enchantmentComment c
+                               JOIN userTable u ON c.UserId = u.UserId
+                               WHERE c.EnchantmentId = @eid
+                               AND c.Status = 'Visible'
+                               ORDER BY c.CommentDate DESC";
+                SqlCommand cmd = new SqlCommand(sql, conn);
+                cmd.Parameters.AddWithValue("@eid", enchantId);
+
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+                rptComments.DataSource = dt;
+                rptComments.DataBind();
+            }
+        }
+
+        protected void btnSubmitComment_Click(object sender, EventArgs e)
+        {
+            int enchantId = Convert.ToInt32(ViewState["CurrentEnchantId"]);
+            string commentText = txtComment.Text.Trim();
+
+            if (!string.IsNullOrEmpty(commentText) && Session["userId"] != null)
+            {
+                using (SqlConnection conn = new SqlConnection(ConnStr))
+                {
+                    string sql = "INSERT INTO enchantmentComment (EnchantmentId, UserId, CommentText) VALUES (@eid, @uid, @text)";
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@eid", enchantId);
+                    cmd.Parameters.AddWithValue("@uid", Session["userId"]);
+                    cmd.Parameters.AddWithValue("@text", commentText);
+
+                    conn.Open();
+                    cmd.ExecuteNonQuery();
+                }
+                txtComment.Text = "";
+                LoadComments(enchantId);
+            }
+        }
+
+        protected void lnkReport_Command(object sender, CommandEventArgs e)
+        {
+            if (Session["userId"] == null)
+            {
+                Response.Redirect("/Lee Wei Zhe/aspx/Login.aspx");
+                return;
+            }
+
+            string[] args = e.CommandArgument.ToString().Split('|');
+            if (args.Length < 2) return;
+
+            string commentId = e.CommandArgument.ToString().Split('|')[0];
+            string enchantId = ViewState["CurrentEnchantId"]?.ToString();
+            string reporterId = Session["userId"].ToString();
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(ConnStr))
+                {
+                    string sql = "INSERT INTO reportTable (CommentId, ReporterId, EnchantmentId) VALUES (@cid, @rid, @eid)";
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@cid", commentId);
+                    cmd.Parameters.AddWithValue("@rid", reporterId);
+                    cmd.Parameters.AddWithValue("@eid", enchantId);
+
+                    conn.Open();
+                    cmd.ExecuteNonQuery();
+                }
+
+                Response.Write("<script>alert('Comment reported successfully. Admins will review it.');</script>");
+            }
+            catch (Exception ex)
+            {
+                Response.Write("<script>alert('Error reporting comment: " + ex.Message.Replace("'", "\\'") + "');</script>");
+            }
         }
     }
 }

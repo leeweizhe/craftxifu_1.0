@@ -77,7 +77,7 @@
                 <ItemTemplate>
                     <asp:LinkButton runat="server" CssClass="category-card"
                         CommandArgument='<%# Eval("Category") %>' OnClick="SelectCategory">
-                        <span class="cat-icon"><%# ((WebAssignment.Wong_Zhang_Zhe.Enchantment)Page).GetCategoryIcon(Eval("Category").ToString()) %></span>
+                        <span class="cat-icon"><%# ((WebAssignment.Brayden.Enchantment)Page).GetCategoryIcon(Eval("Category").ToString()) %></span>
                         <h2><%# Eval("Category") %></h2>
                         <p>Click to explore</p>
                     </asp:LinkButton>
@@ -160,6 +160,42 @@
                 <asp:Button ID="btnEditEnchant" runat="server" CssClass="btn-edit" Text="✎ EDIT" OnClick="ShowEditForm" Visible="false" />
                 <asp:LinkButton ID="btnDeleteEnchant" runat="server" CssClass="btn-delete" Text="✖ DELETE"
                     OnClick="DeleteEnchantment" OnClientClick="return confirm('Delete this enchantment?');" Visible="false" />
+            </div>
+
+            <%-- COMMENT SECTION --%>
+            <div style="margin-top:40px; border-top:3px solid #555; padding-top:30px;">
+                <h3 style="color:#9b59b6; font-size:1.5rem; margin-bottom:20px;">💬 COMMUNITY COMMENTS</h3>
+                <asp:Repeater ID="rptComments" runat="server">
+                    <ItemTemplate>
+                        <div style="border-bottom:1px dashed #444; padding:15px 0; margin-bottom:10px;">
+                            <span style="color:#9b59b6;"><%# Eval("Username") %></span>
+                            <span style="color:#888; font-size:0.8rem;">- <%# Eval("CommentDate", "{0:yyyy-MM-dd HH:mm}") %></span>
+                            <asp:LinkButton ID="lnkReport" runat="server"
+                                Text="[ REPORT ]"
+                                CommandArgument='<%# String.Format("{0}|{1}", Eval("CommentId"), Request.QueryString["EnchantmentId"]) %>'
+                                OnCommand="lnkReport_Command"
+                                OnClientClick="return confirm('Are you sure you want to report this comment?');"
+                                Visible='<%# Session["userId"] != null %>'
+                                style="color:#ff4444; font-size:0.7rem; text-decoration:none; float:right;" />
+                            <p style="margin-top:8px; color:#ddd; line-height:1.4;"><%# Eval("CommentText") %></p>
+                        </div>
+                    </ItemTemplate>
+                </asp:Repeater>
+
+                <%-- Add Comment Panel --%>
+                <asp:Panel ID="pnlAddComment" runat="server" Visible="false" style="margin-top:20px;">
+                    <h4 style="color:#fbbf24; margin-bottom:10px; font-size:1rem;">ADD YOUR THOUGHTS</h4>
+                    <asp:TextBox ID="txtComment" runat="server" TextMode="MultiLine" Rows="4"
+                        style="width:100%; background:#000; color:#fff; border:1px solid #9b59b6; padding:10px; font-family:inherit; resize:none;"
+                        placeholder="Share your experience with this enchantment..." />
+                    <br />
+                    <asp:Button ID="btnSubmitComment" runat="server" Text="[ POST COMMENT ]"
+                        OnClick="btnSubmitComment_Click"
+                        style="margin-top:15px; background:#9b59b6; color:#fff; border:none; padding:10px 25px; font-weight:bold; cursor:pointer; font-family:inherit;" />
+                </asp:Panel>
+
+                <%-- Visitor Message --%>
+                <asp:Literal ID="litVisitorMsg" runat="server" />
             </div>
         </div>
     </asp:Panel>

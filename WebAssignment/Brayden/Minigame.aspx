@@ -88,7 +88,7 @@
     <%-- Tab Bar --%>
     <div class="tab-bar">
         <asp:Button runat="server" CssClass="tab-btn active" ID="tabGame" Text="🎮 LOOT DROP GAME" OnClick="ShowGame"      OnClientClick="setActive(this);" />
-        <asp:Button runat="server" CssClass="tab-btn"        ID="tabShop" Text="🛒 NAME TAG SHOP"  OnClick="ShowShop"      OnClientClick="setActive(this);" />
+        <asp:Button runat="server" CssClass="tab-btn"        ID="tabShop" Text="🛒 SHOP"  OnClick="ShowShop"      OnClientClick="setActive(this);" />
         <asp:Button runat="server" CssClass="tab-btn"        ID="tabInv"  Text="🎒 MY INVENTORY"   OnClick="ShowInventory" OnClientClick="setActive(this);" />
     </div>
 
@@ -154,7 +154,7 @@
 
     <%-- ===== SHOP SECTION ===== --%>
     <asp:Panel ID="shopSection" runat="server" Visible="false">
-        <h2 style="color:#68ff00; font-size:1.8rem; margin-bottom:5px;">🛒 Name Tag Shop</h2>
+        <h2 style="color:#68ff00; font-size:1.8rem; margin-bottom:5px;">🛒 Shop</h2>
         <p style="color:#aaa; margin-bottom:15px;">Spend your hard-earned points on exclusive rank titles and avatar frames.</p>
 
         <asp:Panel ID="pnlShopPoints" runat="server" Visible="false">
@@ -167,29 +167,76 @@
 
         <asp:Label ID="lblShopMsg" runat="server" CssClass="shop-msg" />
 
-        <div class="shop-grid">
-            <asp:Repeater ID="shopRepeater" runat="server">
-                <ItemTemplate>
-                    <div class="shop-card" style='border-color:<%# ((WebAssignment.Brayden.Minigame)Page).GetRarityColor(Eval("Rarity").ToString()) %>'>
-                        <div class="rarity-banner" style='background:<%# ((WebAssignment.Brayden.Minigame)Page).GetRarityColor(Eval("Rarity").ToString()) %>; color:#000;'>
-                            <%# Eval("Rarity") %>
-                        </div>
-                        <img src='<%# ResolveUrl(Eval("ImagePath").ToString()) %>' class="shop-item-img" onerror="this.style.display='none'" alt='<%# Eval("Name") %>' />
-                        <div class="shop-item-name" style='color:<%# ((WebAssignment.Brayden.Minigame)Page).GetRarityColor(Eval("Rarity").ToString()) %>'>
-                            <%# Eval("Name") %>
-                        </div>
-                        <div class="shop-item-desc"><%# Eval("Description") %></div>
-                        <div class="price-tag">💎 <%# Eval("Price") %> pts</div><br />
-                        <asp:LinkButton runat="server" CssClass="btn-buy"
-                            CommandArgument='<%# Eval("ItemId") %>'
-                            OnClick="BuyItem"
-                            OnClientClick='<%# "return confirm(\"Purchase " + Eval("Name") + " for " + Eval("Price") + " points?\");" %>'>
-                            BUY NOW
-                        </asp:LinkButton>
-                    </div>
-                </ItemTemplate>
-            </asp:Repeater>
+        <!-- Sub-tabs: Name Tag / Avatar Frame -->
+        <div class="tab-bar" style="margin-bottom:15px;">
+            <asp:Button runat="server" CssClass="tab-btn active" ID="tabNameTag" Text="Name Tag Shop" OnClick="ShowNameTagShop" />
+            <asp:Button runat="server" CssClass="tab-btn"        ID="tabFrame"   Text="Avatar Frame Shop" OnClick="ShowFrameShop" />
         </div>
+
+        <!-- Name Tag shop (original) -->
+        <asp:Panel ID="pnlNameTag" runat="server">
+            <div class="shop-grid">
+                <asp:Repeater ID="shopRepeater" runat="server">
+                    <ItemTemplate>
+                        <div class="shop-card" style='border-color:<%# ((WebAssignment.Brayden.Minigame)Page).GetRarityColor(Eval("Rarity").ToString()) %>'>
+                            <div class="rarity-banner" style='background:<%# ((WebAssignment.Brayden.Minigame)Page).GetRarityColor(Eval("Rarity").ToString()) %>; color:#000;'>
+                                <%# Eval("Rarity") %>
+                            </div>
+                        <img src='<%# ResolveUrl(
+                            (Eval("ImagePath") != null && !string.IsNullOrEmpty(Eval("ImagePath").ToString()))
+                                ? Eval("ImagePath").ToString()
+                                : (Eval("FrameImagePath") != null ? Eval("FrameImagePath").ToString() : "")
+                        ) %>' class="shop-item-img" onerror="this.style.display='none'" alt='<%# Eval("Name") %>' />
+                            <div class="shop-item-name" style='color:<%# ((WebAssignment.Brayden.Minigame)Page).GetRarityColor(Eval("Rarity").ToString()) %>'>
+                                <%# Eval("Name") %>
+                            </div>
+                            <div class="shop-item-desc"><%# Eval("Description") %></div>
+                            <div class="price-tag">💎 <%# Eval("Price") %> pts</div><br />
+                            <asp:LinkButton runat="server" CssClass="btn-buy"
+                                CommandArgument='<%# Eval("ItemId") + "|name" %>'
+                                OnClick="BuyItem"
+                                OnClientClick='<%# "return confirm(\"Purchase " + Eval("Name") + " for " + Eval("Price") + " points?\");" %>'>
+                                BUY NOW
+                            </asp:LinkButton>
+                        </div>
+                    </ItemTemplate>
+                </asp:Repeater>
+            </div>
+        </asp:Panel>
+
+        <!-- Avatar Frame shop -->
+        <asp:Panel ID="pnlFrame" runat="server" Visible="false">
+            <asp:Label ID="lblFrameShopMsg" runat="server" CssClass="shop-msg" />
+            <div class="shop-grid">
+                <asp:Repeater ID="frameRepeater" runat="server">
+                    <ItemTemplate>
+                        <div class="shop-card" style='border-color:<%# ((WebAssignment.Brayden.Minigame)Page).GetRarityColor(Eval("Rarity").ToString()) %>'>
+                            <div class="rarity-banner" style='background:<%# ((WebAssignment.Brayden.Minigame)Page).GetRarityColor(Eval("Rarity").ToString()) %>; color:#000;'>
+                                <%# Eval("Rarity") %>
+                            </div>
+                            <img src='<%# ResolveUrl(Eval("FrameImagePath").ToString()) %>' class="shop-item-img" onerror="this.style.display='none'" alt='<%# Eval("Name") %>' />
+                            <div class="shop-item-name" style='color:<%# ((WebAssignment.Brayden.Minigame)Page).GetRarityColor(Eval("Rarity").ToString()) %>'>
+                                <%# Eval("Name") %>
+                            </div>
+                            <div class="shop-item-desc"><%# Eval("Description") %></div>
+                            <div class="price-tag">💎 <%# Eval("Price") %> pts</div><br />
+                            <asp:LinkButton runat="server" CssClass="btn-buy"
+                                CommandArgument='<%# Eval("ItemId") + "|frame" %>'
+                                OnClick="BuyItem"
+                                OnClientClick='<%# "return confirm(\"Purchase " + Eval("Name") + " for " + Eval("Price") + " points?\");" %>'>
+                                BUY NOW
+                            </asp:LinkButton>
+                        </div>
+                    </ItemTemplate>
+                </asp:Repeater>
+            </div>
+
+            <asp:Panel ID="pnlFrameGuest" runat="server" Visible="false">
+                <div style="text-align:center; padding:40px; color:#555; font-size:1.2rem;">
+                    Please log in to purchase avatar frames.
+                </div>
+            </asp:Panel>
+        </asp:Panel>
 
         <asp:Panel ID="pnlShopGuest" runat="server" Visible="false">
             <div style="text-align:center; padding:40px; color:#555; font-size:1.2rem;">
@@ -220,7 +267,8 @@
                     <div class='inv-card <%# Eval("IsEquipped").ToString()=="True" ? "equipped" : "" %>'
                          style='border-color:<%# ((WebAssignment.Brayden.Minigame)Page).GetRarityColor(Eval("Rarity").ToString()) %>'>
                         <%# Eval("IsEquipped").ToString()=="True" ? "<div class='equipped-badge'>✓ EQUIPPED</div>" : "" %>
-                        <img src='<%# ResolveUrl(Eval("ImagePath")!=null && Eval("ImagePath").ToString().Length>0 ? Eval("ImagePath").ToString() : (Eval("FrameImagePath")!=null ? Eval("FrameImagePath").ToString() : "") ) %>'
+                        <%-- Choose image based on Variant stored in ui.Variant --%>
+                        <img src='<%# ResolveUrl(Eval("Variant").ToString() == "frame" ? (Eval("FrameImagePath")!=null ? Eval("FrameImagePath").ToString() : "") : (Eval("ImagePath")!=null ? Eval("ImagePath").ToString() : (Eval("FrameImagePath")!=null ? Eval("FrameImagePath").ToString() : "")) ) %>'
                              class="inv-item-img" onerror="this.style.display='none'" alt='<%# Eval("Name") %>' />
                         <div style='color:<%# ((WebAssignment.Brayden.Minigame)Page).GetRarityColor(Eval("Rarity").ToString()) %>; font-size:1.1rem; margin-bottom:5px;'>
                             <%# Eval("Name") %>

@@ -9,66 +9,30 @@
         .report-summary { display: flex; justify-content: space-between; align-items: center; padding: 30px 40px; cursor: pointer; background: #1e1e1e; }
         
         /* Fixed Column System for perfect vertical alignment */
-        .report-meta { 
-            display: flex; 
-            align-items: center; 
-            flex-grow: 1; /* Allows columns to take up space before the arrow */
-            font-family: 'Minecraft', sans-serif; 
-        }
+        .report-meta { display: flex; align-items: center; flex-grow: 1; /* Allows columns to take up space before the arrow */font-family: 'Minecraft', sans-serif; }
 
         /* Column 1: Commenter Name (Centered in 250px box, not bold) */
-        .col-author {
-            width: 250px; 
-            text-align: center;
-            color: #00ff41;
-            font-size: 1.25rem;
-            font-weight: normal; 
-            padding-right: 20px;
-        }
+        .col-author {width: 250px; text-align: center;color: #00ff41;font-size: 1.25rem;font-weight: normal; padding-right: 20px;}
 
         /* Column 2: Comment Date (Fixed distance) */
-        .col-date {
-            width: 200px;
-            color: #555;
-            font-size: 1rem;
-        }
+        .col-date {width: 200px;color: #555;font-size: 1rem;}
 
         /* Column 3: Section Name */
-        .col-section {
-            flex-grow: 1;
-            color: #fbbf24;
-            font-size: 1rem;
-        }
+        .col-section {flex-grow: 1;color: #fbbf24;font-size: 1rem; font-weight: normal; }
         .section-text { color: #fff; }
 
         .toggle-arrow { color: #00ff41; font-size: 1.5rem; font-family: Arial, sans-serif; transition: transform 0.8s ease; }
         
         /* Smooth Animation Setup */
-        .report-details { 
-            max-height: 0; 
-            overflow: hidden; 
-            opacity: 0; 
-            padding: 0 40px; 
-            background: #0c0c0c; 
-            border-top: 1px solid transparent;
-            /* Balanced speeds for both directions */
-            transition: max-height 0.8s cubic-bezier(0.4, 0, 0.2, 1), 
-                        opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), 
-                        padding 0.8s cubic-bezier(0.4, 0, 0.2, 1); 
-        }
+        .report-details { max-height: 0; overflow: hidden; opacity: 0; padding: 0 40px; background: #0c0c0c; border-top: 1px solid transparent; transition: max-height 0.8s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), padding 0.8s cubic-bezier(0.4, 0, 0.2, 1); font-family: 'PT Serif', serif; font-weight: normal; color: #ddd; line-height: 1.6; }
 
-        .report-details.active { 
-            max-height: 800px; 
-            opacity: 1; 
-            padding: 25px 40px; 
-            border-top: 1px solid #333; 
-        }
+        .report-details.active { max-height: 800px; opacity: 1; padding: 25px 40px; border-top: 1px solid #333; }
         
-        .reporter-info { color: #888; font-size: 1.1rem; margin-top: 12px; font-family: 'Minecraft', sans-serif; text-transform: uppercase; }
+        .reporter-info { color: #888; font-size: 1.1rem; margin-top: 12px; font-family: 'Minecraft', sans-serif; text-transform: uppercase; font-weight: normal; }
         .reporter-highlight { color: #ff4444; }
         .report-date-highlight { color: #555; margin-left: 10px; font-size: 0.95rem; }
 
-        .action-btn { border: none; padding: 12px 35px; cursor: pointer; font-weight: bold; font-size: 1rem; border-radius: 20px; font-family: 'Minecraft', sans-serif; transition: 0.2s; }
+        .action-btn { border: none; padding: 12px 35px; cursor: pointer; font-weight: normal; font-size: 1rem; border-radius: 20px; font-family: 'Minecraft', sans-serif; transition: 0.2s; }
         .btn-ignore { background: #333; color: #fff; }
         .btn-delete { background: #ff4444; color: #000; }
         .action-btn:hover { filter: brightness(1.2); }
@@ -118,18 +82,19 @@
                         </div>
 
                         <div class="report-details">
-                            <p style="color: #bbb; margin-bottom: 10px; font-size: 1.1rem; background: #000; padding: 20px; border: 1px solid #222; font-family: 'Minecraft', sans-serif;">
+                            <p style="color: #bbb; margin-bottom: 10px; font-size: 1.1rem; background: #000; padding: 20px; border: 1px solid #222; font-family: 'PT Serif', serif; font-weight: normal; line-height: 1.6;">
                                 <%# Eval("CommentText") %>
                             </p>
-                
-                            <div class="reporter-info">
-                                Reported By: <span class="reporter-highlight"><%# Eval("ReporterName") %></span> 
-                                <span class="report-date-highlight"><%# Eval("ReportDate", "{0:yyyy-MM-dd HH:mm}") %></span>
+
+                            <div class="reporter-info" style="font-weight: normal;">
+                                Reported By: <span class="reporter-highlight" style="font-weight: normal;"><%# Eval("ReporterName") %></span> 
+                                <span class="report-date-highlight" style="font-weight: normal;"><%# Eval("ReportDate", "{0:yyyy-MM-dd HH:mm}") %></span>
                             </div>
 
                             <div style="display: flex; justify-content: flex-end; gap: 15px; margin-top: 5px;">
                                 <asp:Button ID="btnIgnore" runat="server" Text="IGNORE" CommandName="Ignore" 
                                     CommandArgument='<%# Eval("ReportId") %>' CssClass="action-btn btn-ignore" />
+        
                                 <asp:Button ID="btnDelete" runat="server" Text="DELETE" CommandName="Delete" 
                                     CommandArgument='<%# Eval("CommentId") %>' CssClass="action-btn btn-delete" />
                             </div>

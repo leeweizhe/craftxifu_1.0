@@ -2,8 +2,13 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <style type="text/css">
+        /* Position the Add Mob button at the top right of the guide-container */
+        .add-mob-wrapper { position: absolute; top: 40px; right: 40px; }
+        .btn-add-new { background-color: #68ff00; color: #000; padding: 12px 20px; font-family: 'Minecraft', sans-serif; font-weight: normal; text-decoration: none; border: 2px solid #000; transition: 0.3s; text-transform: uppercase; font-size: 0.9rem; }
+        .btn-add-new:hover { background-color: #000; color: #68ff00; border-color: #68ff00; transform: scale(1.05); }
+
         /* The main black container from your friend's code */
-        .guide-container { background-color: #1e1e1e; border-radius: 10px; padding: 40px; width: 95%; max-width: 1600px; margin: 40px auto; color: white; font-family: 'Minecraft', sans-serif; }
+        .guide-container { background-color: #1e1e1e; border-radius: 10px; padding: 40px; width: 95%; max-width: 1600px; margin: 40px auto; color: white; font-family: 'Minecraft', sans-serif; position: relative;}
         .page-title { text-align: center; color: #00b63b; font-size: 3rem; text-shadow: 2px 2px 0px #000; margin-bottom: 40px; width: 100%; display: block; }
         
         /* This Flexbox setup handles the "Columns" automatically - Reverted to multiple rows (wrap) */
@@ -41,6 +46,11 @@
 
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
     <div class="guide-container">
+        <div class="add-mob-wrapper">
+            <asp:HyperLink ID="lnkAddMob" runat="server" NavigateUrl="AddMob.aspx" CssClass="btn-add-new" Visible="false">
+                + Add New Mob
+            </asp:HyperLink>
+        </div>
         <h1 class="page-title">Minecraft Mobs</h1>
 
         <div class="filter-toolbar">

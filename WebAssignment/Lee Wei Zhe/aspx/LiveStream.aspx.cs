@@ -235,7 +235,8 @@ namespace WebAssignment.Lee_Wei_Zhe.aspx
                        u.Username
                 FROM LSCommentTable c
                 INNER JOIN userTable u ON c.UserId = u.UserId
-                WHERE c.StreamId = @streamId
+                WHERE c.StreamId = @streamId 
+                AND c.Status = 'Visible'  -- Only load comments that aren't hidden
                 ORDER BY c.CommentDate ASC";
 
             DataTable dt = GetData(sql, new SqlParameter("@streamId", streamId));
@@ -243,7 +244,7 @@ namespace WebAssignment.Lee_Wei_Zhe.aspx
             rptChat.DataSource = dt;
             rptChat.DataBind();
 
-            // Show "no messages" label only when there are no rows
+            // Show "no messages" label only when there are no rows (or all are hidden)
             lblNoMessages.Visible = (dt.Rows.Count == 0);
         }
 
