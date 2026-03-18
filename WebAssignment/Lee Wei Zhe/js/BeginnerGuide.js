@@ -125,3 +125,24 @@ function previewStepImage(input, previewId) {
         preview.style.display = 'none';
     }
 }
+
+function openLightbox(img) {
+    var lb = document.getElementById('imgLightbox');
+    var lbImg = document.getElementById('lightboxImg');
+    if (!lb || !lbImg || !img.src) return;
+    lbImg.src = img.src;
+    lbImg.alt = img.alt || '';
+    lb.style.display = 'flex';
+    document.body.style.overflow = 'hidden'; // prevent page scroll while open
+}
+
+function closeLightbox() {
+    var lb = document.getElementById('imgLightbox');
+    if (lb) lb.style.display = 'none';
+    document.body.style.overflow = '';
+}
+
+// Close on Escape key
+document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') closeLightbox();
+});

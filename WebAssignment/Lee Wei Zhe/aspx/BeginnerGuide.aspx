@@ -124,6 +124,11 @@
         </div>
     </asp:Panel>
 
+    <div id="imgLightbox" class="lightbox-overlay" onclick="closeLightbox()" style="display:none">
+        <button class="lightbox-close" onclick="closeLightbox(); return false;">✕</button>
+        <img id="lightboxImg" src="" alt="" class="lightbox-img" onclick="event.stopPropagation()" />
+    </div>
+
     <div class="top-bar">
         <a href="/Wong Zhang Zhe/Guide.aspx" class="btn-back">Back</a>
     </div>

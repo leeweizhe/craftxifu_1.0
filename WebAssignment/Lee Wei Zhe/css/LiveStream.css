@@ -217,6 +217,7 @@
 
 /* Shared input style */
 .input-field {
+    font-family: 'PT Serif', serif;
     width: 100%;
     padding: 8px 10px;
     border: 1px solid #ccc;
@@ -239,6 +240,27 @@
 
     .btn-send:hover {
         background: #c92a2a;
+    }
+
+.chat-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.btn-chat-toggle {
+    padding: 5px 12px;
+    background: #1971c2;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+    .btn-chat-toggle:hover {
+        background: #1864ab;
     }
 
 /* Feedback messages */

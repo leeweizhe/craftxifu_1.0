@@ -11,7 +11,7 @@ namespace WebAssignment.Lee_Wei_Zhe.myClass
         public static string GenerateNumericOtp()
         {
             Random rnd = new Random();
-            return rnd.Next(100000, 999999).ToString();
+            return rnd.Next(10000, 99999).ToString();
         }
 
         public static string HashOtp(string plainTextOtp)
