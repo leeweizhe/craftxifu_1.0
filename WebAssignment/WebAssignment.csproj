@@ -175,6 +175,7 @@
     <Content Include="SiteMaster.css" />
     <Content Include="Tong Yu Hong\aspx\AddMob.aspx" />
     <Content Include="Tong Yu Hong\aspx\ManageComments.aspx" />
+    <Content Include="Tong Yu Hong\aspx\ManagePromote.aspx" />
     <Content Include="Tong Yu Hong\aspx\ManageUser.aspx" />
     <Content Include="Tong Yu Hong\aspx\ManageUserDetail.aspx" />
     <Content Include="Tong Yu Hong\aspx\Mob.aspx" />
@@ -498,6 +499,13 @@
     </Compile>
     <Compile Include="Tong Yu Hong\aspx\ManageComments.aspx.designer.cs">
       <DependentUpon>ManageComments.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Tong Yu Hong\aspx\ManagePromote.aspx.cs">
+      <DependentUpon>ManagePromote.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Tong Yu Hong\aspx\ManagePromote.aspx.designer.cs">
+      <DependentUpon>ManagePromote.aspx</DependentUpon>
     </Compile>
     <Compile Include="Tong Yu Hong\aspx\ManageUser.aspx.cs">
       <DependentUpon>ManageUser.aspx</DependentUpon>

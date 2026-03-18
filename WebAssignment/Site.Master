@@ -31,6 +31,7 @@
                             <li><a href="/Tong Yu Hong/aspx/ViewStatistic.aspx" class="sub-link">View Statistic</a></li>
                             <li><a href="/Tong Yu Hong/aspx/SupportChat.aspx" class="sub-link">Ticket Support</a></li>
                             <li><a href="/Tong Yu Hong/aspx/ManageComments.aspx" class="sub-link">Manage Comments</a></li>
+                            <li><a href="/Tong Yu Hong/aspx/ManagePromote.aspx" class="sub-link">Manage Promotion</a></li>
                         </ul>
                     </li>
                 </asp:PlaceHolder>
