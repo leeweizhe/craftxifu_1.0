@@ -26,6 +26,13 @@ namespace WebAssignment
                 errorMsg.ForeColor = Color.Green;
                 errorMsg.Visible = true;
             }
+
+            else if (Request.QueryString["message"] == "livestream")
+            {
+                errorMsg.Text = "Login to view more!";
+                errorMsg.ForeColor = Color.Red;
+                errorMsg.Visible = true;
+            }
         }
 
         protected void btnSubmit_Click(object sender, EventArgs e)

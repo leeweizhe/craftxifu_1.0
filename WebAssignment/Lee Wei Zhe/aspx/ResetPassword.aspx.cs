@@ -80,6 +80,9 @@ namespace WebAssignment.Lee_Wei_Zhe.aspx
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine("Database Error: " + ex.Message);
+                ShowError("DB Error: " + ex.Message); // ← add this temporarily
+                return false;
+                System.Diagnostics.Debug.WriteLine("Database Error: " + ex.Message);
                 return false;
             }
         }

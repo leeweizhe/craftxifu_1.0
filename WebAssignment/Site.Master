@@ -28,7 +28,7 @@
                         <a class="main-link">Admin</a>
                         <ul class="dropdown-menu">
                             <li><a href="/Tong Yu Hong/aspx/ManageUser.aspx" class="sub-link">Manage Users</a></li>
-                            <li><a href="/Tong Yu Hong/aspx/ViewStatistic.aspx" class="sub-link">View Statistic</a></li>
+                            <li><a href="/Tong Yu Hong/aspx/Adminstatistics.aspx" class="sub-link">View Statistic</a></li>
                             <li><a href="/Tong Yu Hong/aspx/SupportChat.aspx" class="sub-link">Ticket Support</a></li>
                             <li><a href="/Tong Yu Hong/aspx/ManageComments.aspx" class="sub-link">Manage Comments</a></li>
                             <li><a href="/Tong Yu Hong/aspx/ManagePromote.aspx" class="sub-link">Manage Promotion</a></li>

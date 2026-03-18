@@ -7,6 +7,7 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using System.Xml.Linq;
 
 namespace WebAssignment.Lee_Wei_Zhe.aspx
 {
@@ -21,6 +22,12 @@ namespace WebAssignment.Lee_Wei_Zhe.aspx
 
         protected void Page_Load(object sender, EventArgs e)
         {
+            if (Session["userId"] == null)
+            {
+                Response.Redirect("/Lee Wei Zhe/aspx/Login.aspx?message=livestream");
+                return;
+            }
+
             if (!int.TryParse(Request.QueryString["id"], out streamId))
             {
                 Response.Redirect("StreamList.aspx");
@@ -53,7 +60,7 @@ namespace WebAssignment.Lee_Wei_Zhe.aspx
 
             DataTable dt = GetData(sql, new SqlParameter("@streamId", streamId));
 
-            if (dt.Rows.Count == 0) { Response.Redirect("InstructorList.aspx"); return; }
+            if (dt.Rows.Count == 0) { Response.Redirect("StreamList.aspx"); return; }
 
             DataRow row = dt.Rows[0];
             bool isLive = Convert.ToBoolean(row["IsLive"]);
@@ -73,7 +80,8 @@ namespace WebAssignment.Lee_Wei_Zhe.aspx
                 pnlVideo.Visible = true;
                 pnlNoVideo.Visible = false;
                 pnlYouTubeChat.Visible = true;
-                pnlOwnChat.Visible = false;
+                pnlOwnChat.Visible = true;
+                pnlChatToggle.Visible = true;
             }
             else
             {
@@ -85,6 +93,12 @@ namespace WebAssignment.Lee_Wei_Zhe.aspx
 
             bool isOwner = Session["userId"] != null &&
                            Convert.ToInt32(Session["userId"]) == ownerUserId;
+
+            if (!isOwner && !IsPostBack)
+            {
+                ExecuteSQL("UPDATE LiveStreams SET ClickCount = ClickCount + 1 WHERE StreamID = @id",
+                    new SqlParameter("@id", streamId));
+            }
 
             if (isOwner)
             {
@@ -138,6 +152,7 @@ namespace WebAssignment.Lee_Wei_Zhe.aspx
                 new SqlParameter("@id", streamId));
             ShowFeedback("Stream ended.", false);
         }
+
 
         protected void btnSend_Click(object sender, EventArgs e)
         {
