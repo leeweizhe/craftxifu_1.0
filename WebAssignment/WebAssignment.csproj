@@ -647,6 +647,7 @@
     <Folder Include="Lee Wei Zhe\images\recipes\full\" />
     <Folder Include="Lee Wei Zhe\images\recipes\thumb\" />
     <Folder Include="obj\Debug\TempPE\" />
+    <Folder Include="Wong Zhang Zhe\uploads\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
