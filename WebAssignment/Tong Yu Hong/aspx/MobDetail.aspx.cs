@@ -27,11 +27,9 @@ namespace WebAssignment.Tong_Yu_Hong.aspx
                     LoadComments(mobId);
                     CheckCommentPermission();
 
-                    // Check if the user is logged in and has the role "Instructor"
-                    // Note: This must match exactly what you store in Session during login
                     string userRole = Session["UserRole"] as string;
 
-                    if (!string.IsNullOrEmpty(userRole) && userRole == "Instructor")
+                    if (!string.IsNullOrEmpty(userRole) && (userRole == "Instructor" || userRole == "Admin"))
                     {
                         btnEdit.Visible = true;
                         btnDelete.Visible = true;

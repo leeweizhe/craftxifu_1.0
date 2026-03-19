@@ -16,11 +16,11 @@ namespace WebAssignment.Tong_Yu_Hong.aspx
         protected void Page_Load(object sender, EventArgs e)
         {
             string currentRole = Session["UserRole"] as string;
-            //if (string.IsNullOrEmpty(currentRole) || currentRole != "Admin")
-            //{
-            //    Response.Redirect("~/Wong Zhang Zhe/Home.aspx");
-            //    return;
-            //}
+            if (string.IsNullOrEmpty(currentRole) || currentRole != "Admin")
+            {
+                Response.Redirect("~/Wong Zhang Zhe/Home.aspx");
+                return;
+            }   
         }
 
         // ══════════════════════════════════════════════════════════════════
@@ -240,7 +240,7 @@ namespace WebAssignment.Tong_Yu_Hong.aspx
 
                     // Revenue per item — Price * purchase count
                     using (var cmd = new SqlCommand(
-                        "SELECT TOP 10 s.Name, SUM(s.Price) AS Rev " +
+                        "SELECT TOP 10 s.Name, ISNULL(SUM(s.Price), 0) AS Rev " +
                         "FROM userInventoryTable i " +
                         "JOIN shopItemTable s ON i.ItemId = s.ItemId " +
                         invFilter + " GROUP BY s.Name ORDER BY Rev DESC", conn))
@@ -248,7 +248,7 @@ namespace WebAssignment.Tong_Yu_Hong.aspx
                         while (dr.Read())
                         {
                             revenueNames.Add(dr["Name"].ToString());
-                            revenueValues.Add(Convert.ToInt32(dr["Rev"]));
+                            revenueValues.Add(dr["Rev"] == DBNull.Value ? 0 : Convert.ToInt32(dr["Rev"]));
                         }
 
                     // Items by rarity (catalogue view — no date filter)
@@ -265,14 +265,14 @@ namespace WebAssignment.Tong_Yu_Hong.aspx
                     // Equipped vs not equipped
                     using (var cmd = new SqlCommand(
                         "SELECT " +
-                        "SUM(CASE WHEN IsEquipped = 1 THEN 1 ELSE 0 END) AS Equipped, " +
-                        "SUM(CASE WHEN IsEquipped = 0 THEN 1 ELSE 0 END) AS NotEquipped " +
+                        "ISNULL(SUM(CASE WHEN IsEquipped = 1 THEN 1 ELSE 0 END), 0) AS Equipped, " +
+                        "ISNULL(SUM(CASE WHEN IsEquipped = 0 THEN 1 ELSE 0 END), 0) AS NotEquipped " +
                         "FROM userInventoryTable " + invWhere, conn))
                     using (var dr = cmd.ExecuteReader())
                         if (dr.Read())
                         {
-                            equippedData.Add(Convert.ToInt32(dr["Equipped"]));
-                            equippedData.Add(Convert.ToInt32(dr["NotEquipped"]));
+                            equippedData.Add(dr["Equipped"] == DBNull.Value ? 0 : Convert.ToInt32(dr["Equipped"]));
+                            equippedData.Add(dr["NotEquipped"] == DBNull.Value ? 0 : Convert.ToInt32(dr["NotEquipped"]));
                         }
                 }
             }
@@ -350,9 +350,11 @@ namespace WebAssignment.Tong_Yu_Hong.aspx
                         "commentTable",
                         "mobComment",
                         "LSCommentTable",
-                        "BGCommentTable"
+                        "BGCommentTable",
+                        "enchantmentComment",
+                        "potionComment"
                     };
-                    string[] labels = new[] { "Farm Guides", "Mob Guides", "Live Streams", "Beginner Guides" };
+                    string[] labels = new[] { "Farm Guides", "Mob Guides", "Live Streams", "Beginner Guides", "Enchantment Guide", "Potion Guide" };
                     for (int i = 0; i < tables.Length; i++)
                     {
                         string sql = "SELECT COUNT(*) FROM " + tables[i] + " " + commentFilter;
@@ -377,7 +379,7 @@ namespace WebAssignment.Tong_Yu_Hong.aspx
                 },
                 commentTypes = new
                 {
-                    labels = new[] { "Farm Guides", "Mob Guides", "Live Streams", "Beginner Guides" },
+                    labels = new[] { "Farm Guides", "Mob Guides", "Live Streams", "Beginner Guides", "Enchantment Guide", "Potion Guide" },
                     data = commentCounts
                 }
             };
@@ -395,7 +397,7 @@ namespace WebAssignment.Tong_Yu_Hong.aspx
             var statusCounts = new List<int>();
             var warnPeriods = new List<string>();
             var warnCounts = new List<int>();
-            var commentStatus = new List<int>(); // Active, Flagged, Removed
+            var commentStatusData = new List<int>(); // Will hold [VisibleCount, HiddenCount]
 
             try
             {
@@ -409,14 +411,11 @@ namespace WebAssignment.Tong_Yu_Hong.aspx
                     ? "WHERE CommentDate >= DATEADD(DAY, -" + days + ", GETDATE())"
                     : "";
 
-                // For the content-type query we need both WHERE and AND
-                string rptCond = string.IsNullOrEmpty(rptFilter) ? "WHERE" : "AND";
-
                 using (var conn = new SqlConnection(GetConn()))
                 {
                     conn.Open();
 
-                    // Reports by status
+                    // 1. Reports by status
                     using (var cmd = new SqlCommand(
                         "SELECT ISNULL(Status,'Unknown') AS Status, COUNT(*) AS Cnt " +
                         "FROM reportTable " + rptFilter +
@@ -428,26 +427,7 @@ namespace WebAssignment.Tong_Yu_Hong.aspx
                             statusCounts.Add(Convert.ToInt32(dr["Cnt"]));
                         }
 
-                    // Reports by content type (which FK is non-null)
-                    using (var cmd = new SqlCommand(
-                        "SELECT " +
-                        "SUM(CASE WHEN FarmId      IS NOT NULL THEN 1 ELSE 0 END) AS Farm, " +
-                        "SUM(CASE WHEN MobId       IS NOT NULL THEN 1 ELSE 0 END) AS Mob, " +
-                        "SUM(CASE WHEN PotionId    IS NOT NULL THEN 1 ELSE 0 END) AS Potion, " +
-                        "SUM(CASE WHEN StreamId    IS NOT NULL THEN 1 ELSE 0 END) AS Stream, " +
-                        "SUM(CASE WHEN CommentId   IS NOT NULL THEN 1 ELSE 0 END) AS Comment, " +
-                        "SUM(CASE WHEN BeginnerId  IS NOT NULL THEN 1 ELSE 0 END) AS Beginner " +
-                        "FROM reportTable " + rptFilter, conn))
-                    using (var dr = cmd.ExecuteReader())
-                    {
-                        // stored separately so we can zip with labels below
-                        if (dr.Read())
-                        {
-                            // returned inline in anonymous object
-                        }
-                    }
-
-                    // Warnings over time (daily)
+                    // 2. Warnings over time (daily)
                     using (var cmd = new SqlCommand(
                         "SELECT FORMAT(WarningDate,'yyyy-MM-dd') AS WDay, COUNT(*) AS Cnt " +
                         "FROM warningTable " + warnFilter +
@@ -459,7 +439,7 @@ namespace WebAssignment.Tong_Yu_Hong.aspx
                             warnCounts.Add(Convert.ToInt32(dr["Cnt"]));
                         }
 
-                    // Comment status breakdown (union all four comment tables)
+                    // 3. Comment status breakdown (Visible vs Hidden)
                     string unionSql =
                         "SELECT Status, CommentDate FROM commentTable " +
                         "UNION ALL SELECT Status, CommentDate FROM mobComment " +
@@ -469,31 +449,23 @@ namespace WebAssignment.Tong_Yu_Hong.aspx
                     string commentWhere = string.IsNullOrEmpty(cmtFilter) ? "" : cmtFilter;
 
                     using (var cmd = new SqlCommand(
-                        "SELECT ISNULL(Status,'Unknown') AS Status, COUNT(*) AS Cnt " +
+                        "SELECT ISNULL(Status,'Visible') AS Status, COUNT(*) AS Cnt " +
                         "FROM (" + unionSql + ") AS AllCmts " +
                         commentWhere +
                         " GROUP BY Status", conn))
                     using (var dr = cmd.ExecuteReader())
                     {
-                        // Build a status-to-count lookup, we'll normalise below
                         var statusMap = new System.Collections.Generic.Dictionary<string, int>(
                             StringComparer.OrdinalIgnoreCase);
                         while (dr.Read())
                             statusMap[dr["Status"].ToString()] = Convert.ToInt32(dr["Cnt"]);
 
-                        // Normalise to exactly three buckets
-                        commentStatus.Add(statusMap.ContainsKey("Active") ? statusMap["Active"] : 0);
-                        commentStatus.Add(statusMap.ContainsKey("Flagged") ? statusMap["Flagged"] : 0);
-                        // Everything else (Removed, Hidden, etc.) goes into "Removed"
-                        int removed = 0;
-                        foreach (var kv in statusMap)
-                            if (!kv.Key.Equals("Active", StringComparison.OrdinalIgnoreCase) &&
-                                !kv.Key.Equals("Flagged", StringComparison.OrdinalIgnoreCase))
-                                removed += kv.Value;
-                        commentStatus.Add(removed);
+                        // Map specifically to your two statuses
+                        commentStatusData.Add(statusMap.ContainsKey("Visible") ? statusMap["Visible"] : 0);
+                        commentStatusData.Add(statusMap.ContainsKey("Hidden") ? statusMap["Hidden"] : 0);
                     }
 
-                    // Re-run the content type query cleanly
+                    // 4. Reports by Content Type
                     var ctCounts = new List<int>();
                     using (var cmd = new SqlCommand(
                         "SELECT " +
@@ -515,6 +487,7 @@ namespace WebAssignment.Tong_Yu_Hong.aspx
                             ctCounts.Add(Convert.ToInt32(dr["Beginner"]));
                         }
 
+                    // Return the cleaned up data
                     return new
                     {
                         reportStatus = new { labels = statusLabels, data = statusCounts },
@@ -526,8 +499,9 @@ namespace WebAssignment.Tong_Yu_Hong.aspx
                         warnings = new { labels = warnPeriods, data = warnCounts },
                         commentStatus = new
                         {
-                            labels = new[] { "Active", "Flagged", "Removed" },
-                            data = commentStatus
+                            // FIXED: Changed labels to match your database
+                            labels = new[] { "Visible", "Hidden" },
+                            data = commentStatusData
                         }
                     };
                 }

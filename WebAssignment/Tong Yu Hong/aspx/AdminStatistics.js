@@ -5,35 +5,38 @@
 
 // ── Design tokens (matches AdminStatistics.css + site theme) ─────────
 var C = {
-    green:       '#00ff55',
-    greenDim:    'rgba(0, 255, 85, 0.15)',
-    greenMid:    'rgba(0, 255, 85, 0.55)',
+    green: '#00ff55',
+    greenDim: 'rgba(0, 255, 85, 0.15)',
+    greenMid: 'rgba(0, 255, 85, 0.55)',
     greenBright: 'rgba(0, 255, 85, 0.85)',
-    blue:        'rgba(0, 180, 255, 0.75)',
-    blueDim:     'rgba(0, 180, 255, 0.20)',
-    grid:        'rgba(255, 255, 255, 0.04)',
-    text:        '#666',
+    blue: 'rgba(0, 180, 255, 0.75)',
+    blueDim: 'rgba(0, 180, 255, 0.20)',
+    grid: 'rgba(255, 255, 255, 0.04)',
+    // FIX 1: Changed global text default to white
+    text: '#ffffff',
     // Donut / multi-series palette
     palette: [
-        'rgba(0,  255, 85,  0.80)',
-        'rgba(0,  182, 59,  0.80)',
-        'rgba(0,  104, 33,  0.80)',
-        'rgba(104,255, 0,   0.80)',
-        'rgba(0,  220, 220, 0.80)',
-        'rgba(0,  150, 255, 0.80)',
-        'rgba(255,200, 0,   0.80)',
-        'rgba(255, 68, 68,  0.80)',
-        'rgba(200,100, 255, 0.80)',
-        'rgba(255,140, 0,   0.80)'
+        'rgba(0,   255, 85,  0.80)', // 1. Mint Green
+        'rgba(0,   182, 59,  0.80)', // 2. Emerald Green
+        'rgba(0,   104, 33,  0.80)', // 3. Dark Moss Green
+        'rgba(104, 255, 0,   0.80)', // 4. Lime Green
+        'rgba(0,   220, 220, 0.80)', // 5. Cyan
+        'rgba(0,   150, 255, 0.80)', // 6. Sky Blue
+        'rgba(255, 200, 0,   0.80)', // 7. Gold/Amber
+        'rgba(255, 68,  68,  0.80)', // 8. Red
+        'rgba(200, 100, 255, 0.80)', // 9. Purple/Lavender
+        'rgba(255, 140, 0,   0.80)', // 10. Deep Orange
+        'rgba(170, 170, 170, 0.80)',  // 11. Common (Grey) - Added to the end
+        'rgba(255, 105, 180, 0.80)'  // [11] Pink (Female)
     ]
 };
 
 // ── Chart.js global defaults ─────────────────────────────────────────
-Chart.defaults.color                     = C.text;
-Chart.defaults.font.family               = "'Minecraft', sans-serif";
-Chart.defaults.font.size                 = 11;
+Chart.defaults.color = C.text;
+Chart.defaults.font.family = "'Minecraft', sans-serif";
+Chart.defaults.font.size = 11;
 Chart.defaults.plugins.legend.labels.boxWidth = 12;
-Chart.defaults.plugins.legend.labels.padding  = 14;
+Chart.defaults.plugins.legend.labels.padding = 14;
 
 // ── Module-level state ───────────────────────────────────────────────
 var _activeCharts = [];
@@ -47,21 +50,21 @@ function loadStats() {
     _showError(null);
 
     var category = document.getElementById('ddlCategory').value;
-    var days     = parseInt(document.getElementById('ddlDateRange').value, 10);
+    var days = parseInt(document.getElementById('ddlDateRange').value, 10);
 
     var methodMap = {
-        users:      'GetUserStats',
-        minigames:  'GetMinigameStats',
-        shop:       'GetShopStats',
-        content:    'GetContentStats',
+        users: 'GetUserStats',
+        minigames: 'GetMinigameStats',
+        shop: 'GetShopStats',
+        content: 'GetContentStats',
         moderation: 'GetModerationStats'
     };
 
     var renderMap = {
-        users:      _renderUsers,
-        minigames:  _renderMinigames,
-        shop:       _renderShop,
-        content:    _renderContent,
+        users: _renderUsers,
+        minigames: _renderMinigames,
+        shop: _renderShop,
+        content: _renderContent,
         moderation: _renderModeration
     };
 
@@ -87,18 +90,18 @@ function _callMethod(methodName, params, callback) {
         headers: { 'Content-Type': 'application/json; charset=utf-8' },
         body: JSON.stringify(params)
     })
-    .then(function (r) {
-        if (!r.ok) throw new Error('HTTP ' + r.status);
-        return r.json();
-    })
-    .then(function (json) {
-        // ASP.NET wraps WebMethod results in { "d": ... }
-        callback(json.d !== undefined ? json.d : json);
-    })
-    .catch(function (err) {
-        _showLoading(false);
-        _showError('Could not load data. (' + err.message + ')');
-    });
+        .then(function (r) {
+            if (!r.ok) throw new Error('HTTP ' + r.status);
+            return r.json();
+        })
+        .then(function (json) {
+            // ASP.NET wraps WebMethod results in { "d": ... }
+            callback(json.d !== undefined ? json.d : json);
+        })
+        .catch(function (err) {
+            _showLoading(false);
+            _showError('Could not load data. (' + err.message + ')');
+        });
 }
 
 // ════════════════════════════════════════════════════════════════════
@@ -132,9 +135,9 @@ function _addSummaryRow(stats) {
     row.className = 'stat-summary-row';
     row.innerHTML = stats.map(function (s) {
         return '<div class="stat-box">' +
-               '<span class="stat-box-value">' + _esc(String(s.value)) + '</span>' +
-               '<span class="stat-box-label">'  + _esc(s.label) + '</span>' +
-               '</div>';
+            '<span class="stat-box-value">' + _esc(String(s.value)) + '</span>' +
+            '<span class="stat-box-label">' + _esc(s.label) + '</span>' +
+            '</div>';
     }).join('');
     container.appendChild(row);
 }
@@ -195,13 +198,54 @@ function _bar(id, labels, data, label) {
 function _donut(id, labels, data) {
     var ctx = document.getElementById(id);
     if (!ctx) return;
+
+    // ── Mapping for Rarity & Gender ──────────────────────────────────
+    var customColors = labels.map(function (label, i) {
+        var l = label.toLowerCase().trim();
+
+        // Rarity Logic
+        if (l.includes("common") && !l.includes("uncommon")) return C.palette[10]; // Grey
+        if (l.includes("uncommon")) return C.palette[0];  // Mint Green
+        if (l.includes("rare")) return C.palette[4];  // Cyan
+        if (l.includes("epic")) return C.palette[8];  // Purple
+        if (l.includes("legendary")) return C.palette[6];  // Gold
+
+        // Gender Logic
+        if (l === "male") return C.palette[4];  // Cyan
+        if (l === "female") return C.palette[11]; // Pink
+
+        // 3. Roles
+        if (l === "member") return C.palette[5]; // Sky Blue
+        if (l === "instructor") return C.palette[1]; // Emerald
+        if (l === "admin") return C.palette[7]; // Red
+
+        // 4. Guides
+        if (l.includes("farm")) return C.palette[6]; // Gold/Amber (Harvest)
+        if (l.includes("mob")) return C.palette[7]; // Red (Combat)
+        if (l.includes("stream")) return C.palette[5]; // Sky Blue (Live)
+        if (l.includes("beginner")) return C.palette[0]; // Mint Green (Fresh)
+        if (l.includes("potion")) return C.palette[5]; // Sky Blue 
+        if (l.includes("enchantment")) return C.palette[8];
+
+        // 5. Reports Status
+        if (l === "pending") return C.palette[7]; // [7] Red
+        if (l === "resolved") return C.palette[0]; // [0] Mint
+
+        // 6. Comment Status
+        if (l === "visible") return C.palette[0]; // [0] Mint
+        if (l === "hidden") return C.palette[10]; // [10] Grey
+
+        // Default: If no match, use palette in order
+        return C.palette[i % C.palette.length];
+    });
+
     var c = new Chart(ctx, {
         type: 'doughnut',
         data: {
             labels: labels,
             datasets: [{
                 data: data,
-                backgroundColor: C.palette.slice(0, labels.length),
+                backgroundColor: customColors, // Use the mapped colors
                 borderColor: '#111',
                 borderWidth: 2,
                 hoverOffset: 6
@@ -211,7 +255,28 @@ function _donut(id, labels, data) {
             responsive: true,
             maintainAspectRatio: false,
             plugins: {
-                legend: { position: 'right' }
+                legend: {
+                    position: 'right',
+                    labels: {
+                        generateLabels: function (chart) {
+                            var ds = chart.data.datasets[0];
+                            var total = ds.data.reduce(function (a, b) { return a + b; }, 0);
+                            return chart.data.labels.map(function (label, i) {
+                                var val = ds.data[i];
+                                var pct = total > 0 ? Math.round(val / total * 100) : 0;
+                                return {
+                                    text: label + '  ' + val + ' (' + pct + '%)',
+                                    fontColor: '#ffffff',
+                                    fillStyle: ds.backgroundColor[i],
+                                    strokeStyle: ds.borderColor,
+                                    lineWidth: ds.borderWidth,
+                                    hidden: !chart.getDataVisibility(i),
+                                    index: i
+                                };
+                            });
+                        }
+                    }
+                }
             }
         }
     });
@@ -280,49 +345,49 @@ function _line(id, labels, data, label) {
 // ════════════════════════════════════════════════════════════════════
 
 function _renderUsers(d) {
-    var totalUsers  = _sum(d.role.data);
-    var adminIdx    = d.role.labels.indexOf('Admin');
-    var adminCount  = adminIdx >= 0 ? d.role.data[adminIdx] : 0;
+    var totalUsers = _sum(d.role.data);
+    var memberIdx = d.role.labels.indexOf('Member');
+    var memberCount = memberIdx >= 0 ? d.role.data[memberIdx] : 0;
 
     _addSummaryRow([
-        { value: totalUsers,               label: 'Total Users' },
-        { value: d.country.data.length,    label: 'Countries' },
-        { value: adminCount,               label: 'Admins' },
-        { value: d.currency.data[0] || 0,  label: 'Highest Currency' }
+        { value: totalUsers, label: 'Total Users' },
+        { value: d.country.data.length, label: 'Countries' },
+        { value: memberCount, label: 'Members' },
+        { value: d.currency.data[0] || 0, label: 'Highest Currency' }
     ]);
 
-    _addCard('cRole',     'Users by Role',        'Account role distribution',       false);
+    _addCard('cRole', 'Users by Role', 'Account role distribution', false);
     _donut('cRole', d.role.labels, d.role.data);
 
-    _addCard('cGender',   'Gender Distribution',  'Male / Female / Unknown split',   false);
+    _addCard('cGender', 'Gender Distribution', 'Male / Female / Unknown split', false);
     _donut('cGender', d.gender.labels, d.gender.data);
 
-    _addCard('cCurrency', 'Top 10 by Currency',   'Richest players on the platform', false);
+    _addCard('cCurrency', 'Top 10 by Currency', 'Richest players on the platform', false);
     _bar('cCurrency', d.currency.labels, d.currency.data, 'Currency');
 
-    _addCard('cCountry',  'Users by Country',     'Top 10 countries by user count',  false);
+    _addCard('cCountry', 'Users by Country', 'Top 10 countries by user count', false);
     _bar('cCountry', d.country.labels, d.country.data, 'Users');
 }
 
 function _renderMinigames(d) {
     var totalPlays = _sum(d.plays.data);
-    var topPlayer  = d.leaderboard.labels[0] || '—';
-    var highScore  = d.scores.maxData.length ? Math.max.apply(null, d.scores.maxData) : 0;
+    var topPlayer = d.leaderboard.labels[0] || '—';
+    var highScore = d.scores.maxData.length ? Math.max.apply(null, d.scores.maxData) : 0;
 
     _addSummaryRow([
-        { value: totalPlays,              label: 'Total Plays' },
-        { value: d.plays.labels.length,   label: 'Games Available' },
-        { value: topPlayer,               label: 'Top Player' },
-        { value: highScore,               label: 'Highest Score' }
+        { value: totalPlays, label: 'Total Plays' },
+        { value: d.plays.labels.length, label: 'Games Available' },
+        { value: topPlayer, label: 'Top Player' },
+        { value: highScore, label: 'Highest Score' }
     ]);
 
-    _addCard('cPlays',  'Plays per Game',            'Which game is played most',         false);
+    _addCard('cPlays', 'Plays per Game', 'Which game is played most', false);
     _bar('cPlays', d.plays.labels, d.plays.data, 'Plays');
 
-    _addCard('cLB',     'Top 10 Players',            'Total points earned',               false);
+    _addCard('cLB', 'Top 10 Players', 'Total points earned', false);
     _bar('cLB', d.leaderboard.labels, d.leaderboard.data, 'Total Points');
 
-    _addCard('cScores', 'Avg vs Max Score per Game', 'Score difficulty comparison',       true);
+    _addCard('cScores', 'Avg vs Max Score per Game', 'Score difficulty comparison', true);
     _groupedBar('cScores', d.scores.labels, [
         {
             label: 'Average Score',
@@ -345,45 +410,45 @@ function _renderMinigames(d) {
 
 function _renderShop(d) {
     var totalPurchases = _sum(d.purchases.data);
-    var totalRevenue   = _sum(d.revenue.data);
-    var equipped       = (d.equipped.data && d.equipped.data[0]) || 0;
+    var totalRevenue = _sum(d.revenue.data);
+    var equipped = (d.equipped.data && d.equipped.data[0]) || 0;
 
     _addSummaryRow([
-        { value: totalPurchases,            label: 'Total Purchases' },
+        { value: totalPurchases, label: 'Total Purchases' },
         { value: totalRevenue.toLocaleString(), label: 'Total Revenue' },
-        { value: d.rarity.labels.length,    label: 'Rarity Tiers' },
-        { value: equipped,                  label: 'Items Equipped' }
+        { value: d.rarity.labels.length, label: 'Rarity Tiers' },
+        { value: equipped, label: 'Items Equipped' }
     ]);
 
-    _addCard('cPurchases', 'Most Purchased Items',     'Top 10 items by purchase count',  false);
+    _addCard('cPurchases', 'Most Purchased Items', 'Top 10 items by purchase count', false);
     _bar('cPurchases', d.purchases.labels, d.purchases.data, 'Purchases');
 
-    _addCard('cRevenue',   'Revenue per Item',         'Price × purchases (top 10)',      false);
+    _addCard('cRevenue', 'Revenue per Item', 'Price × purchases (top 10)', false);
     _bar('cRevenue', d.revenue.labels, d.revenue.data, 'Revenue');
 
-    _addCard('cRarity',    'Items by Rarity',          'Catalogue rarity breakdown',      false);
+    _addCard('cRarity', 'Items by Rarity', 'Catalogue rarity breakdown', false);
     _donut('cRarity', d.rarity.labels, d.rarity.data);
 
-    _addCard('cEquipped',  'Equipped vs Not Equipped', 'Ratio of actively worn items',    false);
+    _addCard('cEquipped', 'Equipped vs Not Equipped', 'Ratio of actively worn items', false);
     _donut('cEquipped', d.equipped.labels, d.equipped.data);
 }
 
 function _renderContent(d) {
-    var totalClicks   = _sum(d.guides.data);
+    var totalClicks = _sum(d.guides.data);
     var totalComments = _sum(d.commentTypes.data);
-    var topGuide      = d.guides.labels[0] || '—';
+    var topGuide = d.guides.labels[0] || '—';
 
     _addSummaryRow([
-        { value: totalClicks,              label: 'Guide Clicks' },
-        { value: topGuide,                 label: 'Top Guide' },
-        { value: totalComments,            label: 'Total Comments' },
-        { value: d.streams.labels.length,  label: 'Streams' }
+        { value: totalClicks, label: 'Guide Clicks' },
+        { value: topGuide, label: 'Top Guide' },
+        { value: totalComments, label: 'Total Comments' },
+        { value: d.streams.labels.length, label: 'Streams' }
     ]);
 
-    _addCard('cGuides',   'Guide Click Count',          'Most visited guides',            false);
+    _addCard('cGuides', 'Guide Click Count', 'Most visited guides', false);
     _bar('cGuides', d.guides.labels, d.guides.data, 'Clicks');
 
-    _addCard('cCmtTypes', 'Comments by Content Type',   'Farm / Mob / Stream / Beginner', false);
+    _addCard('cCmtTypes', 'Comments by Content Type', 'Farm / Mob / Stream / Beginner / Enchantment/ Potion', false);
     _donut('cCmtTypes', d.commentTypes.labels, d.commentTypes.data);
 
     _addCard('cStreams', 'Stream Viewers vs Clicks', 'Top 10 streams engagement', true);
@@ -408,28 +473,36 @@ function _renderContent(d) {
 }
 
 function _renderModeration(d) {
-    var totalReports  = _sum(d.reportStatus.data);
+    var totalReports = _sum(d.reportStatus.data);
     var totalWarnings = _sum(d.warnings.data);
-    var flagged       = (d.commentStatus.data && d.commentStatus.data[1]) || 0;
-    var removed       = (d.commentStatus.data && d.commentStatus.data[2]) || 0;
 
+    // Mapping your two actual statuses
+    // Index [0] = Visible, Index [1] = Hidden
+    var visibleCount = (d.commentStatus.data && d.commentStatus.data[0]) || 0;
+    var hiddenCount = (d.commentStatus.data && d.commentStatus.data[1]) || 0;
+
+    // We keep 4 boxes for the UI layout, but labeled correctly now
     _addSummaryRow([
-        { value: totalReports,  label: 'Total Reports' },
+        { value: totalReports, label: 'Total Reports' },
         { value: totalWarnings, label: 'Warnings Issued' },
-        { value: flagged,       label: 'Flagged Comments' },
-        { value: removed,       label: 'Removed Comments' }
+        { value: visibleCount, label: 'Visible Comments' },
+        { value: hiddenCount, label: 'Hidden Comments' }
     ]);
 
-    _addCard('cRptStatus',  'Reports by Status',           'Pending / Resolved / Rejected', false);
+    // 1. Report Status Card
+    _addCard('cRptStatus', 'Reports by Status', 'Current Status Distribution', false);
     _donut('cRptStatus', d.reportStatus.labels, d.reportStatus.data);
 
-    _addCard('cRptTypes',   'Most Reported Content Type',  'Which content gets flagged most', false);
+    // 2. Report Types Card
+    _addCard('cRptTypes', 'Reported Content Types', 'Categories being flagged', false);
     _bar('cRptTypes', d.reportTypes.labels, d.reportTypes.data, 'Reports');
 
-    _addCard('cCmtStatus',  'Comment Status Breakdown',    'Active / Flagged / Removed',    false);
+    // 3. Comment Status Card (Removed the "/ Removed" text here)
+    _addCard('cCmtStatus', 'Comment Status Breakdown', 'Visible / Hidden', false);
     _donut('cCmtStatus', d.commentStatus.labels, d.commentStatus.data);
 
-    _addCard('cWarnings',   'Warnings Issued Over Time',   'Daily warning trend',           true);
+    // 4. Warnings Trend
+    _addCard('cWarnings', 'Warnings Issued Over Time', 'Daily warning trend', true);
     _line('cWarnings', d.warnings.labels, d.warnings.data, 'Warnings');
 }
 

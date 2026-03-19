@@ -2,7 +2,6 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <style type="text/css">
-        /* KILL THE DIRT: Final Global Reset */
         html, body, form, .main-content, .container, .body-content, #MainContent { margin: 0 !important; padding: 0 !important; width: 100% !important; max-width: none !important; overflow-x: hidden; }
         
         /* Layout - Responsive Background Scaling */
@@ -39,6 +38,7 @@
             <asp:Repeater ID="rptStats" runat="server">
                 <ItemTemplate>
                     <div class="stat-card">
+                        <a href="../../Wong%20Zhang%20Zhe/uploads/">../../Wong Zhang Zhe/uploads/</a>
                         <div class="stat-accent"></div>
                         <div class="stat-content">
                             <span class="stat-category">Tracking</span>

@@ -28,7 +28,7 @@
         .reply-input { width: 100%; background: #2a2a2a; border: 1px solid #444; padding: 12px; color: #fff; font-family: 'Minecraft', sans-serif; margin-bottom: 15px; }
         
         .action-group { display: flex; justify-content: flex-end; gap: 15px; }
-        .btn-action { padding: 10px 25px; border: none; cursor: pointer; font-family: 'Minecraft', sans-serif; text-transform: uppercase; font-weight: bold; }
+        .btn-action { padding: 10px 25px; border: none; cursor: pointer; font-family: 'Minecraft', sans-serif; text-transform: uppercase; font-weight: normal; }
         .btn-approve { background: #68ff00; color: #000; }
         .btn-reject { background: #ff4444; color: #fff; }
         .unlock-panel { background: #331a00; border: 1px solid #ff9900; padding: 10px; text-align: center; margin-bottom: 10px; color: #ff9900; }
@@ -72,6 +72,12 @@
             <div class="message-area">
                 <div class="msg-bubble">
                     <p><asp:Literal ID="litOriginalMessage" runat="server" /></p>
+                    
+                    <asp:Panel ID="pnlAttachments" runat="server" Visible="false" style="margin-top:10px; border-top:1px solid #444; padding-top:10px; display:flex; flex-direction:column; gap:5px;">
+                        <asp:HyperLink ID="lnkAttachment" runat="server" Target="_blank" style="color:#68ff00; font-size:0.8rem;">[ VIEW ATTACHED PROOF ]</asp:HyperLink>
+                        <asp:HyperLink ID="lnkYoutube" runat="server" Target="_blank" style="color:#ff4444; font-size:0.8rem;">[ WATCH VIDEO LINK ]</asp:HyperLink>
+                    </asp:Panel>
+
                     <span class="msg-time"><asp:Literal ID="litUserTime" runat="server" /></span>
                 </div>
 
@@ -83,7 +89,7 @@
 
             <div class="chat-input-box">
                 <asp:Panel ID="pnlUnlockArea" runat="server" Visible="false" CssClass="unlock-panel">
-                    Request Handled. <asp:Button ID="btnUnlock" runat="server" Text="Unlock" OnClick="btnUnlock_Click" CssClass="status-dropdown" />
+                    Request Handled. <asp:Button ID="btnUnlock" runat="server" Text="Unlock to Edit" OnClick="btnUnlock_Click" CssClass="status-dropdown" />
                 </asp:Panel>
 
                 <asp:TextBox ID="txtReply" runat="server" placeholder="Add a moderator note..." CssClass="reply-input" TextMode="MultiLine" Rows="2" />

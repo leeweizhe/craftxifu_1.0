@@ -60,6 +60,33 @@ namespace WebAssignment.Tong_Yu_Hong.aspx
         protected global::System.Web.UI.WebControls.Literal litOriginalMessage;
 
         /// <summary>
+        /// pnlAttachments control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel pnlAttachments;
+
+        /// <summary>
+        /// lnkAttachment control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HyperLink lnkAttachment;
+
+        /// <summary>
+        /// lnkYoutube control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HyperLink lnkYoutube;
+
+        /// <summary>
         /// litUserTime control.
         /// </summary>
         /// <remarks>
