@@ -28,15 +28,30 @@ namespace WebAssignment.Brayden
         {
             switch (cat)
             {
-                case "Sword":       return "⚔️";
-                case "Armor":       return "🛡️";
-                case "Tool":        return "⛏️";
-                case "Bow":         return "🏹";
-                case "Crossbow":    return "🎯";
-                case "Trident":     return "🔱";
-                case "Fishing Rod": return "🎣";
-                default:            return "✨";
+                case "Sword":       return "\u2694\uFE0F";
+                case "Armor":       return "\uD83D\uDEE1\uFE0F";
+                case "Tool":        return "\u26CF\uFE0F";
+                case "Bow":         return "\uD83C\uDFF9";
+                case "Crossbow":    return "\uD83C\uDFAF";
+                case "Trident":     return "\uD83D\uDD31";
+                case "Fishing Rod": return "\uD83C\uDFA3";
+                default:            return "\u2728";
             }
+        }
+
+        public string GetCategoryActiveClass(string category)
+        {
+            return ViewState["CurrentCategory"] != null && ViewState["CurrentCategory"].ToString() == category ? " active" : "";
+        }
+
+        public string GetPaginationActiveClass(object itemId)
+        {
+            return ViewState["CurrentEnchantId"] != null && ViewState["CurrentEnchantId"].ToString() == itemId.ToString() ? " active" : "";
+        }
+
+        public int CurrentEnchantId
+        {
+            get { return ViewState["CurrentEnchantId"] != null ? Convert.ToInt32(ViewState["CurrentEnchantId"]) : 0; }
         }
 
         // ─────────────────────────────────────────────
@@ -46,18 +61,14 @@ namespace WebAssignment.Brayden
         {
             if (!IsPostBack)
             {
-                categoryPanel.Visible = true;
-                listPanel.Visible     = false;
-                detailPanel.Visible   = false;
-                editPanel.Visible     = false;
-                addPanel.Visible      = false;
+                mainPanel.Visible = true;
+                editPanel.Visible = false;
+                addPanel.Visible  = false;
                 LoadCategories();
+                AutoSelectFirst();
             }
         }
 
-        // ─────────────────────────────────────────────
-        // READ – Categories
-        // ─────────────────────────────────────────────
         private void LoadCategories()
         {
             using (SqlConnection conn = new SqlConnection(ConnStr))
@@ -71,56 +82,82 @@ namespace WebAssignment.Brayden
             }
         }
 
-        // ─────────────────────────────────────────────
-        // READ – List by category
-        // ─────────────────────────────────────────────
-        protected void SelectCategory(object sender, EventArgs e)
+        private void AutoSelectFirst()
         {
-            string category = ((LinkButton)sender).CommandArgument;
-            ViewState["CurrentCategory"] = category;
-            lblListTitle.Text = category + " Enchantments";
-            LoadEnchantmentsByCategory(category);
-
-            categoryPanel.Visible = false;
-            listPanel.Visible     = true;
-            detailPanel.Visible   = false;
-            editPanel.Visible     = false;
-            addPanel.Visible      = false;
-            btnAddNew.Visible     = IsAdmin();
-        }
-
-        private void LoadEnchantmentsByCategory(string category)
-        {
+            string firstCategory = null;
             using (SqlConnection conn = new SqlConnection(ConnStr))
             {
-                string sql = "SELECT * FROM enchantmentTable WHERE Category = @cat ORDER BY Name";
-                SqlCommand cmd = new SqlCommand(sql, conn);
-                cmd.Parameters.AddWithValue("@cat", category);
-                SqlDataAdapter da = new SqlDataAdapter(cmd);
-                DataTable dt = new DataTable();
-                da.Fill(dt);
-                enchantRepeater.DataSource = dt;
-                enchantRepeater.DataBind();
+                SqlCommand catCmd = new SqlCommand(
+                    "SELECT TOP 1 Category FROM enchantmentTable ORDER BY Category", conn);
+                conn.Open();
+                object catObj = catCmd.ExecuteScalar();
+                if (catObj != null)
+                    firstCategory = catObj.ToString();
+            }
+
+            if (firstCategory != null)
+            {
+                ViewState["CurrentCategory"] = firstCategory;
+                LoadCategoryContent(firstCategory);
+            }
+            else
+            {
+                contentPanel.Visible = false;
+                emptyPanel.Visible = true;
             }
         }
 
         // ─────────────────────────────────────────────
-        // READ – Detail view (now includes DetailImage)
+        // Load all items for a category
         // ─────────────────────────────────────────────
-        protected void ViewDetail(object sender, EventArgs e)
+        private void LoadCategoryContent(string category)
         {
-            int id = Convert.ToInt32(((LinkButton)sender).CommandArgument);
-            ViewState["CurrentEnchantId"] = id;
-            LoadEnchantmentDetail(id);
+            DataTable dt;
+            using (SqlConnection conn = new SqlConnection(ConnStr))
+            {
+                string sql = "SELECT EnchantmentId, Name, Thumbnail FROM enchantmentTable WHERE Category = @cat ORDER BY Name";
+                SqlCommand cmd = new SqlCommand(sql, conn);
+                cmd.Parameters.AddWithValue("@cat", category);
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                dt = new DataTable();
+                da.Fill(dt);
+            }
 
-            categoryPanel.Visible = false;
-            listPanel.Visible     = false;
-            detailPanel.Visible   = true;
-            editPanel.Visible     = false;
-            addPanel.Visible      = false;
+            if (dt.Rows.Count > 0)
+            {
+                paginationRepeater.DataSource = dt;
+                paginationRepeater.DataBind();
+
+                int currentId = ViewState["CurrentEnchantId"] != null ? Convert.ToInt32(ViewState["CurrentEnchantId"]) : 0;
+                bool found = false;
+                foreach (DataRow row in dt.Rows)
+                {
+                    if (Convert.ToInt32(row["EnchantmentId"]) == currentId) { found = true; break; }
+                }
+                if (!found)
+                {
+                    currentId = Convert.ToInt32(dt.Rows[0]["EnchantmentId"]);
+                    ViewState["CurrentEnchantId"] = currentId;
+                }
+
+                LoadFlipCard(currentId);
+                contentPanel.Visible = true;
+                emptyPanel.Visible = false;
+            }
+            else
+            {
+                contentPanel.Visible = false;
+                emptyPanel.Visible = true;
+            }
+
+            LoadCategories();
+            btnAddNew.Visible = IsAdmin();
         }
 
-        private void LoadEnchantmentDetail(int id)
+        // ─────────────────────────────────────────────
+        // Load flip card content
+        // ─────────────────────────────────────────────
+        private void LoadFlipCard(int id)
         {
             using (SqlConnection conn = new SqlConnection(ConnStr))
             {
@@ -135,35 +172,18 @@ namespace WebAssignment.Brayden
                     {
                         string name = dr["Name"].ToString();
 
-                        lblDetailName.Text      = name;
-                        lblDetailName2.Text     = name;
-                        lblDetailCategory.Text  = dr["Category"].ToString();
-                        lblDetailMaxLevel.Text  = "Max Level: " + dr["MaxLevel"].ToString();
-                        lblDetailDesc.Text      = dr["Description"].ToString();
-                        litDetailContent.Text   = dr["FullContent"].ToString();
-                        lblDetailApplies.Text   = dr["AppliesTo"].ToString();
-                        lblDetailConflicts.Text = string.IsNullOrEmpty(dr["ConflictsWith"].ToString())
-                                                  ? "None" : dr["ConflictsWith"].ToString();
-                        lblDetailTreasure.Text  = dr["TreasureOnly"].ToString() == "True" ? "Yes" : "No";
+                        // Front
+                        lblDetailName.Text     = name;
+                        lblDetailCategory.Text = dr["Category"].ToString();
+                        lblDetailMaxLevel.Text = "Max Level: " + dr["MaxLevel"].ToString();
 
-                        // Small thumbnail in header
-                        string thumb = dr["Thumbnail"].ToString();
-                        if (!string.IsNullOrEmpty(thumb))
-                            imgDetailThumb.ImageUrl = ResolveUrl(thumb);
-
-                        // Large detail image below header
                         string detailImg = dr["DetailImage"].ToString();
+                        string thumb = dr["Thumbnail"].ToString();
                         if (!string.IsNullOrEmpty(detailImg))
-                        {
                             imgDetailLarge.ImageUrl = ResolveUrl(detailImg);
-                            pnlDetailImage.Visible  = true;
-                        }
-                        else
-                        {
-                            pnlDetailImage.Visible = false;
-                        }
+                        else if (!string.IsNullOrEmpty(thumb))
+                            imgDetailLarge.ImageUrl = ResolveUrl(thumb);
 
-                        // Level pips
                         int maxLvl = Convert.ToInt32(dr["MaxLevel"]);
                         string[] roman = { "I", "II", "III", "IV", "V" };
                         string pips = "";
@@ -171,40 +191,71 @@ namespace WebAssignment.Brayden
                             pips += "<span class='level-pip'>" + roman[i] + "</span>";
                         litLevelPips.Text = pips;
 
-                        // Show edit/delete for Admin or Instructor
-                        btnEditEnchant.Visible           = IsAdmin() || IsInstructor();
-                        btnDeleteEnchant.Visible         = IsAdmin() || IsInstructor();
+                        // Back
+                        lblDetailName2.Text     = name;
+                        lblDetailDesc.Text      = dr["Description"].ToString();
+                        litDetailContent.Text   = dr["FullContent"].ToString();
+                        lblDetailApplies.Text   = dr["AppliesTo"].ToString();
+                        lblDetailConflicts.Text = string.IsNullOrEmpty(dr["ConflictsWith"].ToString())
+                                                  ? "None" : dr["ConflictsWith"].ToString();
+                        lblDetailTreasure.Text  = dr["TreasureOnly"].ToString() == "True" ? "Yes" : "No";
+                        lblBackMaxLevel.Text    = dr["MaxLevel"].ToString();
+
+                        bool canEdit = IsAdmin() || IsInstructor();
+                        pnlAdminActions.Visible = canEdit;
                         btnDeleteEnchant.CommandArgument = id.ToString();
                     }
                 }
             }
 
-            // Load comments after loading detail
             LoadComments(id);
             CheckCommentPermission();
         }
 
         // ─────────────────────────────────────────────
-        // Back navigation
+        // Navigation
         // ─────────────────────────────────────────────
-        protected void BackToCategories(object sender, EventArgs e)
+        protected void SelectCategory(object sender, EventArgs e)
         {
-            categoryPanel.Visible = true;
-            listPanel.Visible = false; detailPanel.Visible = false;
-            editPanel.Visible = false; addPanel.Visible    = false;
+            string category = ((LinkButton)sender).CommandArgument;
+            ViewState["CurrentCategory"] = category;
+            ViewState["CurrentEnchantId"] = null;
+            LoadCategoryContent(category);
         }
 
-        protected void BackToList(object sender, EventArgs e)
+        protected void SelectPaginationItem(object sender, EventArgs e)
         {
-            string category = ViewState["CurrentCategory"] != null
-                              ? ViewState["CurrentCategory"].ToString() : "Sword";
-            lblListTitle.Text = category + " Enchantments";
-            LoadEnchantmentsByCategory(category);
+            int id = Convert.ToInt32(((LinkButton)sender).CommandArgument);
+            ViewState["CurrentEnchantId"] = id;
+            LoadFlipCard(id);
 
-            categoryPanel.Visible = false; listPanel.Visible  = true;
-            detailPanel.Visible   = false; editPanel.Visible  = false;
-            addPanel.Visible      = false;
-            btnAddNew.Visible     = IsAdmin();
+            string category = ViewState["CurrentCategory"] != null ? ViewState["CurrentCategory"].ToString() : "";
+            if (!string.IsNullOrEmpty(category))
+            {
+                using (SqlConnection conn = new SqlConnection(ConnStr))
+                {
+                    string sql = "SELECT EnchantmentId, Name, Thumbnail FROM enchantmentTable WHERE Category = @cat ORDER BY Name";
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@cat", category);
+                    SqlDataAdapter da = new SqlDataAdapter(cmd);
+                    DataTable dt = new DataTable();
+                    da.Fill(dt);
+                    paginationRepeater.DataSource = dt;
+                    paginationRepeater.DataBind();
+                }
+            }
+        }
+
+        protected void BackToMain(object sender, EventArgs e)
+        {
+            mainPanel.Visible = true;
+            editPanel.Visible = false;
+            addPanel.Visible  = false;
+            string category = ViewState["CurrentCategory"] != null ? ViewState["CurrentCategory"].ToString() : "";
+            if (!string.IsNullOrEmpty(category))
+                LoadCategoryContent(category);
+            else
+                AutoSelectFirst();
         }
 
         // ─────────────────────────────────────────────
@@ -239,10 +290,10 @@ namespace WebAssignment.Brayden
                 }
             }
 
-            categoryPanel.Visible = false; listPanel.Visible    = false;
-            detailPanel.Visible   = false; editPanel.Visible    = true;
-            addPanel.Visible      = false;
-            lblEditError.Text     = "";
+            mainPanel.Visible = false;
+            editPanel.Visible = true;
+            addPanel.Visible  = false;
+            lblEditError.Text = "";
         }
 
         // ─────────────────────────────────────────────
@@ -284,10 +335,11 @@ namespace WebAssignment.Brayden
                 cmd.ExecuteNonQuery();
             }
 
-            LoadEnchantmentDetail(id);
-            categoryPanel.Visible = false; listPanel.Visible  = false;
-            detailPanel.Visible   = true;  editPanel.Visible  = false;
-            addPanel.Visible      = false;
+            mainPanel.Visible = true;
+            editPanel.Visible = false;
+            addPanel.Visible  = false;
+            ViewState["CurrentCategory"] = ddlEditCategory.SelectedValue;
+            LoadCategoryContent(ddlEditCategory.SelectedValue);
         }
 
         // ─────────────────────────────────────────────
@@ -298,8 +350,6 @@ namespace WebAssignment.Brayden
             if (!IsAdmin()) return;
 
             int id = Convert.ToInt32(((LinkButton)sender).CommandArgument);
-            string category = ViewState["CurrentCategory"] != null
-                              ? ViewState["CurrentCategory"].ToString() : "Sword";
 
             using (SqlConnection conn = new SqlConnection(ConnStr))
             {
@@ -310,12 +360,12 @@ namespace WebAssignment.Brayden
                 cmd.ExecuteNonQuery();
             }
 
-            lblListTitle.Text = category + " Enchantments";
-            LoadEnchantmentsByCategory(category);
-            categoryPanel.Visible = false; listPanel.Visible  = true;
-            detailPanel.Visible   = false; editPanel.Visible  = false;
-            addPanel.Visible      = false;
-            btnAddNew.Visible     = IsAdmin();
+            ViewState["CurrentEnchantId"] = null;
+            string category = ViewState["CurrentCategory"] != null ? ViewState["CurrentCategory"].ToString() : "";
+            if (!string.IsNullOrEmpty(category))
+                LoadCategoryContent(category);
+            else
+                AutoSelectFirst();
         }
 
         // ─────────────────────────────────────────────
@@ -330,9 +380,9 @@ namespace WebAssignment.Brayden
             txtAddThumbnail.Text = ""; txtAddDetailImage.Text = "";
             chkAddTreasure.Checked = false; lblAddError.Text = "";
 
-            categoryPanel.Visible = false; listPanel.Visible  = false;
-            detailPanel.Visible   = false; editPanel.Visible  = false;
-            addPanel.Visible      = true;
+            mainPanel.Visible = false;
+            editPanel.Visible = false;
+            addPanel.Visible  = true;
         }
 
         // ─────────────────────────────────────────────
@@ -370,14 +420,12 @@ namespace WebAssignment.Brayden
                 cmd.ExecuteNonQuery();
             }
 
-            string category = ddlAddCategory.SelectedValue;
-            ViewState["CurrentCategory"] = category;
-            lblListTitle.Text = category + " Enchantments";
-            LoadEnchantmentsByCategory(category);
-            categoryPanel.Visible = false; listPanel.Visible  = true;
-            detailPanel.Visible   = false; editPanel.Visible  = false;
-            addPanel.Visible      = false;
-            btnAddNew.Visible     = IsAdmin();
+            mainPanel.Visible = true;
+            editPanel.Visible = false;
+            addPanel.Visible  = false;
+            ViewState["CurrentCategory"] = ddlAddCategory.SelectedValue;
+            ViewState["CurrentEnchantId"] = null;
+            LoadCategoryContent(ddlAddCategory.SelectedValue);
         }
 
         // ─────────────────────────────────────────────

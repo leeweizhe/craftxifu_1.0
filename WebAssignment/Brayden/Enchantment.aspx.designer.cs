@@ -11,444 +11,55 @@ namespace WebAssignment.Brayden
 {
     public partial class Enchantment
     {
-
-        /// <summary>
-        /// categoryPanel control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel categoryPanel;
-
-        /// <summary>
-        /// categoryRepeater control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel mainPanel;
         protected global::System.Web.UI.WebControls.Repeater categoryRepeater;
-
-        /// <summary>
-        /// listPanel control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel listPanel;
-
-        /// <summary>
-        /// btnAddNew control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnAddNew;
-
-        /// <summary>
-        /// lblListTitle control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblListTitle;
-
-        /// <summary>
-        /// enchantRepeater control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Repeater enchantRepeater;
-
-        /// <summary>
-        /// detailPanel control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel detailPanel;
-
-        /// <summary>
-        /// imgDetailThumb control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Image imgDetailThumb;
-
-        /// <summary>
-        /// lblDetailName control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblDetailName;
-
-        /// <summary>
-        /// lblDetailCategory control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblDetailCategory;
-
-        /// <summary>
-        /// lblDetailMaxLevel control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblDetailMaxLevel;
-
-        /// <summary>
-        /// lblDetailTreasure control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblDetailTreasure;
-
-        /// <summary>
-        /// litLevelPips control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Literal litLevelPips;
-
-        /// <summary>
-        /// pnlDetailImage control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel pnlDetailImage;
-
-        /// <summary>
-        /// imgDetailLarge control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel contentPanel;
         protected global::System.Web.UI.WebControls.Image imgDetailLarge;
-
-        /// <summary>
-        /// lblDetailName2 control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblDetailName;
+        protected global::System.Web.UI.WebControls.Label lblDetailCategory;
+        protected global::System.Web.UI.WebControls.Label lblDetailMaxLevel;
+        protected global::System.Web.UI.WebControls.Literal litLevelPips;
         protected global::System.Web.UI.WebControls.Label lblDetailName2;
-
-        /// <summary>
-        /// lblDetailDesc control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblDetailDesc;
-
-        /// <summary>
-        /// lblDetailApplies control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblDetailApplies;
-
-        /// <summary>
-        /// lblDetailConflicts control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblDetailConflicts;
-
-        /// <summary>
-        /// litDetailContent control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblDetailTreasure;
+        protected global::System.Web.UI.WebControls.Label lblBackMaxLevel;
         protected global::System.Web.UI.WebControls.Literal litDetailContent;
-
-        /// <summary>
-        /// btnEditEnchant control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel pnlAdminActions;
         protected global::System.Web.UI.WebControls.Button btnEditEnchant;
-
-        /// <summary>
-        /// btnDeleteEnchant control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
         protected global::System.Web.UI.WebControls.LinkButton btnDeleteEnchant;
-
-        /// <summary>
-        /// rptComments control.
-        /// </summary>
+        protected global::System.Web.UI.WebControls.Repeater paginationRepeater;
         protected global::System.Web.UI.WebControls.Repeater rptComments;
-
-        /// <summary>
-        /// pnlAddComment control.
-        /// </summary>
         protected global::System.Web.UI.WebControls.Panel pnlAddComment;
-
-        /// <summary>
-        /// txtComment control.
-        /// </summary>
         protected global::System.Web.UI.WebControls.TextBox txtComment;
-
-        /// <summary>
-        /// btnSubmitComment control.
-        /// </summary>
         protected global::System.Web.UI.WebControls.Button btnSubmitComment;
-
-        /// <summary>
-        /// litVisitorMsg control.
-        /// </summary>
         protected global::System.Web.UI.WebControls.Literal litVisitorMsg;
-
-        /// <summary>
-        /// editPanel control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel emptyPanel;
         protected global::System.Web.UI.WebControls.Panel editPanel;
-
-        /// <summary>
-        /// lblEditError control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblEditError;
-
-        /// <summary>
-        /// txtEditName control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtEditName;
-
-        /// <summary>
-        /// ddlEditCategory control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlEditCategory;
-
-        /// <summary>
-        /// txtEditMaxLevel control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtEditMaxLevel;
-
-        /// <summary>
-        /// txtEditThumbnail control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtEditThumbnail;
-
-        /// <summary>
-        /// txtEditDetailImage control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtEditDetailImage;
-
-        /// <summary>
-        /// txtEditDesc control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtEditDesc;
-
-        /// <summary>
-        /// txtEditApplies control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtEditApplies;
-
-        /// <summary>
-        /// txtEditConflicts control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtEditConflicts;
-
-        /// <summary>
-        /// txtEditContent control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtEditContent;
-
-        /// <summary>
-        /// chkEditTreasure control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
         protected global::System.Web.UI.WebControls.CheckBox chkEditTreasure;
-
-        /// <summary>
-        /// addPanel control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
         protected global::System.Web.UI.WebControls.Panel addPanel;
-
-        /// <summary>
-        /// lblAddError control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblAddError;
-
-        /// <summary>
-        /// txtAddName control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtAddName;
-
-        /// <summary>
-        /// ddlAddCategory control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlAddCategory;
-
-        /// <summary>
-        /// txtAddMaxLevel control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtAddMaxLevel;
-
-        /// <summary>
-        /// txtAddThumbnail control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtAddThumbnail;
-
-        /// <summary>
-        /// txtAddDetailImage control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtAddDetailImage;
-
-        /// <summary>
-        /// txtAddDesc control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtAddDesc;
-
-        /// <summary>
-        /// txtAddApplies control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtAddApplies;
-
-        /// <summary>
-        /// txtAddConflicts control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtAddConflicts;
-
-        /// <summary>
-        /// txtAddContent control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtAddContent;
-
-        /// <summary>
-        /// chkAddTreasure control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
         protected global::System.Web.UI.WebControls.CheckBox chkAddTreasure;
     }
 }

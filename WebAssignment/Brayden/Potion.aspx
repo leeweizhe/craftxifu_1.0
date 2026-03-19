@@ -2,76 +2,83 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <style type="text/css">
-        .pot-container { width: 90%; margin: 30px auto; color: #fff; }
-        .page-title { font-size: 2.5rem; color: #3498db; text-transform: uppercase; border-bottom: 4px solid #3498db; padding-bottom: 10px; margin-bottom: 30px; }
-        .section-label { color: #3498db; text-transform: uppercase; margin: 30px 0 12px; display: block; font-size: 1.3rem; border-left: 5px solid #3498db; padding-left: 15px; }
+        .pot-container { width: 95%; margin: 30px auto; color: #fff; }
+        .page-title { font-size: 2.5rem; color: #3498db; text-transform: uppercase; border-bottom: 4px solid #3498db; padding-bottom: 10px; margin-bottom: 25px; }
 
-        /* Category cards */
-        .pot-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px; }
-        .positive-card { background: rgba(0,80,0,0.6);  border: 3px solid #2ecc71; }
-        .negative-card { background: rgba(80,0,0,0.6);  border: 3px solid #e74c3c; }
-        .neutral-card  { background: rgba(80,60,0,0.6); border: 3px solid #f39c12; }
-        .pot-cat-card  { padding: 30px; cursor: pointer; text-decoration: none; display: block; transition: 0.3s; text-align: center; }
-        .pot-cat-card:hover { transform: translateY(-5px); box-shadow: 0 5px 20px rgba(0,0,0,0.5); }
-        .pot-cat-card h2 { font-size: 1.5rem; text-transform: uppercase; margin-top: 10px; }
-        .pot-cat-card p  { font-size: 0.9rem; color: #ccc; margin-top: 5px; }
-        .cat-icon-big { font-size: 3.5rem; display: block; }
+        /* Layout */
+        .guide-layout { display: grid; grid-template-columns: 190px 1fr; gap: 25px; }
+        @media (max-width: 768px) { .guide-layout { grid-template-columns: 1fr; } .guide-sidebar { flex-direction: row; flex-wrap: wrap; } }
 
-        /* List rows */
-        .type-badge     { padding: 2px 10px; font-size: 0.75rem; margin-left: 8px; }
-        .type-Brewed    { background: #2980b9; color: #fff; }
-        .type-Splash    { background: #8e44ad; color: #fff; }
+        /* Sidebar */
+        .guide-sidebar { display: flex; flex-direction: column; gap: 6px; }
+        .cat-btn { display: flex; align-items: center; gap: 10px; background: rgba(0,0,0,0.8); border: 2px solid #444; color: #aaa; padding: 12px 14px; cursor: pointer; text-decoration: none; font-family: inherit; font-size: 0.85rem; text-transform: uppercase; transition: 0.2s; }
+        .cat-btn:hover { border-color: #3498db; color: #74b9ff; }
+        .cat-btn.active { background: rgba(0,0,0,0.5); }
+
+        .cat-icon-sm { font-size: 1.2rem; }
+
+        /* Frame */
+        .guide-frame { background: rgba(0,0,0,0.85); border: 4px solid #3498db; border-radius: 8px; padding: 30px; margin-bottom: 25px; }
+
+        /* Flip Card */
+        .flip-card-wrap { perspective: 1200px; max-width: 520px; margin: 0 auto 20px; }
+        .flip-card { width: 100%; height: 460px; position: relative; transform-style: preserve-3d; transition: transform 0.7s ease; cursor: pointer; }
+        .flip-card.flipped { transform: rotateY(180deg); }
+        .flip-face { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border: 3px solid #555; box-sizing: border-box; }
+        .flip-front { background: linear-gradient(180deg, #0d1b2a, #0d0d0d); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 25px; text-align: center; }
+        .flip-front .card-img { width: 160px; height: 160px; object-fit: contain; image-rendering: pixelated; border: 3px solid #3498db; background: #000; padding: 8px; margin-bottom: 15px; }
+        .flip-front .card-name { font-size: 1.7rem; color: #74b9ff; margin-bottom: 6px; }
+        .flip-front .card-sub { color: #3498db; font-size: 0.85rem; text-transform: uppercase; margin-bottom: 4px; }
+        .flip-front .card-hint { color: #555; font-size: 0.8rem; margin-top: 12px; }
+        .flip-front .type-badge { padding: 3px 12px; font-size: 0.75rem; display: inline-block; margin-top: 6px; }
+        .type-Brewed { background: #2980b9; color: #fff; }
+        .type-Splash { background: #8e44ad; color: #fff; }
         .type-Lingering { background: #d35400; color: #fff; }
-        .type-Beacon    { background: #f1c40f; color: #000; }
-        .pot-row { background: #1a1a1a; padding: 15px 20px; margin-bottom: 12px; display: flex; align-items: center; gap: 20px; transition: 0.2s; }
-        .pot-row:hover { background: #242424; }
-        .positive-row { border-left: 5px solid #2ecc71; }
-        .negative-row { border-left: 5px solid #e74c3c; }
-        .neutral-row  { border-left: 5px solid #f39c12; }
-        .pot-row-thumb { width: 65px; height: 65px; object-fit: contain; image-rendering: pixelated; border: 2px solid #333; background: #0d0d0d; flex-shrink: 0; }
-        .pot-row-info { flex: 1; }
-        .pot-row-info h3 { font-size: 1.2rem; margin-bottom: 4px; }
-        .pot-row-info p  { color: #aaa; font-size: 0.9rem; }
-        .duration-badge { background: #34495e; color: #ecf0f1; padding: 3px 12px; font-size: 0.8rem; white-space: nowrap; }
+        .type-Beacon { background: #f1c40f; color: #000; }
+        .flip-back { background: #0d0d0d; transform: rotateY(180deg); padding: 20px 22px; overflow-y: auto; }
+        .flip-back .back-title { font-size: 1.3rem; color: #74b9ff; border-bottom: 2px solid #3498db; padding-bottom: 6px; margin-bottom: 12px; }
+        .flip-back .back-lbl { color: #3498db; text-transform: uppercase; font-size: 0.7rem; margin: 12px 0 4px; display: block; }
+        .flip-back .back-txt { color: #ccc; font-size: 0.9rem; line-height: 1.5; }
+        .flip-back .meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+        .flip-back .meta-cell { background: #111; border: 1px solid #333; padding: 6px 10px; }
+        .flip-back .meta-cell label { color: #666; font-size: 0.65rem; text-transform: uppercase; display: block; }
+        .flip-back .meta-cell span { color: #fff; font-size: 0.85rem; }
+        .flip-back .content-box { background: #111; border: 1px solid #333; padding: 12px; color: #ccc; line-height: 1.6; font-size: 0.85rem; max-height: 120px; overflow-y: auto; }
+        .flip-back .ingredient-img { width: 60px; height: 60px; object-fit: contain; image-rendering: pixelated; border: 2px solid #333; background: #000; padding: 4px; float: right; margin-left: 10px; }
+        .back-actions { margin-top: 10px; padding-top: 8px; border-top: 1px solid #333; text-align: center; }
 
-        /* Detail page */
-        .detail-box { background: rgba(0,0,0,0.9); border: 4px solid #555; padding: 35px; }
-        .detail-header { display: flex; gap: 25px; align-items: flex-start; border-bottom: 3px solid #3498db; padding-bottom: 20px; margin-bottom: 25px; }
-        .detail-thumb { width: 90px; height: 90px; image-rendering: pixelated; object-fit: contain; border: 3px solid #3498db; background: #0d0d0d; padding: 4px; flex-shrink: 0; }
-        .detail-title { font-size: 2.4rem; color: #74b9ff; }
-        .detail-sub   { color: #888; font-size: 1rem; margin-top: 5px; }
+        /* Pagination */
+        .pagination-bar { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; padding: 15px 0; border-top: 2px solid #333; }
+        .pg-btn { background: none; border: none; padding: 0; cursor: pointer; position: relative; display: inline-block; text-decoration: none; }
+        .pg-icon { width: 46px; height: 46px; object-fit: contain; image-rendering: pixelated; border: 2px solid #444; background: #111; padding: 3px; transition: 0.2s; display: block; }
+        .pg-icon:hover { border-color: #3498db; transform: scale(1.12); }
+        .pg-icon.active { border-color: #3498db; box-shadow: 0 0 10px rgba(52,152,219,0.5); }
+        .pg-btn .pg-tip { display: none; position: absolute; bottom: -24px; left: 50%; transform: translateX(-50%); background: #3498db; color: #fff; padding: 2px 8px; font-size: 0.65rem; white-space: nowrap; z-index: 10; pointer-events: none; }
+        .pg-btn:hover .pg-tip { display: block; }
 
-        /* Two-column image section */
-        .img-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 25px; }
-        .img-card { background: #0d0d0d; border: 2px solid #333; padding: 12px; text-align: center; }
-        .img-card img { width: 100%; max-height: 200px; object-fit: contain; image-rendering: pixelated; }
-        .img-card p { color: #666; font-size: 0.8rem; margin-top: 8px; }
+        /* Comment */
+        .comment-section { background: rgba(0,0,0,0.7); border: 3px solid #333; padding: 25px; }
+        .comment-section h3 { color: #2ecc71; font-size: 1.3rem; margin-bottom: 15px; }
 
-        .brewing-chain { display: flex; align-items: center; gap: 10px; background: #111; border: 1px solid #333; padding: 15px 20px; margin-bottom: 20px; flex-wrap: wrap; }
-        .chain-step  { background: #2c3e50; color: #ecf0f1; padding: 6px 15px; font-size: 0.9rem; }
-        .chain-arrow { color: #3498db; font-size: 1.2rem; }
-        .meta-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 15px; margin-bottom: 20px; }
-        .meta-cell { background: #111; border: 1px solid #333; padding: 12px 15px; }
-        .meta-cell label { color: #666; font-size: 0.75rem; text-transform: uppercase; display: block; margin-bottom: 4px; }
-        .meta-cell span  { color: #fff; font-size: 0.95rem; }
-        .content-box { background: #111; border: 1px solid #333; padding: 20px; color: #ccc; line-height: 1.8; font-size: 1rem; }
+        /* Empty */
+        .empty-state { text-align: center; padding: 80px 20px; color: #555; }
+        .empty-state .empty-icon { font-size: 4rem; display: block; margin-bottom: 15px; }
 
         /* Buttons */
-        .btn-edit   { background: #2980b9; color: #fff; border: none; padding: 8px 20px; cursor: pointer; font-size: 0.9rem; margin-right: 10px; font-family: inherit; }
-        .btn-delete { background: #c0392b; color: #fff; border: none; padding: 8px 20px; cursor: pointer; font-size: 0.9rem; font-family: inherit; }
-        .btn-add    { background: #27ae60; color: #fff; border: none; padding: 8px 20px; cursor: pointer; font-size: 0.9rem; font-family: inherit; margin-bottom: 20px; }
-        .btn-save   { background: #27ae60; color: #fff; border: none; padding: 10px 25px; cursor: pointer; font-size: 1rem; font-family: inherit; }
+        .btn-edit { background: #2980b9; color: #fff; border: none; padding: 6px 16px; cursor: pointer; font-size: 0.85rem; margin-right: 8px; font-family: inherit; }
+        .btn-delete { background: #c0392b; color: #fff; border: none; padding: 6px 16px; cursor: pointer; font-size: 0.85rem; font-family: inherit; }
+        .btn-add { background: #27ae60; color: #fff; border: none; padding: 8px 16px; cursor: pointer; font-size: 0.85rem; font-family: inherit; }
+        .btn-save { background: #27ae60; color: #fff; border: none; padding: 10px 25px; cursor: pointer; font-size: 1rem; font-family: inherit; }
         .btn-cancel { background: #555; color: #fff; border: none; padding: 10px 25px; cursor: pointer; font-size: 1rem; font-family: inherit; margin-left: 10px; }
-        .back-btn   { color: #f39c12; cursor: pointer; text-decoration: none; margin-bottom: 20px; display: inline-block; font-size: 1rem; }
+        .back-btn { color: #f39c12; cursor: pointer; text-decoration: none; margin-bottom: 20px; display: inline-block; font-size: 1rem; }
         .back-btn:hover { color: #fbbf24; }
-        .view-btn   { background: #3498db; color: #fff; padding: 8px 18px; font-size: 0.85rem; border: none; cursor: pointer; font-family: inherit; }
 
         /* Form */
         .form-panel { background: rgba(0,0,0,0.9); border: 4px solid #555; padding: 35px; max-width: 800px; margin: 0 auto; }
         .form-panel h2 { color: #3498db; font-size: 1.8rem; border-bottom: 2px solid #3498db; padding-bottom: 10px; margin-bottom: 25px; }
         .form-row { margin-bottom: 18px; }
         .form-row label { color: #aaa; font-size: 0.9rem; display: block; margin-bottom: 6px; text-transform: uppercase; }
-        .form-input, .form-textarea, .form-select { width: 100%; background: #1a1a1a; border: 2px solid #555; color: #fff; padding: 10px; font-family: inherit; font-size: 0.95rem; }
+        .form-input, .form-textarea, .form-select { width: 100%; background: #1a1a1a; border: 2px solid #555; color: #fff; padding: 10px; font-family: inherit; font-size: 0.95rem; box-sizing: border-box; }
         .form-textarea { height: 120px; resize: vertical; }
         .form-row-half { display: flex; gap: 20px; }
         .form-row-half .form-row { flex: 1; }
@@ -82,168 +89,137 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
 <div class="pot-container">
 
-    <%-- PANEL 1: CATEGORIES --%>
-    <asp:Panel ID="categoryPanel" runat="server">
-        <h1 class="page-title">🧪 Potion Guide</h1>
-        <p style="color:#aaa; margin-bottom:25px; font-size:1rem;">Brew powerful concoctions to aid your adventures. Explore all 20 potions across 3 categories.</p>
-        <div class="pot-grid">
-            <asp:Repeater ID="categoryRepeater" runat="server">
-                <ItemTemplate>
-                    <asp:LinkButton runat="server"
-                        CssClass='<%# "pot-cat-card " + Eval("Category").ToString().ToLower() + "-card" %>'
-                        CommandArgument='<%# Eval("Category") %>' OnClick="SelectCategory">
-                        <span class="cat-icon-big"><%# ((WebAssignment.Brayden.Potion)Page).GetCategoryIcon(Eval("Category").ToString()) %></span>
-                        <h2 style='color:<%# ((WebAssignment.Brayden.Potion)Page).GetCategoryColor(Eval("Category").ToString()) %>'>
-                            <%# Eval("Category") %> Potions
-                        </h2>
-                        <p>Explore <%# Eval("Category").ToString().ToLower() %> effect brews</p>
-                    </asp:LinkButton>
-                </ItemTemplate>
-            </asp:Repeater>
-        </div>
+    <%-- ===== MAIN VIEW ===== --%>
+    <asp:Panel ID="mainPanel" runat="server">
+        <h1 class="page-title">&#129514; Potion Guide</h1>
+        <p style="color:#aaa; margin-bottom:20px; font-size:0.95rem;">Brew powerful concoctions to aid your adventures. Select a category, then click the card to flip and reveal brewing instructions.</p>
 
-        <div style="margin-top:40px; background:rgba(0,0,0,0.7); border:3px solid #555; padding:25px;">
-            <h2 style="color:#3498db; font-size:1.4rem; margin-bottom:15px;">🍶 How Brewing Works</h2>
-            <div class="brewing-chain">
-                <span class="chain-step">Water Bottle</span>
-                <span class="chain-arrow">➜</span>
-                <span class="chain-step">+ Nether Wart</span>
-                <span class="chain-arrow">➜</span>
-                <span class="chain-step">Awkward Potion</span>
-                <span class="chain-arrow">➜</span>
-                <span class="chain-step">+ Ingredient</span>
-                <span class="chain-arrow">➜</span>
-                <span class="chain-step">Potion!</span>
-            </div>
-            <p style="color:#aaa; font-size:0.9rem; margin-top:10px;">
-                <b style="color:#e67e22;">Gunpowder</b> → Splash &nbsp;|&nbsp;
-                <b style="color:#9b59b6;">Dragon's Breath</b> → Lingering &nbsp;|&nbsp;
-                <b style="color:#3498db;">Redstone</b> extends duration &nbsp;|&nbsp;
-                <b style="color:#f1c40f;">Glowstone</b> increases level
-            </p>
-        </div>
-    </asp:Panel>
-
-    <%-- PANEL 2: LIST --%>
-    <asp:Panel ID="listPanel" runat="server" Visible="false">
-        <asp:LinkButton runat="server" CssClass="back-btn" OnClick="BackToCategories">« BACK TO CATEGORIES</asp:LinkButton>
-        <asp:Button ID="btnAddNew" runat="server" CssClass="btn-add" Text="+ ADD POTION" OnClick="ShowAddForm" Style="float:right;" Visible="false" />
-        <h1 class="page-title"><asp:Label ID="lblListTitle" runat="server" /></h1>
-
-        <asp:Repeater ID="potionRepeater" runat="server">
-            <ItemTemplate>
-                <div class='pot-row <%# Eval("Category").ToString().ToLower() %>-row'>
-                    <%-- Thumbnail on list --%>
-                    <img src='<%# ResolveUrl(Eval("Thumbnail").ToString()) %>'
-                         class="pot-row-thumb"
-                         onerror="this.style.display='none'" alt='<%# Eval("Name") %>' />
-                    <div class="pot-row-info">
-                        <h3 style='color:<%# ((WebAssignment.Brayden.Potion)Page).GetCategoryColor(Eval("Category").ToString()) %>'>
-                            <%# Eval("Name") %>
-                            <span class='type-badge type-<%# Eval("PotionType").ToString().Replace(" ","") %>'><%# Eval("PotionType") %></span>
-                        </h3>
-                        <p><%# Eval("Description") %></p>
-                    </div>
-                    <span class="duration-badge">⏱ <%# Eval("Duration") %></span>
-                    <asp:LinkButton runat="server" CssClass="view-btn"
-                        CommandArgument='<%# Eval("PotionId") %>' OnClick="ViewDetail">VIEW »</asp:LinkButton>
-                </div>
-            </ItemTemplate>
-        </asp:Repeater>
-    </asp:Panel>
-
-    <%-- PANEL 3: DETAIL --%>
-    <asp:Panel ID="detailPanel" runat="server" Visible="false">
-        <asp:LinkButton runat="server" CssClass="back-btn" OnClick="BackToList">« BACK TO LIST</asp:LinkButton>
-        <div class="detail-box">
-
-            <div class="detail-header">
-                <asp:Image ID="imgDetailThumb" runat="server" CssClass="detail-thumb" />
-                <div>
-                    <div class="detail-title"><asp:Label ID="lblDetailName" runat="server" /></div>
-                    <div class="detail-sub">
-                        <asp:Label ID="lblDetailCategory" runat="server" /> &nbsp;|&nbsp;
-                        <asp:Label ID="lblDetailType" runat="server" />
-                    </div>
-                    <p style="color:#ccc; font-size:1rem; margin-top:8px;"><asp:Label ID="lblDetailDesc" runat="server" /></p>
-                </div>
-            </div>
-
-            <%-- Two-column visual: potion bottle + ingredient image --%>
-            <asp:Panel ID="pnlImages" runat="server" Visible="false">
-                <div class="img-row">
-                    <div class="img-card">
-                        <asp:Image ID="imgDetailLarge" runat="server" onerror="this.parentElement.style.display='none'" />
-                        <p>Potion bottle / in-game appearance</p>
-                    </div>
-                    <div class="img-card">
-                        <asp:Image ID="imgIngredient" runat="server" onerror="this.parentElement.style.display='none'" />
-                        <p>Key ingredient / brewing recipe</p>
-                    </div>
-                </div>
-            </asp:Panel>
-
-            <span class="section-label">Effect</span>
-            <p style="color:#ecf0f1; font-size:1.05rem; margin-bottom:20px;"><asp:Label ID="lblDetailEffect" runat="server" /></p>
-
-            <div class="meta-grid">
-                <div class="meta-cell"><label>Duration</label><span><asp:Label ID="lblDetailDuration" runat="server" /></span></div>
-                <div class="meta-cell"><label>Brewing Base</label><span><asp:Label ID="lblDetailBase" runat="server" /></span></div>
-                <div class="meta-cell"><label>Key Ingredient</label><span><asp:Label ID="lblDetailIngredient" runat="server" /></span></div>
-            </div>
-
-            <span class="section-label">Brewing Instructions</span>
-            <div class="content-box"><asp:Literal ID="litDetailContent" runat="server" /></div>
-
-            <div style="margin-top:25px;">
-                <asp:Button ID="btnEditPotion" runat="server" CssClass="btn-edit" Text="✎ EDIT" OnClick="ShowEditForm" Visible="false" />
-                <asp:LinkButton ID="btnDeletePotion" runat="server" CssClass="btn-delete" Text="✖ DELETE"
-                    OnClick="DeletePotion" OnClientClick="return confirm('Delete this potion?');" Visible="false" />
-            </div>
-
-            <%-- COMMENT SECTION --%>
-            <div style="margin-top:40px; border-top:3px solid #555; padding-top:30px;">
-                <h3 style="color:#2ecc71; font-size:1.5rem; margin-bottom:20px;">💬 COMMUNITY COMMENTS</h3>
-                <asp:Repeater ID="rptComments" runat="server">
+        <div class="guide-layout">
+            <%-- SIDEBAR --%>
+            <div class="guide-sidebar">
+                <asp:Repeater ID="categoryRepeater" runat="server">
                     <ItemTemplate>
-                        <div style="border-bottom:1px dashed #444; padding:15px 0; margin-bottom:10px;">
-                            <span style="color:#2ecc71;"><%# Eval("Username") %></span>
-                            <span style="color:#888; font-size:0.8rem;">- <%# Eval("CommentDate", "{0:yyyy-MM-dd HH:mm}") %></span>
-                            <asp:LinkButton ID="lnkReport" runat="server"
-                                Text="[ REPORT ]"
-                                CommandArgument='<%# String.Format("{0}|{1}", Eval("CommentId"), Request.QueryString["id"]) %>'
-                                OnCommand="lnkReport_Command"
-                                OnClientClick="return confirm('Are you sure you want to report this comment?');"
-                                Visible='<%# Session["userId"] != null %>'
-                                style="color:#ff4444; font-size:0.7rem; text-decoration:none; float:right;" />
-                            <p style="margin-top:8px; color:#ddd; line-height:1.4;"><%# Eval("CommentText") %></p>
-                        </div>
+                        <asp:LinkButton runat="server"
+                            CssClass='<%# "cat-btn" + ((WebAssignment.Brayden.Potion)Page).GetCategoryActiveClass(Eval("Category").ToString()) %>'
+                            style='<%# ((WebAssignment.Brayden.Potion)Page).GetCategorySidebarStyle(Eval("Category").ToString()) %>'
+                            CommandArgument='<%# Eval("Category") %>' OnClick="SelectCategory">
+                            <span class="cat-icon-sm"><%# ((WebAssignment.Brayden.Potion)Page).GetCategoryIcon(Eval("Category").ToString()) %></span>
+                            <%# Eval("Category") %>
+                        </asp:LinkButton>
                     </ItemTemplate>
                 </asp:Repeater>
+                <div style="margin-top:12px;">
+                    <asp:Button ID="btnAddNew" runat="server" CssClass="btn-add" Text="+ ADD" OnClick="ShowAddForm" Visible="false" style="width:100%;" />
+                </div>
+            </div>
 
-                <%-- Add Comment Panel --%>
-                <asp:Panel ID="pnlAddComment" runat="server" Visible="false" style="margin-top:20px;">
-                    <h4 style="color:#fbbf24; margin-bottom:10px; font-size:1rem;">ADD YOUR THOUGHTS</h4>
-                    <asp:TextBox ID="txtComment" runat="server" TextMode="MultiLine" Rows="4"
-                        style="width:100%; background:#000; color:#fff; border:1px solid#2ecc71; padding:10px; font-family:inherit; resize:none;"
-                        placeholder="Share your experience with this potion..." />
-                    <br />
-                    <asp:Button ID="btnSubmitComment" runat="server" Text="[ POST COMMENT ]"
-                        OnClick="btnSubmitComment_Click"
-                        style="margin-top:15px; background:#2ecc71; color:#000; border:none; padding:10px 25px; font-weight:bold; cursor:pointer; font-family:inherit;" />
+            <%-- CENTER --%>
+            <div>
+                <asp:Panel ID="contentPanel" runat="server" Visible="false">
+                    <div class="guide-frame">
+                        <%-- Flip Card --%>
+                        <div class="flip-card-wrap">
+                            <div class="flip-card" id="flipCard" onclick="handleFlip(event)">
+                                <div class="flip-face flip-front">
+                                    <asp:Image ID="imgDetailLarge" runat="server" CssClass="card-img" onerror="this.style.display='none'" />
+                                    <div class="card-name"><asp:Label ID="lblDetailName" runat="server" /></div>
+                                    <div class="card-sub">
+                                        <asp:Label ID="lblDetailCategory" runat="server" /> &bull;
+                                        <asp:Label ID="lblDetailType" runat="server" />
+                                    </div>
+                                    <div><span class="duration-badge" style="background:#34495e; color:#ecf0f1; padding:3px 12px; font-size:0.8rem;">&#9201; <asp:Label ID="lblFrontDuration" runat="server" /></span></div>
+                                    <div class="card-hint">&#128260; Click to reveal brewing details</div>
+                                </div>
+                                <div class="flip-face flip-back">
+                                    <asp:Image ID="imgIngredient" runat="server" CssClass="ingredient-img" onerror="this.style.display='none'" />
+                                    <div class="back-title"><asp:Label ID="lblBackName" runat="server" /></div>
+                                    <span class="back-lbl">Effect</span>
+                                    <p class="back-txt"><asp:Label ID="lblDetailEffect" runat="server" /></p>
+                                    <p class="back-txt" style="color:#888;"><asp:Label ID="lblDetailDesc" runat="server" /></p>
+                                    <div class="meta-grid">
+                                        <div class="meta-cell"><label>Duration</label><span><asp:Label ID="lblDetailDuration" runat="server" /></span></div>
+                                        <div class="meta-cell"><label>Potion Type</label><span><asp:Label ID="lblBackType" runat="server" /></span></div>
+                                        <div class="meta-cell"><label>Brewing Base</label><span><asp:Label ID="lblDetailBase" runat="server" /></span></div>
+                                        <div class="meta-cell"><label>Key Ingredient</label><span><asp:Label ID="lblDetailIngredient" runat="server" /></span></div>
+                                    </div>
+                                    <span class="back-lbl">Brewing Instructions</span>
+                                    <div class="content-box"><asp:Literal ID="litDetailContent" runat="server" /></div>
+                                    <asp:Panel ID="pnlAdminActions" runat="server" Visible="false" CssClass="back-actions">
+                                        <asp:Button ID="btnEditPotion" runat="server" CssClass="btn-edit" Text="&#9998; EDIT" OnClick="ShowEditForm" />
+                                        <asp:LinkButton ID="btnDeletePotion" runat="server" CssClass="btn-delete" Text="&#10006; DELETE"
+                                            OnClick="DeletePotion" OnClientClick="return confirm('Delete this potion?');" />
+                                    </asp:Panel>
+                                    <div style="color:#555; font-size:0.75rem; text-align:center; margin-top:8px;">&#128260; Click to flip back</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <%-- Pagination Icons --%>
+                        <div class="pagination-bar">
+                            <asp:Repeater ID="paginationRepeater" runat="server">
+                                <ItemTemplate>
+                                    <asp:LinkButton runat="server" CssClass="pg-btn"
+                                        CommandArgument='<%# Eval("PotionId") %>'
+                                        OnClick="SelectPaginationItem">
+                                        <img src='<%# ResolveUrl(Eval("Thumbnail").ToString()) %>'
+                                             class='<%# "pg-icon" + ((WebAssignment.Brayden.Potion)Page).GetPaginationActiveClass(Eval("PotionId")) %>'
+                                             onerror="this.style.display='none'" alt='<%# Eval("Name") %>' />
+                                        <span class="pg-tip"><%# Eval("Name") %></span>
+                                    </asp:LinkButton>
+                                </ItemTemplate>
+                            </asp:Repeater>
+                        </div>
+                    </div>
+
+                    <%-- Comment Section --%>
+                    <div class="comment-section">
+                        <h3>&#128172; COMMUNITY COMMENTS</h3>
+                        <asp:Repeater ID="rptComments" runat="server">
+                            <ItemTemplate>
+                                <div style="border-bottom:1px dashed #444; padding:12px 0;">
+                                    <span style="color:#2ecc71;"><%# Eval("Username") %></span>
+                                    <span style="color:#888; font-size:0.8rem;">- <%# Eval("CommentDate", "{0:yyyy-MM-dd HH:mm}") %></span>
+                                    <asp:LinkButton ID="lnkReport" runat="server"
+                                        Text="[ REPORT ]"
+                                        CommandArgument='<%# Eval("CommentId") + "|" + ((WebAssignment.Brayden.Potion)Page).CurrentPotionId %>'
+                                        OnCommand="lnkReport_Command"
+                                        OnClientClick="return confirm('Report this comment?');"
+                                        Visible='<%# Session["userId"] != null %>'
+                                        style="color:#ff4444; font-size:0.7rem; text-decoration:none; float:right;" />
+                                    <p style="margin-top:6px; color:#ddd; line-height:1.4;"><%# Eval("CommentText") %></p>
+                                </div>
+                            </ItemTemplate>
+                        </asp:Repeater>
+                        <asp:Panel ID="pnlAddComment" runat="server" Visible="false" style="margin-top:15px;">
+                            <h4 style="color:#fbbf24; margin-bottom:8px; font-size:0.95rem;">ADD YOUR THOUGHTS</h4>
+                            <asp:TextBox ID="txtComment" runat="server" TextMode="MultiLine" Rows="3"
+                                style="width:100%; background:#000; color:#fff; border:1px solid #2ecc71; padding:10px; font-family:inherit; resize:none; box-sizing:border-box;"
+                                placeholder="Share your experience with this potion..." />
+                            <br />
+                            <asp:Button ID="btnSubmitComment" runat="server" Text="[ POST COMMENT ]"
+                                OnClick="btnSubmitComment_Click"
+                                style="margin-top:10px; background:#2ecc71; color:#000; border:none; padding:8px 20px; font-weight:bold; cursor:pointer; font-family:inherit;" />
+                        </asp:Panel>
+                        <asp:Literal ID="litVisitorMsg" runat="server" />
+                    </div>
                 </asp:Panel>
 
-                <%-- Visitor Message --%>
-                <asp:Literal ID="litVisitorMsg" runat="server" />
+                <asp:Panel ID="emptyPanel" runat="server">
+                    <div class="empty-state">
+                        <span class="empty-icon">&#129514;</span>
+                        <h2 style="color:#555; font-size:1.4rem;">Select a Category</h2>
+                        <p style="color:#444;">Choose from the sidebar to explore potions</p>
+                    </div>
+                </asp:Panel>
             </div>
         </div>
     </asp:Panel>
 
-    <%-- PANEL 4: EDIT --%>
+    <%-- EDIT PANEL --%>
     <asp:Panel ID="editPanel" runat="server" Visible="false">
-        <asp:LinkButton runat="server" CssClass="back-btn" OnClick="BackToList">« CANCEL & BACK</asp:LinkButton>
+        <asp:LinkButton runat="server" CssClass="back-btn" OnClick="BackToMain">&laquo; CANCEL &amp; BACK</asp:LinkButton>
         <div class="form-panel">
-            <h2>✎ Edit Potion</h2>
+            <h2>&#9998; Edit Potion</h2>
             <asp:Label ID="lblEditError" runat="server" CssClass="error-msg" />
             <div class="form-row-half">
                 <div class="form-row"><label>Name</label><asp:TextBox ID="txtEditName" runat="server" CssClass="form-input" /></div>
@@ -270,20 +246,20 @@
                 <div class="form-row"><label>Key Ingredient</label><asp:TextBox ID="txtEditIngredient" runat="server" CssClass="form-input" /></div>
             </div>
             <div class="form-row"><label>Short Description</label><asp:TextBox ID="txtEditDesc" runat="server" CssClass="form-input" /></div>
-            <div class="form-row"><label>Thumbnail Path (list small image)</label><asp:TextBox ID="txtEditThumbnail" runat="server" CssClass="form-input" /></div>
-            <div class="form-row"><label>Detail Image Path (potion bottle)</label><asp:TextBox ID="txtEditDetailImage" runat="server" CssClass="form-input" /></div>
-            <div class="form-row"><label>Ingredient Image Path (recipe/ingredient)</label><asp:TextBox ID="txtEditIngredientImage" runat="server" CssClass="form-input" /></div>
-            <div class="form-row"><label>Brewing Instructions (Detail)</label><asp:TextBox ID="txtEditContent" runat="server" CssClass="form-textarea" TextMode="MultiLine" /></div>
+            <div class="form-row"><label>Thumbnail Path</label><asp:TextBox ID="txtEditThumbnail" runat="server" CssClass="form-input" /></div>
+            <div class="form-row"><label>Detail Image Path</label><asp:TextBox ID="txtEditDetailImage" runat="server" CssClass="form-input" /></div>
+            <div class="form-row"><label>Ingredient Image Path</label><asp:TextBox ID="txtEditIngredientImage" runat="server" CssClass="form-input" /></div>
+            <div class="form-row"><label>Brewing Instructions</label><asp:TextBox ID="txtEditContent" runat="server" CssClass="form-textarea" TextMode="MultiLine" /></div>
             <div style="margin-top:20px;">
                 <asp:Button runat="server" CssClass="btn-save" Text="SAVE CHANGES" OnClick="SaveEdit" />
-                <asp:Button runat="server" CssClass="btn-cancel" Text="CANCEL" OnClick="BackToList" />
+                <asp:Button runat="server" CssClass="btn-cancel" Text="CANCEL" OnClick="BackToMain" />
             </div>
         </div>
     </asp:Panel>
 
-    <%-- PANEL 5: ADD --%>
+    <%-- ADD PANEL --%>
     <asp:Panel ID="addPanel" runat="server" Visible="false">
-        <asp:LinkButton runat="server" CssClass="back-btn" OnClick="BackToList">« CANCEL & BACK</asp:LinkButton>
+        <asp:LinkButton runat="server" CssClass="back-btn" OnClick="BackToMain">&laquo; CANCEL &amp; BACK</asp:LinkButton>
         <div class="form-panel">
             <h2>+ Add New Potion</h2>
             <asp:Label ID="lblAddError" runat="server" CssClass="error-msg" />
@@ -312,16 +288,23 @@
                 <div class="form-row"><label>Key Ingredient</label><asp:TextBox ID="txtAddIngredient" runat="server" CssClass="form-input" /></div>
             </div>
             <div class="form-row"><label>Short Description</label><asp:TextBox ID="txtAddDesc" runat="server" CssClass="form-input" /></div>
-            <div class="form-row"><label>Thumbnail Path (list small image)</label><asp:TextBox ID="txtAddThumbnail" runat="server" CssClass="form-input" /></div>
-            <div class="form-row"><label>Detail Image Path (potion bottle)</label><asp:TextBox ID="txtAddDetailImage" runat="server" CssClass="form-input" /></div>
-            <div class="form-row"><label>Ingredient Image Path (recipe/ingredient)</label><asp:TextBox ID="txtAddIngredientImage" runat="server" CssClass="form-input" /></div>
-            <div class="form-row"><label>Brewing Instructions (Detail)</label><asp:TextBox ID="txtAddContent" runat="server" CssClass="form-textarea" TextMode="MultiLine" /></div>
+            <div class="form-row"><label>Thumbnail Path</label><asp:TextBox ID="txtAddThumbnail" runat="server" CssClass="form-input" /></div>
+            <div class="form-row"><label>Detail Image Path</label><asp:TextBox ID="txtAddDetailImage" runat="server" CssClass="form-input" /></div>
+            <div class="form-row"><label>Ingredient Image Path</label><asp:TextBox ID="txtAddIngredientImage" runat="server" CssClass="form-input" /></div>
+            <div class="form-row"><label>Brewing Instructions</label><asp:TextBox ID="txtAddContent" runat="server" CssClass="form-textarea" TextMode="MultiLine" /></div>
             <div style="margin-top:20px;">
                 <asp:Button runat="server" CssClass="btn-save" Text="ADD POTION" OnClick="SaveAdd" />
-                <asp:Button runat="server" CssClass="btn-cancel" Text="CANCEL" OnClick="BackToList" />
+                <asp:Button runat="server" CssClass="btn-cancel" Text="CANCEL" OnClick="BackToMain" />
             </div>
         </div>
     </asp:Panel>
 
 </div>
+
+<script type="text/javascript">
+    function handleFlip(e) {
+        if (e.target.closest('a, input, button, textarea')) return;
+        document.getElementById('flipCard').classList.toggle('flipped');
+    }
+</script>
 </asp:Content>

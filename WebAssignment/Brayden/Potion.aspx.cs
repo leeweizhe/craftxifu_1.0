@@ -41,10 +41,34 @@ namespace WebAssignment.Brayden
         {
             switch (cat)
             {
-                case "Positive": return "🟢";
-                case "Negative": return "🔴";
-                default:         return "🟡";
+                case "Positive": return "\uD83D\uDFE2";
+                case "Negative": return "\uD83D\uDD34";
+                default:         return "\uD83D\uDFE1";
             }
+        }
+
+        public string GetCategoryActiveClass(string category)
+        {
+            return ViewState["CurrentCategory"] != null && ViewState["CurrentCategory"].ToString() == category ? " active" : "";
+        }
+
+        public string GetCategorySidebarStyle(string category)
+        {
+            bool isActive = ViewState["CurrentCategory"] != null && ViewState["CurrentCategory"].ToString() == category;
+            string color = GetCategoryColor(category);
+            if (isActive)
+                return "border-color:" + color + "; color:" + color + "; box-shadow:inset 3px 0 0 " + color + ";";
+            return "";
+        }
+
+        public string GetPaginationActiveClass(object itemId)
+        {
+            return ViewState["CurrentPotionId"] != null && ViewState["CurrentPotionId"].ToString() == itemId.ToString() ? " active" : "";
+        }
+
+        public int CurrentPotionId
+        {
+            get { return ViewState["CurrentPotionId"] != null ? Convert.ToInt32(ViewState["CurrentPotionId"]) : 0; }
         }
 
         // ─────────────────────────────────────────────
@@ -54,18 +78,14 @@ namespace WebAssignment.Brayden
         {
             if (!IsPostBack)
             {
-                categoryPanel.Visible = true;
-                listPanel.Visible     = false;
-                detailPanel.Visible   = false;
-                editPanel.Visible     = false;
-                addPanel.Visible      = false;
+                mainPanel.Visible = true;
+                editPanel.Visible = false;
+                addPanel.Visible  = false;
                 LoadCategories();
+                AutoSelectFirst();
             }
         }
 
-        // ─────────────────────────────────────────────
-        // READ – Categories
-        // ─────────────────────────────────────────────
         private void LoadCategories()
         {
             using (SqlConnection conn = new SqlConnection(ConnStr))
@@ -79,56 +99,82 @@ namespace WebAssignment.Brayden
             }
         }
 
-        // ─────────────────────────────────────────────
-        // READ – List by category
-        // ─────────────────────────────────────────────
-        protected void SelectCategory(object sender, EventArgs e)
+        private void AutoSelectFirst()
         {
-            string category = ((LinkButton)sender).CommandArgument;
-            ViewState["CurrentCategory"] = category;
-            lblListTitle.Text = category + " Potions";
-            LoadPotionsByCategory(category);
-
-            categoryPanel.Visible = false;
-            listPanel.Visible     = true;
-            detailPanel.Visible   = false;
-            editPanel.Visible     = false;
-            addPanel.Visible      = false;
-            btnAddNew.Visible     = IsAdmin();
-        }
-
-        private void LoadPotionsByCategory(string category)
-        {
+            string firstCategory = null;
             using (SqlConnection conn = new SqlConnection(ConnStr))
             {
-                string sql = "SELECT * FROM potionTable WHERE Category = @cat ORDER BY Name";
-                SqlCommand cmd = new SqlCommand(sql, conn);
-                cmd.Parameters.AddWithValue("@cat", category);
-                SqlDataAdapter da = new SqlDataAdapter(cmd);
-                DataTable dt = new DataTable();
-                da.Fill(dt);
-                potionRepeater.DataSource = dt;
-                potionRepeater.DataBind();
+                SqlCommand catCmd = new SqlCommand(
+                    "SELECT TOP 1 Category FROM potionTable ORDER BY Category", conn);
+                conn.Open();
+                object catObj = catCmd.ExecuteScalar();
+                if (catObj != null)
+                    firstCategory = catObj.ToString();
+            }
+
+            if (firstCategory != null)
+            {
+                ViewState["CurrentCategory"] = firstCategory;
+                LoadCategoryContent(firstCategory);
+            }
+            else
+            {
+                contentPanel.Visible = false;
+                emptyPanel.Visible = true;
             }
         }
 
         // ─────────────────────────────────────────────
-        // READ – Detail (now loads 3 images)
+        // Load all items for a category
         // ─────────────────────────────────────────────
-        protected void ViewDetail(object sender, EventArgs e)
+        private void LoadCategoryContent(string category)
         {
-            int id = Convert.ToInt32(((LinkButton)sender).CommandArgument);
-            ViewState["CurrentPotionId"] = id;
-            LoadPotionDetail(id);
+            DataTable dt;
+            using (SqlConnection conn = new SqlConnection(ConnStr))
+            {
+                string sql = "SELECT PotionId, Name, Thumbnail FROM potionTable WHERE Category = @cat ORDER BY Name";
+                SqlCommand cmd = new SqlCommand(sql, conn);
+                cmd.Parameters.AddWithValue("@cat", category);
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                dt = new DataTable();
+                da.Fill(dt);
+            }
 
-            categoryPanel.Visible = false;
-            listPanel.Visible     = false;
-            detailPanel.Visible   = true;
-            editPanel.Visible     = false;
-            addPanel.Visible      = false;
+            if (dt.Rows.Count > 0)
+            {
+                paginationRepeater.DataSource = dt;
+                paginationRepeater.DataBind();
+
+                int currentId = ViewState["CurrentPotionId"] != null ? Convert.ToInt32(ViewState["CurrentPotionId"]) : 0;
+                bool found = false;
+                foreach (DataRow row in dt.Rows)
+                {
+                    if (Convert.ToInt32(row["PotionId"]) == currentId) { found = true; break; }
+                }
+                if (!found)
+                {
+                    currentId = Convert.ToInt32(dt.Rows[0]["PotionId"]);
+                    ViewState["CurrentPotionId"] = currentId;
+                }
+
+                LoadFlipCard(currentId);
+                contentPanel.Visible = true;
+                emptyPanel.Visible = false;
+            }
+            else
+            {
+                contentPanel.Visible = false;
+                emptyPanel.Visible = true;
+            }
+
+            LoadCategories();
+            btnAddNew.Visible = IsAdmin();
         }
 
-        private void LoadPotionDetail(int id)
+        // ─────────────────────────────────────────────
+        // Load flip card content
+        // ─────────────────────────────────────────────
+        private void LoadFlipCard(int id)
         {
             using (SqlConnection conn = new SqlConnection(ConnStr))
             {
@@ -141,73 +187,90 @@ namespace WebAssignment.Brayden
                 {
                     if (dr.Read())
                     {
-                        lblDetailName.Text       = dr["Name"].ToString();
-                        lblDetailCategory.Text   = dr["Category"].ToString();
-                        lblDetailType.Text       = dr["PotionType"].ToString();
-                        lblDetailDuration.Text   = dr["Duration"].ToString();
+                        string name = dr["Name"].ToString();
+
+                        // Front
+                        lblDetailName.Text     = name;
+                        lblDetailCategory.Text = dr["Category"].ToString();
+                        lblDetailType.Text     = dr["PotionType"].ToString();
+                        lblFrontDuration.Text  = dr["Duration"].ToString();
+
+                        string detailImg = dr["DetailImage"].ToString();
+                        string thumb = dr["Thumbnail"].ToString();
+                        if (!string.IsNullOrEmpty(detailImg))
+                            imgDetailLarge.ImageUrl = ResolveUrl(detailImg);
+                        else if (!string.IsNullOrEmpty(thumb))
+                            imgDetailLarge.ImageUrl = ResolveUrl(thumb);
+
+                        // Back
+                        lblBackName.Text         = name;
+                        lblDetailDesc.Text       = dr["Description"].ToString();
                         lblDetailEffect.Text     = dr["Effect"].ToString();
+                        lblDetailDuration.Text   = dr["Duration"].ToString();
+                        lblBackType.Text         = dr["PotionType"].ToString();
                         lblDetailBase.Text       = dr["BrewingBase"].ToString();
                         lblDetailIngredient.Text = dr["Ingredient"].ToString();
-                        lblDetailDesc.Text       = dr["Description"].ToString();
                         litDetailContent.Text    = dr["FullContent"].ToString();
 
-                        // ── 1. Small thumbnail in header ──
-                        string thumb = dr["Thumbnail"].ToString();
-                        if (!string.IsNullOrEmpty(thumb))
-                            imgDetailThumb.ImageUrl = ResolveUrl(thumb);
+                        string ingredientImg = dr["IngredientImage"].ToString();
+                        if (!string.IsNullOrEmpty(ingredientImg))
+                            imgIngredient.ImageUrl = ResolveUrl(ingredientImg);
 
-                        // ── 2. Large potion bottle + ingredient image ──
-                        string detailImg      = dr["DetailImage"].ToString();
-                        string ingredientImg  = dr["IngredientImage"].ToString();
-
-                        bool hasDetail     = !string.IsNullOrEmpty(detailImg);
-                        bool hasIngredient = !string.IsNullOrEmpty(ingredientImg);
-
-                        if (hasDetail || hasIngredient)
-                        {
-                            if (hasDetail)     imgDetailLarge.ImageUrl = ResolveUrl(detailImg);
-                            if (hasIngredient) imgIngredient.ImageUrl  = ResolveUrl(ingredientImg);
-                            pnlImages.Visible = true;
-                        }
-                        else
-                        {
-                            pnlImages.Visible = false;
-                        }
-
-                        // Show edit/delete for Admin or Instructor
-                        btnEditPotion.Visible           = IsAdmin() || IsInstructor();
-                        btnDeletePotion.Visible         = IsAdmin() || IsInstructor();
+                        bool canEdit = IsAdmin() || IsInstructor();
+                        pnlAdminActions.Visible = canEdit;
                         btnDeletePotion.CommandArgument = id.ToString();
                     }
                 }
             }
 
-            // Load comments after loading detail
             LoadComments(id);
             CheckCommentPermission();
         }
 
         // ─────────────────────────────────────────────
-        // Back navigation
+        // Navigation
         // ─────────────────────────────────────────────
-        protected void BackToCategories(object sender, EventArgs e)
+        protected void SelectCategory(object sender, EventArgs e)
         {
-            categoryPanel.Visible = true;
-            listPanel.Visible = false; detailPanel.Visible = false;
-            editPanel.Visible = false; addPanel.Visible    = false;
+            string category = ((LinkButton)sender).CommandArgument;
+            ViewState["CurrentCategory"] = category;
+            ViewState["CurrentPotionId"] = null;
+            LoadCategoryContent(category);
         }
 
-        protected void BackToList(object sender, EventArgs e)
+        protected void SelectPaginationItem(object sender, EventArgs e)
         {
-            string category = ViewState["CurrentCategory"] != null
-                              ? ViewState["CurrentCategory"].ToString() : "Positive";
-            lblListTitle.Text = category + " Potions";
-            LoadPotionsByCategory(category);
+            int id = Convert.ToInt32(((LinkButton)sender).CommandArgument);
+            ViewState["CurrentPotionId"] = id;
+            LoadFlipCard(id);
 
-            categoryPanel.Visible = false; listPanel.Visible  = true;
-            detailPanel.Visible   = false; editPanel.Visible  = false;
-            addPanel.Visible      = false;
-            btnAddNew.Visible     = IsAdmin();
+            string category = ViewState["CurrentCategory"] != null ? ViewState["CurrentCategory"].ToString() : "";
+            if (!string.IsNullOrEmpty(category))
+            {
+                using (SqlConnection conn = new SqlConnection(ConnStr))
+                {
+                    string sql = "SELECT PotionId, Name, Thumbnail FROM potionTable WHERE Category = @cat ORDER BY Name";
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@cat", category);
+                    SqlDataAdapter da = new SqlDataAdapter(cmd);
+                    DataTable dt = new DataTable();
+                    da.Fill(dt);
+                    paginationRepeater.DataSource = dt;
+                    paginationRepeater.DataBind();
+                }
+            }
+        }
+
+        protected void BackToMain(object sender, EventArgs e)
+        {
+            mainPanel.Visible = true;
+            editPanel.Visible = false;
+            addPanel.Visible  = false;
+            string category = ViewState["CurrentCategory"] != null ? ViewState["CurrentCategory"].ToString() : "";
+            if (!string.IsNullOrEmpty(category))
+                LoadCategoryContent(category);
+            else
+                AutoSelectFirst();
         }
 
         // ─────────────────────────────────────────────
@@ -244,10 +307,10 @@ namespace WebAssignment.Brayden
                 }
             }
 
-            categoryPanel.Visible = false; listPanel.Visible    = false;
-            detailPanel.Visible   = false; editPanel.Visible    = true;
-            addPanel.Visible      = false;
-            lblEditError.Text     = "";
+            mainPanel.Visible = false;
+            editPanel.Visible = true;
+            addPanel.Visible  = false;
+            lblEditError.Text = "";
         }
 
         // ─────────────────────────────────────────────
@@ -285,10 +348,11 @@ namespace WebAssignment.Brayden
                 cmd.ExecuteNonQuery();
             }
 
-            LoadPotionDetail(id);
-            categoryPanel.Visible = false; listPanel.Visible  = false;
-            detailPanel.Visible   = true;  editPanel.Visible  = false;
-            addPanel.Visible      = false;
+            mainPanel.Visible = true;
+            editPanel.Visible = false;
+            addPanel.Visible  = false;
+            ViewState["CurrentCategory"] = ddlEditCategory.SelectedValue;
+            LoadCategoryContent(ddlEditCategory.SelectedValue);
         }
 
         // ─────────────────────────────────────────────
@@ -299,8 +363,6 @@ namespace WebAssignment.Brayden
             if (!IsAdmin()) return;
 
             int id = Convert.ToInt32(((LinkButton)sender).CommandArgument);
-            string category = ViewState["CurrentCategory"] != null
-                              ? ViewState["CurrentCategory"].ToString() : "Positive";
 
             using (SqlConnection conn = new SqlConnection(ConnStr))
             {
@@ -311,12 +373,12 @@ namespace WebAssignment.Brayden
                 cmd.ExecuteNonQuery();
             }
 
-            lblListTitle.Text = category + " Potions";
-            LoadPotionsByCategory(category);
-            categoryPanel.Visible = false; listPanel.Visible  = true;
-            detailPanel.Visible   = false; editPanel.Visible  = false;
-            addPanel.Visible      = false;
-            btnAddNew.Visible     = IsAdmin();
+            ViewState["CurrentPotionId"] = null;
+            string category = ViewState["CurrentCategory"] != null ? ViewState["CurrentCategory"].ToString() : "";
+            if (!string.IsNullOrEmpty(category))
+                LoadCategoryContent(category);
+            else
+                AutoSelectFirst();
         }
 
         // ─────────────────────────────────────────────
@@ -332,9 +394,9 @@ namespace WebAssignment.Brayden
             txtAddDetailImage.Text = ""; txtAddIngredientImage.Text = "";
             lblAddError.Text = "";
 
-            categoryPanel.Visible = false; listPanel.Visible  = false;
-            detailPanel.Visible   = false; editPanel.Visible  = false;
-            addPanel.Visible      = true;
+            mainPanel.Visible = false;
+            editPanel.Visible = false;
+            addPanel.Visible  = true;
         }
 
         // ─────────────────────────────────────────────
@@ -367,14 +429,12 @@ namespace WebAssignment.Brayden
                 cmd.ExecuteNonQuery();
             }
 
-            string category = ddlAddCategory.SelectedValue;
-            ViewState["CurrentCategory"] = category;
-            lblListTitle.Text = category + " Potions";
-            LoadPotionsByCategory(category);
-            categoryPanel.Visible = false; listPanel.Visible  = true;
-            detailPanel.Visible   = false; editPanel.Visible  = false;
-            addPanel.Visible      = false;
-            btnAddNew.Visible     = IsAdmin();
+            mainPanel.Visible = true;
+            editPanel.Visible = false;
+            addPanel.Visible  = false;
+            ViewState["CurrentCategory"] = ddlAddCategory.SelectedValue;
+            ViewState["CurrentPotionId"] = null;
+            LoadCategoryContent(ddlAddCategory.SelectedValue);
         }
 
         // ─────────────────────────────────────────────
