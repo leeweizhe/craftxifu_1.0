@@ -109,6 +109,12 @@
 
                 <h3>Live Chat</h3>
 
+                    <asp:Panel ID="pnlChatToggle" runat="server" Visible="false">
+                        <button type="button" class="btn-chat-toggle" onclick="toggleChat(this)">
+                            Switch to Local Chat
+                        </button>
+                    </asp:Panel>
+
                 <%-- YouTube live chat embed — switches to fallback if no video ID --%>
                 <asp:Panel ID="pnlYouTubeChat" runat="server" Visible="false">
                     <%-- src is set in code-behind using the YouTube Video ID --%>
@@ -169,6 +175,7 @@
     </div>
 
     <%-- Set the YouTube iframe src via JavaScript to avoid browser warnings --%>
+    <asp:HiddenField ID="hdnActiveChat" runat="server" Value="youtube" />
     <script type="text/javascript">
 
         // YouTubeID and domain are passed from code-behind via hidden fields
@@ -176,15 +183,28 @@
         var domain   = '<%= Request.Url.Host %>';
 
         if (ytID !== '') {
-            // Set video embed src
             var player = document.getElementById('youtubePlayer');
             if (player)
                 player.src = 'https://www.youtube.com/embed/' + ytID + '?autoplay=1';
 
-            // Set chat embed src
             var chat = document.getElementById('youtubeChat');
             if (chat)
                 chat.src = 'https://www.youtube.com/live_chat?v=' + ytID + '&embed_domain=' + domain;
+
+            // Restore whichever chat was active before postback
+            var hdnChat = document.getElementById('<%= hdnActiveChat.ClientID %>');
+            var localChat = document.getElementById('<%= pnlOwnChat.ClientID %>');
+            var toggleBtn = document.querySelector('.btn-chat-toggle');
+
+            if (hdnChat && hdnChat.value === 'local') {
+                // Was showing local chat — restore it
+                document.getElementById('youtubeChat').parentElement.style.display = 'none';
+                localChat.style.display = 'block';
+                if (toggleBtn) toggleBtn.textContent = 'Switch to YouTube Chat';
+            } else {
+                // Default: hide local chat, show YouTube
+                if (localChat) localChat.style.display = 'none';
+            }
         }
 
         function toggleInstructorPanel() {
@@ -200,6 +220,23 @@
             }
         }
 
+        function toggleChat(btn) {
+            var ytChat = document.getElementById('youtubeChat').parentElement;
+            var localChat = document.getElementById('<%= pnlOwnChat.ClientID %>');
+            var hdnChat = document.getElementById('<%= hdnActiveChat.ClientID %>');
+
+            if (ytChat.style.display === 'none') {
+                ytChat.style.display = 'block';
+                localChat.style.display = 'none';
+                btn.textContent = 'Switch to Local Chat';
+                hdnChat.value = 'youtube';   // Save state
+            } else {
+                ytChat.style.display = 'none';
+                localChat.style.display = 'block';
+                btn.textContent = 'Switch to YouTube Chat';
+                hdnChat.value = 'local';     // Save state
+            }
+        }
     </script>
 
 </asp:Content>

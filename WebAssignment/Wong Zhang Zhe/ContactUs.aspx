@@ -15,19 +15,26 @@
 
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
     <div class="contact-box">
-        <h2 style="color:#68ff00; font-size: 2.5rem; margin-bottom: 30px;">[ CREATE SUPPORT TICKET ]</h2>
+        <h2 style="color:#68ff00; font-size: 2.5rem; margin-bottom: 30px;">[ CONTACT US ]</h2>
 
         <asp:Panel ID="formPanel" runat="server">
             <span class="label-text">Issue Category</span>
             <asp:DropDownList ID="ddlSubject" runat="server" CssClass="pixel-input">
-                <asp:ListItem Value="Upgrade">Account Rank Upgrade</asp:ListItem>
-                <asp:ListItem Value="Account">Account Recovery</asp:ListItem>
-                <asp:ListItem Value="Feedback">Bug Report / Suggestion</asp:ListItem>
+                <asp:ListItem Value="Upgrade Account">Account Rank Upgrade</asp:ListItem>
+                <asp:ListItem Value="Account Issue">Account Recovery</asp:ListItem>
+                <asp:ListItem Value="Feedback/Suggestion">Bug Report / Suggestion</asp:ListItem>
                 <asp:ListItem Value="Other">General Inquiry</asp:ListItem>
             </asp:DropDownList>
 
             <span class="label-text">Detailed Description</span>
             <asp:TextBox ID="txtMessage" runat="server" TextMode="MultiLine" Rows="6" CssClass="pixel-input" placeholder="Please provide details..."></asp:TextBox>
+
+            <span class="label-text">Attachment (Photo, PDF, etc.)</span>
+            <asp:FileUpload ID="fuAttachment" runat="server" CssClass="pixel-input" />
+            <p style="color:#888; font-size:0.8rem; margin-top:-20px; margin-bottom:20px;">* Max 5MB (Optional)</p>
+
+            <span class="label-text">Reference YouTube Link</span>
+            <asp:TextBox ID="txtYoutubeLink" runat="server" CssClass="pixel-input" placeholder="https://www.youtube.com/watch?v=... (Optional)"></asp:TextBox>
 
             <div style="margin-top: 10px;">
                 <asp:Button ID="btnSubmit" runat="server" Text="SUBMIT TICKET" OnClick="btnSubmit_Click" CssClass="btn-send" />

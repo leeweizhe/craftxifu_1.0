@@ -22,13 +22,28 @@ namespace WebAssignment
             object userId = Session["userId"];
 
             string connString = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
+            string attachmentPath = null;
+            string youtubeLink = txtYoutubeLink.Text.Trim();
 
             try
             {
+                if (fuAttachment.HasFile)
+                {
+                    string fileName = "Ticket_" + DateTime.Now.Ticks + "_" + System.IO.Path.GetFileName(fuAttachment.FileName);
+                    string savePath = Server.MapPath("~/Wong Zhang Zhe/uploads/") + fileName;
+
+                    string folderPath = Server.MapPath("~/Wong Zhang Zhe/uploads/");
+                    if (!System.IO.Directory.Exists(folderPath)) System.IO.Directory.CreateDirectory(folderPath);
+
+                    fuAttachment.SaveAs(savePath);
+                    attachmentPath = "/Wong Zhang Zhe/uploads/" + fileName;
+                }
+
                 using (SqlConnection conn = new SqlConnection(connString))
                 {
                     // Insert a feedback record. If guest submissions are allowed, the UserId field in the database should be allowed to be NULL.
-                    string sql = "INSERT INTO contactTable (UserId, Subject, Message, Status) VALUES (@uid, @sub, @msg, @status)";
+                    string sql = @"INSERT INTO contactTable (UserId, Subject, Message, Status, AttachmentPath, YoutubeLink) 
+                           VALUES (@uid, @sub, @msg, @status, @apath, @ylink)";
                     SqlCommand cmd = new SqlCommand(sql, conn);
 
                     // If userId is null, then store DBNull.Value in the database
@@ -36,6 +51,8 @@ namespace WebAssignment
                     cmd.Parameters.AddWithValue("@sub", ddlSubject.SelectedValue);
                     cmd.Parameters.AddWithValue("@msg", txtMessage.Text.Trim());
                     cmd.Parameters.AddWithValue("@status", "Submitted");
+                    cmd.Parameters.AddWithValue("@apath", (object)attachmentPath ?? DBNull.Value);
+                    cmd.Parameters.AddWithValue("@ylink", string.IsNullOrEmpty(youtubeLink) ? DBNull.Value : (object)youtubeLink);
 
                     conn.Open();
                     cmd.ExecuteNonQuery();

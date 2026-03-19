@@ -27,11 +27,9 @@ namespace WebAssignment.Tong_Yu_Hong.aspx
                     LoadComments(mobId);
                     CheckCommentPermission();
 
-                    // Check if the user is logged in and has the role "Instructor"
-                    // Note: This must match exactly what you store in Session during login
                     string userRole = Session["UserRole"] as string;
 
-                    if (!string.IsNullOrEmpty(userRole) && userRole == "Instructor")
+                    if (!string.IsNullOrEmpty(userRole) && (userRole == "Instructor" || userRole == "Admin"))
                     {
                         btnEdit.Visible = true;
                         btnDelete.Visible = true;
@@ -262,15 +260,13 @@ namespace WebAssignment.Tong_Yu_Hong.aspx
             if (args.Length < 2) return; // Safety check
 
             string commentId = args[0];
-            string mobId = args[1]; // Changed from farmId to mobId
+            string mobId = args[1]; 
             string reporterId = Session["userId"].ToString();
 
             try
             {
                 using (SqlConnection conn = new SqlConnection(connString))
                 {
-                    // Updated SQL to use MobID instead of FarmID
-                    // Note: Ensure your database table has the MobID column!
                     string sql = "INSERT INTO reportTable (CommentId, ReporterId, MobID) VALUES (@cid, @rid, @mid)";
                     SqlCommand cmd = new SqlCommand(sql, conn);
                     cmd.Parameters.AddWithValue("@cid", commentId);

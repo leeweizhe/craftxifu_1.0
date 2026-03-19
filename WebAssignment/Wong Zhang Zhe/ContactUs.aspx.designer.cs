@@ -42,6 +42,24 @@ namespace WebAssignment
         protected global::System.Web.UI.WebControls.TextBox txtMessage;
 
         /// <summary>
+        /// fuAttachment control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.FileUpload fuAttachment;
+
+        /// <summary>
+        /// txtYoutubeLink control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtYoutubeLink;
+
+        /// <summary>
         /// btnSubmit control.
         /// </summary>
         /// <remarks>

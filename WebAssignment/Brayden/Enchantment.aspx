@@ -82,7 +82,7 @@
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-<div class="enc-container">
+    <div class="enc-container">
 
     <%-- ===== MAIN VIEW ===== --%>
     <asp:Panel ID="mainPanel" runat="server">

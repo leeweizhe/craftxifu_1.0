@@ -36,27 +36,29 @@ namespace WebAssignment.Tong_Yu_Hong.aspx
                 r.ReportId, 
                 r.CommentId, 
                 r.ReportDate,
-                COALESCE(bc.CommentDate, mc.CommentDate, pc.CommentDate, fc.CommentDate, lc.CommentDate) as CommentDate,
+                COALESCE(bc.CommentDate, mc.CommentDate, pc.CommentDate, ec.CommentDate, fc.CommentDate, lc.CommentDate) as CommentDate,
                 -- Hardcode 'Beginner Guide' if BeginnerId exists, else grab the other names
                 CASE 
                     WHEN r.BeginnerId IS NOT NULL THEN 'Beginner Guide'
-                    ELSE COALESCE(mt.MobName, pt.Name, ft.Title, ls.StreamTitle) 
+                    ELSE COALESCE(mt.MobName, pt.Name, et.Name, ft.Title, ls.StreamTitle) 
                 END as SectionName,
-                COALESCE(bc.CommentText, mc.CommentText, pc.CommentText, fc.CommentText, lc.CommentText) as CommentText,
+                COALESCE(bc.CommentText, mc.CommentText, pc.CommentText, ec.CommentText, fc.CommentText, lc.CommentText) as CommentText,
                 u.Username as CommentAuthor,
                 rep.Username as ReporterName
             FROM reportTable r
             LEFT JOIN BGCommentTable bc ON r.CommentId = bc.CommentId AND r.BeginnerId IS NOT NULL
             LEFT JOIN mobComment      mc ON r.CommentId = mc.CommentId AND r.MobId IS NOT NULL
             LEFT JOIN potionComment   pc ON r.CommentId = pc.CommentId AND r.PotionId IS NOT NULL
+            LEFT JOIN enchantmentComment   ec ON r.CommentId = ec.CommentId AND r.EnchantmentId IS NOT NULL
             LEFT JOIN commentTable     fc ON r.CommentId = fc.CommentId AND r.FarmId IS NOT NULL
             LEFT JOIN LSCommentTable   lc ON r.CommentId = lc.CommentId AND r.StreamId IS NOT NULL
             -- Joined tables for Mobs, Potions, and Farms
             LEFT JOIN mobTable        mt ON r.MobId = mt.MobId
             LEFT JOIN potionTable     pt ON r.PotionId = pt.PotionId
+            LEFT JOIN enchantmentTable  et ON r.EnchantmentId = et.EnchantmentId
             LEFT JOIN farmTable       ft ON r.FarmId = ft.FarmId
             LEFT JOIN LiveStreams     ls ON r.StreamId = lc.StreamID
-            INNER JOIN userTable      u   ON u.UserId = COALESCE(bc.UserId, mc.UserId, pc.UserId, fc.UserId, lc.UserId)
+            INNER JOIN userTable      u   ON u.UserId = COALESCE(bc.UserId, mc.UserId, pc.UserId, ec.UserId, fc.UserId, lc.UserId)
             LEFT JOIN userTable       rep ON r.ReporterId = rep.UserId
             WHERE r.Status = 'Pending'
             ORDER BY r.ReportDate DESC";

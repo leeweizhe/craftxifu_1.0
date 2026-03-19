@@ -124,6 +124,11 @@
         </div>
     </asp:Panel>
 
+    <div id="imgLightbox" class="lightbox-overlay" onclick="closeLightbox()" style="display:none">
+        <button class="lightbox-close" onclick="closeLightbox(); return false;">✕</button>
+        <img id="lightboxImg" src="" alt="" class="lightbox-img" onclick="event.stopPropagation()" />
+    </div>
+
     <div class="top-bar">
         <a href="/Wong Zhang Zhe/Guide.aspx" class="btn-back">Back</a>
     </div>
@@ -541,7 +546,7 @@
                             CssClass="comment-input" placeholder="Type your comment here..." />
                 
                         <asp:Button ID="btnSubmitComment" runat="server" Text="POST COMMENT" 
-                            OnClick="btnSubmitComment_Click" CssClass="btn-submit-comment" />
+                            OnClick="btnSubmitComment_Click" CssClass="btn-submit-comment" href="#txtComment"/>
                     </asp:Panel>
 
                     <asp:Literal ID="litVisitorMsg" runat="server" />

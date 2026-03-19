@@ -17,7 +17,7 @@
 
 .hero-title {
     font-family: 'Minecraft', sans-serif;
-    color: #ffffff;
+    color: #68ff00; /* Your neon green accent color */
     font-size: 3.5rem;
     text-shadow: 4px 4px 0px #000;
     margin-bottom: 20px;
@@ -26,7 +26,7 @@
 
 .hero-subtitle {
     font-family: 'Roboto', sans-serif;
-    color: #68ff00; /* Your neon green accent color */
+    color: #ffffff;
     font-size: 1.2rem;
     font-weight: bold;
     text-transform: uppercase;
@@ -119,6 +119,7 @@
 }
 
 .card-stream-title {
+    font-family: 'PT Serif', serif;
     font-size: 14px;
     color: #666;
     margin: 0;

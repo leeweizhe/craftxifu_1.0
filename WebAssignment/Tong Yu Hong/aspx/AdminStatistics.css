@@ -1,0 +1,318 @@
+/* ═══════════════════════════════════════════════════════════════════
+   AdminStatistics.css
+   Statistics Dashboard — matches Minecraft admin panel theme
+   Font: 'Minecraft', sans-serif
+   Primary accent: #00ff55  |  Secondary: #00b63b
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── Reset (match other admin pages) ───────────────────────────── */
+html, body, form,
+.container, .body-content, #MainContent {
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    max-width: none !important;
+    overflow-x: hidden;
+}
+
+/* ── Page wrapper ──────────────────────────────────────────────── */
+.stat-page-wrapper {
+    background: transparent;
+    min-height: 100vh;
+    font-family: 'Minecraft', sans-serif;
+    padding: 60px 3% 60px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* ── Header row ────────────────────────────────────────────────── */
+.stat-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding: 30px 50px;
+    background: rgba(15, 15, 15, 0.95);
+    border: 1px solid #333;
+    border-bottom: none;
+    border-radius: 12px 12px 0 0;
+    backdrop-filter: blur(10px);
+}
+
+.stat-main-title {
+    font-size: 2.6rem;
+    color: #00ff55;
+    text-transform: uppercase;
+    letter-spacing: 5px;
+    text-shadow: 2px 2px #000;
+    margin: 0;
+}
+
+/* ── Filter bar ────────────────────────────────────────────────── */
+.filter-bar {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    align-items: flex-end;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.filter-label {
+    color: #666;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+}
+
+.filter-select {
+    background: rgba(0, 0, 0, 0.85);
+    border: 1px solid #444;
+    color: #fff;
+    padding: 10px 22px;
+    border-radius: 50px;
+    font-family: 'Minecraft', sans-serif;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    min-width: 185px;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2300ff55' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    padding-right: 38px;
+}
+
+.filter-select:hover,
+.filter-select:focus {
+    border-color: #00ff55;
+    box-shadow: 0 0 10px rgba(0, 255, 85, 0.2);
+    outline: none;
+}
+
+.filter-select option {
+    background: #111;
+    color: #fff;
+}
+
+/* ── Loading bar ───────────────────────────────────────────────── */
+.loading-bar {
+    background: rgba(10, 10, 10, 0.9);
+    border: 1px solid #333;
+    border-top: none;
+    padding: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    color: #00ff55;
+    font-size: 0.9rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+}
+
+.loading-pulse {
+    width: 12px;
+    height: 12px;
+    background: #00ff55;
+    border-radius: 2px;
+    animation: pulseBlock 0.8s ease-in-out infinite alternate;
+}
+
+@keyframes pulseBlock {
+    from { opacity: 0.2; transform: scale(0.8); }
+    to   { opacity: 1;   transform: scale(1.1); }
+}
+
+/* ── Error banner ──────────────────────────────────────────────── */
+.error-banner {
+    background: rgba(255, 44, 44, 0.1);
+    border: 1px solid #ff2c2c;
+    border-top: none;
+    padding: 16px 50px;
+    color: #ff6666;
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+}
+
+/* ── Charts grid ───────────────────────────────────────────────── */
+.charts-grid {
+    background: rgba(10, 10, 10, 0.85);
+    border: 1px solid #333;
+    border-radius: 0 0 12px 12px;
+    padding: 35px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 28px;
+}
+
+/* ── Summary stat boxes (spans full width as a row inside grid) ── */
+.stat-summary-row {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+
+.stat-box {
+    background: rgba(20, 20, 20, 0.9);
+    border: 1px solid #2a2a2a;
+    border-radius: 8px;
+    padding: 22px 20px;
+    text-align: center;
+    transition: border-color 0.25s, transform 0.2s;
+    position: relative;
+    overflow: hidden;
+}
+
+.stat-box::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #00ff55, transparent);
+    opacity: 0;
+    transition: opacity 0.25s;
+}
+
+.stat-box:hover {
+    border-color: #00ff55;
+    transform: translateY(-3px);
+}
+
+.stat-box:hover::before {
+    opacity: 1;
+}
+
+.stat-box-value {
+    display: block;
+    font-size: 2.2rem;
+    color: #00ff55;
+    text-shadow: 0 0 15px rgba(0, 255, 85, 0.4);
+    margin-bottom: 6px;
+    /* Truncate very long values like usernames */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.stat-box-label {
+    color: #555;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+}
+
+/* ── Individual chart card ─────────────────────────────────────── */
+.chart-card {
+    background: rgba(20, 20, 20, 0.9);
+    border: 1px solid #2a2a2a;
+    border-radius: 8px;
+    padding: 24px 22px;
+    transition: border-color 0.25s, box-shadow 0.25s;
+}
+
+.chart-card:hover {
+    border-color: rgba(0, 255, 85, 0.4);
+    box-shadow: 0 0 18px rgba(0, 255, 85, 0.07);
+}
+
+.chart-card.full-width {
+    grid-column: 1 / -1;
+}
+
+.chart-card-title {
+    color: #00ff55;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin: 0 0 6px;
+    text-shadow: 1px 1px #000;
+}
+
+.chart-card-subtitle {
+    color: #555;
+    font-size: 0.72rem;
+    letter-spacing: 0.5px;
+    margin: 0 0 18px;
+    text-transform: uppercase;
+}
+
+.chart-wrapper {
+    position: relative;
+    height: 270px;
+}
+
+/* ── Empty state ───────────────────────────────────────────────── */
+.empty-chart {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: #333;
+    font-size: 0.85rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+.charts-empty-full {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 80px 20px;
+    color: #333;
+    font-size: 1rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+}
+
+/* ── Responsive ────────────────────────────────────────────────── */
+@media (max-width: 1100px) {
+    .stat-summary-row {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 850px) {
+    .charts-grid {
+        grid-template-columns: 1fr;
+    }
+    .stat-summary-row {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .stat-header {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 24px 24px;
+    }
+    .stat-main-title {
+        font-size: 1.8rem;
+        letter-spacing: 3px;
+    }
+    .filter-bar {
+        width: 100%;
+    }
+    .filter-select {
+        min-width: 0;
+        width: 100%;
+    }
+    .charts-grid {
+        padding: 20px;
+    }
+}
+
+@media (max-width: 500px) {
+    .stat-summary-row {
+        grid-template-columns: 1fr 1fr;
+    }
+    .stat-box-value {
+        font-size: 1.6rem;
+    }
+}

@@ -141,6 +141,15 @@ namespace WebAssignment.Lee_Wei_Zhe.aspx
         protected global::System.Web.UI.WebControls.Label lblPanelFeedback;
 
         /// <summary>
+        /// pnlChatToggle control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel pnlChatToggle;
+
+        /// <summary>
         /// pnlYouTubeChat control.
         /// </summary>
         /// <remarks>
@@ -202,5 +211,14 @@ namespace WebAssignment.Lee_Wei_Zhe.aspx
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblFeedback;
+
+        /// <summary>
+        /// hdnActiveChat control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HiddenField hdnActiveChat;
     }
 }

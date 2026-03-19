@@ -70,13 +70,12 @@ namespace WebAssignment.Tong_Yu_Hong.aspx
 
             using (SqlConnection conn = new SqlConnection(connString))
             {
-                // Added the WHERE clause to filter by the selected status
-                // Add u.ProfilePicture to the SELECT statement
+                // Added "AND c.Subject <> 'Upgrade'" to exclude promotion requests
                 string query = @"SELECT c.Id, c.Subject, c.Message, c.Date, u.Username, u.ProfilePicture 
-                 FROM contactTable c 
-                 JOIN userTable u ON c.Userid = u.UserId 
-                 WHERE c.Status = @Status
-                 ORDER BY c.Date DESC";
+                         FROM contactTable c 
+                         JOIN userTable u ON c.Userid = u.UserId 
+                         WHERE c.Status = @Status AND c.Subject <> 'Upgrade Account'
+                         ORDER BY c.Date DESC";
 
                 SqlCommand cmd = new SqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("@Status", selectedStatus);

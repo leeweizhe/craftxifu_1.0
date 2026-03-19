@@ -174,7 +174,11 @@
     <Content Include="obj\Debug\WebAssignment.pdb" />
     <Content Include="SiteMaster.css" />
     <Content Include="Tong Yu Hong\aspx\AddMob.aspx" />
+    <Content Include="Tong Yu Hong\aspx\AdminStatistics.aspx" />
+    <Content Include="Tong Yu Hong\aspx\AdminStatistics.css" />
+    <Content Include="Tong Yu Hong\aspx\AdminStatistics.js" />
     <Content Include="Tong Yu Hong\aspx\ManageComments.aspx" />
+    <Content Include="Tong Yu Hong\aspx\ManagePromote.aspx" />
     <Content Include="Tong Yu Hong\aspx\ManageUser.aspx" />
     <Content Include="Tong Yu Hong\aspx\ManageUserDetail.aspx" />
     <Content Include="Tong Yu Hong\aspx\Mob.aspx" />
@@ -492,12 +496,26 @@
     <Compile Include="Tong Yu Hong\aspx\AddMob.aspx.designer.cs">
       <DependentUpon>AddMob.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Tong Yu Hong\aspx\AdminStatistics.aspx.cs">
+      <DependentUpon>AdminStatistics.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Tong Yu Hong\aspx\AdminStatistics.aspx.designer.cs">
+      <DependentUpon>AdminStatistics.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Tong Yu Hong\aspx\ManageComments.aspx.cs">
       <DependentUpon>ManageComments.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Tong Yu Hong\aspx\ManageComments.aspx.designer.cs">
       <DependentUpon>ManageComments.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Tong Yu Hong\aspx\ManagePromote.aspx.cs">
+      <DependentUpon>ManagePromote.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Tong Yu Hong\aspx\ManagePromote.aspx.designer.cs">
+      <DependentUpon>ManagePromote.aspx</DependentUpon>
     </Compile>
     <Compile Include="Tong Yu Hong\aspx\ManageUser.aspx.cs">
       <DependentUpon>ManageUser.aspx</DependentUpon>
@@ -637,6 +655,7 @@
     <Folder Include="Lee Wei Zhe\images\recipes\full\" />
     <Folder Include="Lee Wei Zhe\images\recipes\thumb\" />
     <Folder Include="obj\Debug\TempPE\" />
+    <Folder Include="Wong Zhang Zhe\uploads\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
