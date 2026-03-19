@@ -34,7 +34,7 @@ namespace WebAssignment.Tong_Yu_Hong.aspx
                 string query = @"SELECT c.Id, u.Username, c.Message 
                                  FROM contactTable c 
                                  JOIN userTable u ON c.Userid = u.UserId 
-                                 WHERE c.Subject = 'Upgrade' AND c.Status = @Status 
+                                 WHERE c.Subject = 'Upgrade Account' AND c.Status = @Status 
                                  ORDER BY c.Date DESC";
 
                 SqlCommand cmd = new SqlCommand(query, conn);

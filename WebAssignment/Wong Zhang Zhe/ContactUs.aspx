@@ -20,9 +20,9 @@
         <asp:Panel ID="formPanel" runat="server">
             <span class="label-text">Issue Category</span>
             <asp:DropDownList ID="ddlSubject" runat="server" CssClass="pixel-input">
-                <asp:ListItem Value="Upgrade">Account Rank Upgrade</asp:ListItem>
-                <asp:ListItem Value="Account">Account Recovery</asp:ListItem>
-                <asp:ListItem Value="Feedback">Bug Report / Suggestion</asp:ListItem>
+                <asp:ListItem Value="Upgrade Account">Account Rank Upgrade</asp:ListItem>
+                <asp:ListItem Value="Account Issue">Account Recovery</asp:ListItem>
+                <asp:ListItem Value="Feedback/Suggestion">Bug Report / Suggestion</asp:ListItem>
                 <asp:ListItem Value="Other">General Inquiry</asp:ListItem>
             </asp:DropDownList>
 
