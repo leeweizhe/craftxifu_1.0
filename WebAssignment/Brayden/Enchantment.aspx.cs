@@ -15,7 +15,7 @@ namespace WebAssignment.Brayden
 
         private bool IsAdmin()
         {
-            return Session["role"] != null && Session["role"].ToString().ToLower() == "admin";
+            return Session["userRole"] != null && Session["userRole"].ToString().Equals("Admin", StringComparison.OrdinalIgnoreCase);
         }
 
         private bool IsInstructor()
